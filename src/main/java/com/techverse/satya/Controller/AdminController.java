@@ -332,6 +332,38 @@ public class AdminController {
 				        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
 				    }
 			}
+			@PostMapping("/admin/adddevicetoken")
+			public ResponseEntity<ResponseDTO<?>> addDeviceToken(@RequestHeader("Authorization") String authorizationHeader,@RequestParam(value="deviceToken", required=true)String token) {
+						 Optional<Admin> user = adminService.getAdminByToken(authorizationHeader.substring(7));
+			     
+				ResponseDTO<String> responseBody = new ResponseDTO<>();
+				  	try {
+				  		System.out.println("hi token");
+			        if(user.isPresent()) {
+			        	System.out.println("hi token");
+			        	if(user.get().getDeviceToken().equals("")||user.get().getDeviceToken().equals(null)) {
+			        		System.out.println("token updated");
+			        	 user.get().setDeviceToken(token);
+			        	 
+			        	adminRepository.save(user.get());
+			        	 }
+			        	
+			        	
+			            responseBody.setStatus(true);
+			            responseBody.setMessage("Admin device saved successfully.");
+			            responseBody.setData("");
+			              return ResponseEntity.ok(responseBody);
+			        } else {
+			        	 responseBody.setStatus(false);
+			   		    responseBody.setMessage("Admin not found.");
+			            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
+			        }
+			    } catch (Exception e) {
+			    	 responseBody.setStatus(false);
+				        responseBody.setMessage( "Failed to retrive admin.");
+				        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
+				    }
+			}
 	 
 	
 	 

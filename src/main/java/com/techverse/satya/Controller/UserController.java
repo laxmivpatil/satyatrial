@@ -388,10 +388,10 @@ else
  
 		
 		@PostMapping("/user/adddevicetoken")
-		public ResponseEntity<ResponseDTO<UserDTO>> addDeviceToken(@RequestHeader("Authorization") String authorizationHeader,@RequestParam(value="deviceToken", required=true)String token) {
+		public ResponseEntity<ResponseDTO<?>> addDeviceToken(@RequestHeader("Authorization") String authorizationHeader,@RequestParam(value="deviceToken", required=true)String token) {
 			 Optional<Users> user = userService.getUserByToken(authorizationHeader.substring(7));
 		     
-			ResponseDTO<UserDTO> responseBody = new ResponseDTO<>();
+			ResponseDTO<String> responseBody = new ResponseDTO<>();
 			  	try {
 		         if (user.isPresent()) {
 		        	 if(user.get().getDeviceToken().equals("")||user.get().getDeviceToken()==null) {
@@ -401,8 +401,8 @@ else
 		        	 userRepository.save(user.get());
 		        	 }
 		            responseBody.setStatus(true);
-		            responseBody.setMessage("User retrieved successfully.");
-		            responseBody.setData(new UserDTO(user.get())); // Convert user object to string if needed
+		            responseBody.setMessage("device token Saved successfully.");
+		            responseBody.setData("");
 		            return ResponseEntity.ok(responseBody);
 		        } else {
 		        	 responseBody.setStatus(false);

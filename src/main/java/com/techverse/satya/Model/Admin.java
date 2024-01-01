@@ -57,6 +57,8 @@ public class Admin {
 	private String party;
 	private String verification="";
 	
+	private String deviceToken="";
+	
 	
     
     @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL)
@@ -73,6 +75,14 @@ public class Admin {
     private List<Suggestion> suggestions;
   
 
+
+	public String getDeviceToken() {
+		return deviceToken;
+	}
+
+	public void setDeviceToken(String deviceToken) {
+		this.deviceToken = deviceToken;
+	}
 
 	public List<Suggestion> getSuggestions() {
 		return suggestions;
