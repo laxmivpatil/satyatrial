@@ -386,6 +386,36 @@ else
 			    }
 		}
  
+		
+		@PostMapping("/user/adddevicetoken")
+		public ResponseEntity<ResponseDTO<UserDTO>> addDeviceToken(@RequestHeader("Authorization") String authorizationHeader,@RequestParam(value="deviceToken", required=true)String token) {
+			 Optional<Users> user = userService.getUserByToken(authorizationHeader.substring(7));
+		     
+			ResponseDTO<UserDTO> responseBody = new ResponseDTO<>();
+			  	try {
+		         if (user.isPresent()) {
+		        	 if(user.get().getDeviceToken().equals("")||user.get().getDeviceToken()==null) {
+		        		 System.out.println("token updated");
+		        	 user.get().setDeviceToken(token);
+		        	 
+		        	 userRepository.save(user.get());
+		        	 }
+		            responseBody.setStatus(true);
+		            responseBody.setMessage("User retrieved successfully.");
+		            responseBody.setData(new UserDTO(user.get())); // Convert user object to string if needed
+		            return ResponseEntity.ok(responseBody);
+		        } else {
+		        	 responseBody.setStatus(false);
+		   		    responseBody.setMessage("User not found.");
+		            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
+		        }
+		    } catch (Exception e) {
+		    	 responseBody.setStatus(false);
+			        responseBody.setMessage( "Failed to retrive user.");
+			        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
+			    }
+		}
+ 
 		@GetMapping("/admin/checkadminbymobileno")
 		public ResponseEntity<?> checkadminbymobileno(@RequestParam String mobileNo) {
 			  ResponseDTO<AdminDTO> responseBody = new ResponseDTO<>();
