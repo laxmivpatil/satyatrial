@@ -11,9 +11,10 @@ import com.techverse.satya.Model.Appointment;
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
     // You can define custom query methods here if needed
-	
-	  // Query method to find today's appointments for a specific user
+	   // Query method to find today's appointments for a specific user
+   // List<Appointment> findByUserIdAndDate(Long userId, String date);
     List<Appointment> findByUserIdAndDate(Long userId, String date);
+
     List<Appointment> findByUserId(Long userId);
     
     List<Appointment> findByAdminIdAndDate(Long userId, String date);

@@ -433,8 +433,16 @@ public class AppointmentController {
         		ar.setPurpose(a.getPurpose());
         		ar.setStatus(a.getStatus());
         		ar.setTime(a.getTime());
-    		
-    		arr.add(ar);
+        		if(ar.getStatus().equals("Deleted"))
+        		{
+        			ar.setAppointmentAddress("");
+        		}
+        		else
+        		{
+        			ar.setAppointmentAddress(a.getSmallerTimeSlot().getTimeSlot().getTimeSlotDetails().get(0).getAddress());
+            		
+        		}
+        		arr.add(ar);
     	}
     	return arr;
     	
@@ -451,7 +459,7 @@ public class AppointmentController {
         		ar.setPurpose(a.getPurpose());
         		ar.setStatus(a.getStatus());
         		ar.setTime(a.getTime());
-    		
+        		ar.setAppointmentAddress(a.getSmallerTimeSlot().getTimeSlot().getTimeSlotDetails().get(0).getAddress());
     	
     	return ar;
     	

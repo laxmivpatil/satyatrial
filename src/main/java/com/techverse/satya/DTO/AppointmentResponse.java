@@ -13,10 +13,20 @@ public class AppointmentResponse {
 	    private String time; // Store time in 10:00AM format
 	    private String purpose;
 	    private String comment;
-	    
+	    private String appointmentAddress="";
 	    private String status;
 	    
 	    
+	    
+	    
+
+		public String getAppointmentAddress() {
+			return appointmentAddress;
+		}
+
+		public void setAppointmentAddress(String appointmentAddress) {
+			this.appointmentAddress = appointmentAddress;
+		}
 
 		public Long getAppointmentId() {
 			return appointmentId;
