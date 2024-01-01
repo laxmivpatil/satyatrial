@@ -232,8 +232,12 @@ public ResponseEntity<?> getAllSlotsByMonthYear(
 
                     appointmentDetails.put("userDetails", userDetails);
                 } else {
+                	 appointmentDetails.put("date", s.getTimeSlot().getDate());
+                     
                     appointmentDetails.put("startTime", s.getStartTime());
                     appointmentDetails.put("endTime", s.getEndTime());
+                    appointmentDetails.put("appointmentType", s.getTimeSlot().getAvailability());
+                   
                     appointmentDetails.put("appointmentAddress",s.getTimeSlot().getTimeSlotDetails().get(0).getAddress());
                     
                 }

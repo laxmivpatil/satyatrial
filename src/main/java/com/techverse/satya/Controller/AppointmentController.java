@@ -433,7 +433,7 @@ public class AppointmentController {
         		ar.setPurpose(a.getPurpose());
         		ar.setStatus(a.getStatus());
         		ar.setTime(a.getTime());
-        		if(ar.getStatus().equals("Deleted"))
+        		if(ar.getStatus().equals("Deleted")||ar.getStatus().equals("cancel")||ar.getStatus().equals("Cancel"))
         		{
         			ar.setAppointmentAddress("");
         		}

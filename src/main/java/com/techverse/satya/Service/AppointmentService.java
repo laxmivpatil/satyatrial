@@ -203,7 +203,7 @@ public class AppointmentService {
         Optional<Appointment> appointmentOptional = appointmentRepository.findById(appointmentId);
         if (appointmentOptional.isPresent()) {
             Appointment appointment = appointmentOptional.get();
-            appointment.setStatus("Progress"); // Set status to "In Progress"
+            appointment.setStatus("progress"); // Set status to "In Progress"
             appointmentRepository.save(appointment); // Save the updated appointment
             return Optional.of(appointment);
         } else {
@@ -224,7 +224,7 @@ public class AppointmentService {
 
             if (currentDateTime.isBefore(appointmentDateTime)) {
                 // Cancel the appointment and update slotBook to false
-                appointment.setStatus("Deleted");
+                appointment.setStatus("cancel");
                 appointmentRepository.save(appointment);
 
                 // Update the slotBook to false in SmallerTimeSlot entity
@@ -237,7 +237,7 @@ public class AppointmentService {
                 return true;
             } else {
                 // Appointment time has passed, cannot cancel
-            	  appointment.setStatus("Cancel");
+            	  appointment.setStatus("cancel");
             	  adminNotificationService.sendCancelAppointmentNotificationToAdmin(appointment,appointment.getUser());
                   
                   appointmentRepository.save(appointment);
@@ -316,7 +316,7 @@ public class AppointmentService {
 
             if (currentDateTime.isBefore(appointmentDateTime)) {
                 // Cancel the appointment and update slotBook to false
-                appointment.setStatus("Cancel");
+                appointment.setStatus("cancel");
                 appointmentRepository.save(appointment);
 
                 // Update the slotBook to false in SmallerTimeSlot entity
@@ -328,7 +328,7 @@ public class AppointmentService {
                 return true;
             } else {
                 // Appointment time has passed, cannot cancel
-            	  appointment.setStatus("Cancel");
+            	  appointment.setStatus("cancel");
             	  userNotificationService.sendCancelAppointmentNotificationToUser(appointment,appointment.getUser());
                   
                   appointmentRepository.save(appointment);
@@ -344,7 +344,7 @@ public class AppointmentService {
 
         if (optionalAppointment.isPresent()) {
             Appointment appointment = optionalAppointment.get();
-            appointment.setStatus("Deleted");
+            appointment.setStatus("cancel");
             appointmentRepository.save(appointment);
 
             // Delete the appointment

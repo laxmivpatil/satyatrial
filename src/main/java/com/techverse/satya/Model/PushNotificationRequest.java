@@ -8,7 +8,15 @@ public class PushNotificationRequest {
     
     
     
-  public String getTopic() {
+  public PushNotificationRequest(String token , String title, String body) {
+	 
+		this.title = title;
+		this.body = body;
+		this.token = token;
+	}
+
+
+public String getTopic() {
 		return topic;
 	}
 
