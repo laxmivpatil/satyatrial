@@ -1,51 +1,4 @@
-package com.techverse.satya.Controller;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.techverse.satya.Model.Admin;
-import com.techverse.satya.Model.Appointment;
-import com.techverse.satya.Model.SmallerTimeSlot;
-import com.techverse.satya.Model.Users;
-import com.techverse.satya.Service.AdminService;
-import com.techverse.satya.Service.SmallerTimeSlotService;
-import com.techverse.satya.Service.UserService;
-
- 
- 
-
- 
- 
- 
- 
- 
-
-@RestController
-@RequestMapping("")
-public class SmallerSlotController {
-	@Autowired
+@Autowired
     private SmallerTimeSlotService smallerTimeSlotService;
 	@Autowired
 	private UserService userService;
@@ -218,7 +171,7 @@ public ResponseEntity<?> getAllSlotsByMonthYear(
                     appointmentDetails.put("appointmentType", appointment.getAppointmentType());
                     appointmentDetails.put("purpose", appointment.getPurpose());
                     appointmentDetails.put("appointmentId", appointment.getId());
-                    appointmentDetails.put("appointmentAddress",s.getTimeSlot().getTimeSlotDetails().get(0).getAddress());
+                    appointmentDetails.put("appointmentAddress","jhdjdshgjk");
                     appointmentDetails.put("comment", appointment.getComment());
                     appointmentDetails.put("time", appointment.getTime());
                     appointmentDetails.put("status", appointment.getStatus());
@@ -234,8 +187,6 @@ public ResponseEntity<?> getAllSlotsByMonthYear(
                 } else {
                     appointmentDetails.put("startTime", s.getStartTime());
                     appointmentDetails.put("endTime", s.getEndTime());
-                    appointmentDetails.put("appointmentAddress",s.getTimeSlot().getTimeSlotDetails().get(0).getAddress());
-                    
                 }
 
                 slot.computeIfAbsent("date", k -> {
@@ -276,5 +227,3 @@ public ResponseEntity<?> getAllSlotsByMonthYear(
  //
 //
 	 
-	
-}
