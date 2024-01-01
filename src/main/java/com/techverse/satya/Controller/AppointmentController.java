@@ -459,7 +459,8 @@ public class AppointmentController {
         		ar.setPurpose(a.getPurpose());
         		ar.setStatus(a.getStatus());
         		ar.setTime(a.getTime());
-        		ar.setAppointmentAddress(a.getSmallerTimeSlot().getTimeSlot().getTimeSlotDetails().get(0).getAddress());
+        		
+        	 	//ar.setAppointmentAddress(a.getSmallerTimeSlot().getTimeSlot().getTimeSlotDetails().get(0).getAddress());
     	
     	return ar;
     	

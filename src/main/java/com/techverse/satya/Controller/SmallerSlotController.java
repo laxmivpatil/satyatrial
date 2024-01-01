@@ -229,7 +229,6 @@ public ResponseEntity<?> getAllSlotsByMonthYear(
                     userDetails.put("userId", user.getId());
                     userDetails.put("userName", user.getName());
                     userDetails.put("profile", user.getProfilePphoto());
-
                     appointmentDetails.put("userDetails", userDetails);
                 } else {
                 	 appointmentDetails.put("date", s.getTimeSlot().getDate());
