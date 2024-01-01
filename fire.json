@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "525061123508",
+    "project_id": "styatesting",
+    "storage_bucket": "styatesting.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:525061123508:android:77c9b7161f8653ae98d6e1",
+        "android_client_info": {
+          "package_name": "com.techverse.satya"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAew12yNpahw5x4hKXAbOfh-85qdMwzBLc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
