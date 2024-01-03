@@ -287,7 +287,7 @@ public class AppointmentService {
                    
 
                     // Send notification to the user about the cancellation
-                    adminNotificationService.sendRescheduleAppointmentNotificationToUser(appointment, appointment.getUser(),oldTime);
+                    adminNotificationService.sendRescheduleAppointmentNotificationToAdmin(appointment, appointment.getUser(),oldTime);
 
                     return true;
             	 }

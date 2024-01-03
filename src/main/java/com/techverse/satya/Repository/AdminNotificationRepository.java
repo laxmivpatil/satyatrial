@@ -12,4 +12,6 @@ public interface AdminNotificationRepository extends JpaRepository<AdminNotifica
     // You can define custom query methods here if needed
 
     List<AdminNotification> findByReadFalse();
+    List<AdminNotification> findByAdminIdAndReadFalse(Long adminId);
+    
 }

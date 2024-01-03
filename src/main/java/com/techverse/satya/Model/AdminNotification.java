@@ -5,6 +5,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -28,12 +31,13 @@ public class AdminNotification {
         this.read = false; // By default, the notification is unread when created
     }
 
-    public AdminNotification(String message, String notificationType, Long entityId,String profilePhoto) {
+    public AdminNotification(String message, String notificationType, Long entityId,String profilePhoto,Admin admin) {
         this();
         this.message = message;
         this.notificationType = notificationType;
         this.entityId = entityId;
         this.profilePhoto=profilePhoto;
+        this.admin=admin;
     }
 
 	public Long getId() {
@@ -92,6 +96,18 @@ public class AdminNotification {
 		this.createdAt = createdAt;
 	}
 
-    
+	 @ManyToOne
+	    @JoinColumn(name = "admin_id")  // adjust the column name accordingly
+	    private Admin admin;
     // Getters and setters
+
+	public Admin getAdmin() {
+		return admin;
+	}
+
+	public void setAdmin(Admin admin) {
+		this.admin = admin;
+	}
+	 
+	 
 }

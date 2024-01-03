@@ -59,7 +59,8 @@ public class Admin {
 	
 	private String deviceToken="";
 	
-	
+	  @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL)
+	    private List<AdminNotification> adminNotifications;
     
     @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL)
     private List<Appointment> appointments;
@@ -295,6 +296,14 @@ public class Admin {
 
 	public void setVerification(String verification) {
 		this.verification = verification;
+	}
+
+	public List<AdminNotification> getAdminNotifications() {
+		return adminNotifications;
+	}
+
+	public void setAdminNotifications(List<AdminNotification> adminNotifications) {
+		this.adminNotifications = adminNotifications;
 	}
  
     
