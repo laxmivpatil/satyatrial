@@ -79,6 +79,5 @@ public class SubAdminService {
 	   public Optional<SubAdmin> getSubAdminBymobileNo(String mobileNo) {
 	        return subAdminRepository.findByMobileNumber(mobileNo);
 	    }
-	
-
+	    
 }

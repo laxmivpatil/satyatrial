@@ -121,6 +121,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin/notifications/unread").hasRole("ADMIN")
                 .antMatchers("/superadmin/create-admin").permitAll()
                 
+                .antMatchers("/subadmin/appointments/todaybyadminid").hasRole("SUBADMIN")
+                .antMatchers("/subadmin/appointments/upcomingbyadminid").hasRole("SUBADMIN")
+                .antMatchers("/subadmin/appointments/pastbyadminid").hasRole("SUBADMIN")
+                .antMatchers("/subadmin/appointments/pendingbyadminid").hasRole("SUBADMIN")
+                .antMatchers("/subadmin/appointments/canceledbyadminid").hasRole("SUBADMIN")
+
+                
                 .antMatchers("/login/generateOtp").permitAll() 
                 .antMatchers("/signup/generateOtp").permitAll() 
                 .antMatchers("/signup/**").permitAll()            

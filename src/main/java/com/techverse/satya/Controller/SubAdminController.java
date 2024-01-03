@@ -21,7 +21,9 @@ import com.techverse.satya.DTO.ApiResponse;
 import com.techverse.satya.Model.JWTRequest;
 import com.techverse.satya.Model.SubAdmin; 
 import com.techverse.satya.Security.JwtHelper;
+import com.techverse.satya.Service.AdminService;
 import com.techverse.satya.Service.SubAdminService;
+import com.techverse.satya.Service.UserService;
 
 @RestController
 @RequestMapping("/subadmin")
@@ -36,6 +38,11 @@ public class SubAdminController {
     
     @Autowired
     SubAdminService subAdminService; 
+    
+    @Autowired
+    private AdminService adminService;
+	@Autowired
+    private UserService userService;
 
     /****final***/
 	 @PostMapping("/login")

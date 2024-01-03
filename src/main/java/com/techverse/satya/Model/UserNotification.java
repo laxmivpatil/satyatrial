@@ -21,9 +21,16 @@ public class UserNotification {
     private LocalDateTime createdAt;
 	private Long userId;
 	
-	
+	 String profilePhoto="";
+	 
     
-    public Long getUserId() {
+    public String getProfilePhoto() {
+		return profilePhoto;
+	}
+	public void setProfilePhoto(String profilePhoto) {
+		this.profilePhoto = profilePhoto;
+	}
+	public Long getUserId() {
 		return userId;
 	}
 	public void setUserId(Long userId) {
@@ -65,13 +72,14 @@ public class UserNotification {
 	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
 	}
-	public UserNotification(String message, Long appointmentId,Long userId,String title) {
+	public UserNotification(String message, Long appointmentId,Long userId,String title,String profile) {
 	 
 		this.message = message;
 		this.appointmentId = appointmentId;
 		this.userId=userId;
 		  this.createdAt = LocalDateTime.now();
 		  this.title=title;
+		  this.profilePhoto=profile;
 	}
 	public UserNotification() {
 		super();

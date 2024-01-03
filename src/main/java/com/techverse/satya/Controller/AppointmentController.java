@@ -27,11 +27,13 @@ import com.techverse.satya.DTO.TimeSlotDetail;
 import com.techverse.satya.Model.Admin;
 import com.techverse.satya.Model.Appointment;
 import com.techverse.satya.Model.SmallerTimeSlot;
+import com.techverse.satya.Model.SubAdmin;
 import com.techverse.satya.Model.Users;
 import com.techverse.satya.Repository.AppointmentRepository;
 import com.techverse.satya.Service.AdminService;
 import com.techverse.satya.Service.AppointmentService;
 import com.techverse.satya.Service.SmallerTimeSlotService;
+import com.techverse.satya.Service.SubAdminService;
 import com.techverse.satya.Service.UserService;
 
 @RestController
@@ -49,7 +51,8 @@ public class AppointmentController {
     
     @Autowired
    	private AdminService adminService;
-       
+    @Autowired
+   	private SubAdminService subAdminService; 
     
     //create appointments by user
     @PostMapping("/user/appointments/create")
@@ -242,7 +245,7 @@ public class AppointmentController {
          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
      }
     }
-    
+    //admin start
     @GetMapping("/admin/appointments/todaybyadminid")
     public ResponseEntity<?> getTodayAppointmentsByAdmin(@RequestHeader("Authorization") String authorizationHeader) {
     	 Optional<Admin> user = adminService.getAdminByToken(authorizationHeader.substring(7));
@@ -859,6 +862,159 @@ public ResponseEntity<?> rescheduledAppointmentByAdmin(@RequestHeader("Authoriza
     
     
     
+     
+     
+     //subadmin start
+     @GetMapping("/subadmin/appointments/todaybysubadminid")
+     public ResponseEntity<?> getTodayAppointmentsBySubAdmin(@RequestHeader("Authorization") String authorizationHeader) {
+     	 Optional<SubAdmin> user = subAdminService.getSubAdminByToken(authorizationHeader.substring(7));
+     	 Map<String, Object> responseBody = new HashMap<String, Object>();
+    	  if(user.isPresent()) {
+
+     	List<Appointment> todayAppointments = appointmentService.getTodaysAppointmentsByAdmin(user.get().getAdmin().getId()+"");
+         
+     	if(!todayAppointments.isEmpty()) {
+     	responseBody.put("status", true);
+ 		responseBody.put("Todays Appointments",toAppointmentResponse( todayAppointments));
+ 		return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.OK);
+ 		}
+     	else
+     	{
+     		responseBody.put("status", false);
+     		responseBody.put("Todays Appointments",toAppointmentResponse( todayAppointments));
+     		return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.OK);
+         
+     	}
+    	 }else {
+     		responseBody.put("status",false);
+            responseBody.put("message","Unauthorized Access");
+            return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.UNAUTHORIZED);
+        }
+
+          
+     }
+
+     @GetMapping("/subadmin/appointments/upcomingbysubadminid")
+     public ResponseEntity<?> getUpcomingAppointmentsBySubAdmin(@RequestHeader("Authorization") String authorizationHeader) {
+    	 Optional<SubAdmin> user = subAdminService.getSubAdminByToken(authorizationHeader.substring(7));
+ 	 Map<String, Object> responseBody = new HashMap<String, Object>();
+ 	  if(user.isPresent()) {
+
+
+     	List<Appointment> upcomingAppointments = appointmentService.getUpcomingAppointmentsByAdmin(user.get().getAdmin().getId()+"");
+     	if(!upcomingAppointments.isEmpty()) {
+         	responseBody.put("status", true);
+     		responseBody.put("Upcoming Appointments",toAppointmentResponse( upcomingAppointments));
+     		return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.OK);
+     		}
+         	else
+         	{
+         		responseBody.put("status", false);
+         		responseBody.put("Upcoming Appointments",toAppointmentResponse(upcomingAppointments));
+         		return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.OK);
+                     
+         	}
+ 	  }else {
+   		responseBody.put("status",false);
+          responseBody.put("message","Unauthorized Access");
+          return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.UNAUTHORIZED);
+      }
+     	 
+     }
+
+     @GetMapping("/subadmin/appointments/pastbysubadminid")
+     public ResponseEntity<?> getPastAppointmentsBySubAdmin(@RequestHeader("Authorization") String authorizationHeader) {
+     	Optional<SubAdmin> user = subAdminService.getSubAdminByToken(authorizationHeader.substring(7));
+    	 Map<String, Object> responseBody = new HashMap<String, Object>();
+    	  if(user.isPresent()) {
+
+
+     	List<Appointment> pastAppointments = appointmentService.getPastAppointmentsByAdmin(user.get().getAdmin().getId()+"");
+     	if(!pastAppointments.isEmpty()) {
+         	responseBody.put("status", true);
+     		responseBody.put("Past Appointments",toAppointmentResponse( pastAppointments));
+     		return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.OK);
+     		}
+         	else
+         	{
+         		responseBody.put("status", false);
+         		responseBody.put("past Appointments",toAppointmentResponse(pastAppointments));
+         		return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.OK);
+         	} 
+     	}else {
+           		responseBody.put("status",false);
+                 responseBody.put("message","Unauthorized Access");
+                 return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.UNAUTHORIZED);
+             }
+     }
+     @GetMapping("/subadmin/appointments/pendingbysubadminid")
+     public ResponseEntity<?> getPendingAppointmentsByAdmin1(@RequestHeader("Authorization") String authorizationHeader) {
+     	 	Optional<SubAdmin> user = subAdminService.getSubAdminByToken(authorizationHeader.substring(7));
+       	 Map<String, Object> responseBody = new HashMap<String, Object>();
+       	try { 
+       	 if(user.isPresent()) {    	
+             List<Appointment> pendingAppointments = appointmentService.getPendingAppointmentsByAdmin(user.get().getAdmin().getId()+"");
+             
+             // Check if appointments are found
+             if(!pendingAppointments.isEmpty()) {
+             	responseBody.put("status", true);
+         		responseBody.put("Pending Appointments",toAppointmentResponse( pendingAppointments ));
+         		return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.OK);
+         		}
+             	else
+             	{
+             		responseBody.put("status", false);
+             		responseBody.put("pending Appointments",toAppointmentResponse(pendingAppointments));
+             		return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.OK);
+                         
+             	}
+     	 }else {
+     	  		responseBody.put("status",false);
+     	         responseBody.put("message","Unauthorized Access");
+     	         return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.UNAUTHORIZED);
+     	     }
+         } catch (NumberFormatException e) {
+             // Handle invalid user ID (not a number)
+             return ResponseEntity.badRequest().build();
+         } catch (Exception e) {
+             // Handle other exceptions
+             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+         }
+     }
+     @GetMapping("/subadmin/appointments/canceledbysubadminid")
+     public ResponseEntity<?> getcanceledAppointmentsBySubAdmin(@RequestHeader("Authorization") String authorizationHeader) {
+      	Optional<SubAdmin> user = subAdminService.getSubAdminByToken(authorizationHeader.substring(7));
+      	 Map<String, Object> responseBody = new HashMap<String, Object>();
+      	try { 
+      	 if(user.isPresent()) { 
+             List<Appointment> canceledAppointments = appointmentService.getCanceledAppointmentsByAdmin(user.get().getAdmin().getId()+"");
+             
+             // Check if appointments are found
+             if(!canceledAppointments.isEmpty()) {
+             	responseBody.put("status", true);
+         		responseBody.put("canceled Appointments",toAppointmentResponse(canceledAppointments ));
+         		return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.OK);
+         		}
+             	else
+             	{
+             		responseBody.put("status", false);
+             		responseBody.put("canceled Appointments",toAppointmentResponse(canceledAppointments));
+             		return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.OK);
+                         
+             	}
+     	 }else {
+  	  		responseBody.put("status",false);
+  	         responseBody.put("message","Unauthorized Access");
+  	         return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.UNAUTHORIZED);
+  	     }
+      } catch (NumberFormatException e) {
+          // Handle invalid user ID (not a number)
+          return ResponseEntity.badRequest().build();
+      } catch (Exception e) {
+          // Handle other exceptions
+          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+      }
+     }
     
     
     
