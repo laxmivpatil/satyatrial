@@ -70,6 +70,9 @@ public class AdminDTO {
             // Example: Set joinedDate based on admin's creation date
             this.joinedDate = admin.getJoineddate();
             this.verification=admin.getVerification();
+            this.profession=admin.getProfession();
+            this.proof=admin.getProof();
+            this.party=admin.getParty();
         }
     }
 
