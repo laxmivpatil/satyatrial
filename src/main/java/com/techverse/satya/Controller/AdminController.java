@@ -61,8 +61,14 @@ public class AdminController {
 	
 	@Autowired
     private AdminRepository adminRepository;
+	@GetMapping("/user/constitutions")
+	public Map<String, List<String>> getAllConstitutions() {
+	    Map<String, List<String>> response = new HashMap<>();
+	    List<String> constitutions = adminRepository.findAllConstitutions();
+	    response.put("constitution", constitutions);
+	    return response;
+	}
 
-	
   
 	@PutMapping("/admin/updateProfile")
     public ResponseEntity<Object> updateAdminProfile(@RequestHeader("Authorization") String authorizationHeader,

@@ -18,5 +18,8 @@ public interface AdminRepository extends JpaRepository<Admin, Long> {
     @Modifying
     @Query("UPDATE Admin SET verification = :newStatus WHERE id = :adminId")
     int updateVerificationStatus(@Param("adminId") Long adminId, @Param("newStatus") String newStatus);
-
+    
+    
+    @Query("SELECT DISTINCT a.constitution FROM Admin a WHERE a.constitution IS NOT NULL AND a.constitution <> ''")
+    List<String> findAllConstitutions();
 }
