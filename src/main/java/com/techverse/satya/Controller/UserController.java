@@ -387,7 +387,7 @@ else
 		}
  
 		
-		@PostMapping("/user/adddevicetoken")
+		@GetMapping("/user/adddevicetoken")
 		public ResponseEntity<ResponseDTO<?>> addDeviceToken(@RequestHeader("Authorization") String authorizationHeader,@RequestParam(value="deviceToken", required=true)String token) {
 			 Optional<Users> user = userService.getUserByToken(authorizationHeader.substring(7));
 		     

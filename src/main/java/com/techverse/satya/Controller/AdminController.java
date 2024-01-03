@@ -332,7 +332,7 @@ public class AdminController {
 				        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
 				    }
 			}
-			@PostMapping("/admin/adddevicetoken")
+			@GetMapping("/admin/adddevicetoken")
 			public ResponseEntity<ResponseDTO<?>> addDeviceToken(@RequestHeader("Authorization") String authorizationHeader,@RequestParam(value="deviceToken", required=true)String token) {
 						 Optional<Admin> user = adminService.getAdminByToken(authorizationHeader.substring(7));
 			     
