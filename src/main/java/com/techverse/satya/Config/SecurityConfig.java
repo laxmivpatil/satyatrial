@@ -88,7 +88,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                   .antMatchers("/admin/timeslots/all").hasRole("ADMIN")
                  .antMatchers("/admin/timeslots/allbymonthyear").hasRole("ADMIN")
                  .antMatchers("/admin/timeslots/delete/{id}").hasRole("ADMIN")
-                
+                 .antMatchers("/user/notifications/unread").hasRole("USER")
                  
                  
                 .antMatchers("/user/timeslots/get").hasRole("USER")

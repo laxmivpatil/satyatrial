@@ -1,30 +1,39 @@
 package com.techverse.satya.Controller;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.techverse.satya.DTO.AdminNotificationDTO;
 import com.techverse.satya.DTO.AppointmentResponse;
 import com.techverse.satya.DTO.SuggestionResponseDTO;
 import com.techverse.satya.Model.AdminNotification;
 import com.techverse.satya.Model.Appointment;
 import com.techverse.satya.Model.Suggestion;
 import com.techverse.satya.Model.UserNotification;
+import com.techverse.satya.Model.Users;
 import com.techverse.satya.Repository.UserNotificationRepository;
 import com.techverse.satya.Service.AppointmentService;
 import com.techverse.satya.Service.UserNotificationService;
+import com.techverse.satya.Service.UserService;
 
 @RestController
 @RequestMapping("")
@@ -33,6 +42,9 @@ public class UserNotificationController {
 	@Autowired
 	UserNotificationService userNotificationService;
 
+	
+	@Autowired
+	UserService userService;
 	@Autowired
 	AppointmentService appointmentService;
 	@Autowired
@@ -58,15 +70,57 @@ public class UserNotificationController {
 
 	         
 	    }*/
-	  @GetMapping("/notifications/unread")
-	    public ResponseEntity<?> getUnreadAdminNotificationsbyUserId(@RequestParam Long userId) {
-	        List<UserNotification> unreadNotifications = userNotificationService.getUnreadUserNotificationsByUserId(userId);
+	  @GetMapping("/user/notifications/unread")
+	    public ResponseEntity<?> getUnreadAdminNotificationsbyUserId(@RequestHeader("Authorization") String authorizationHeader  ) {
+		  Map<String, Object> responseBody = new HashMap<>();
+	       
+		  Optional<Users> user = userService.getUserByToken(authorizationHeader.substring(7));
+     	  if(user.isPresent()) {
+		  
+		  List<UserNotification> unreadNotifications = userNotificationService.getUnreadUserNotificationsByUserId(user.get().getId());
 	     
-	        Map<String, Object> responseBody = new HashMap<>();
 	        if(!unreadNotifications.isEmpty()) {
-	        	responseBody.put("status",true);
-	 	   responseBody.put("Notifications", unreadNotifications);
-	       return new ResponseEntity<>(responseBody, HttpStatus.OK); 
+	        	
+	        	 LocalDate today = LocalDate.now();
+	                LocalDateTime startOfWeek = LocalDateTime.now().with(DayOfWeek.MONDAY).truncatedTo(ChronoUnit.DAYS);
+	                LocalDateTime startOfMonth = LocalDateTime.now().withDayOfMonth(1).truncatedTo(ChronoUnit.DAYS);
+
+	                List<UserNotification> todayNotifications = unreadNotifications.stream()
+	                        .filter(notification -> notification.getCreatedAt().toLocalDate().isEqual(today))
+	                        .collect(Collectors.toList());
+
+	                List<UserNotification> thisWeekNotifications = unreadNotifications.stream()
+	                        .filter(notification -> notification.getCreatedAt().isAfter(startOfWeek))
+	                        .filter(notification -> !todayNotifications.contains(notification))
+	                        .collect(Collectors.toList());
+
+	                List<UserNotification> thisMonthNotifications = unreadNotifications.stream()
+	                        .filter(notification -> notification.getCreatedAt().isAfter(startOfMonth))
+	                        .filter(notification -> !todayNotifications.contains(notification))
+	                        .filter(notification -> !thisWeekNotifications.contains(notification))
+	                        .collect(Collectors.toList());
+
+	                List<Map<String, Object>> notifications = new ArrayList<>();
+
+	                if (!todayNotifications.isEmpty()) {
+	                    notifications.add(buildNotificationMap("today", todayNotifications));
+	                }
+
+	                if (!thisWeekNotifications.isEmpty()) {
+	                    notifications.add(buildNotificationMap("thisweek", thisWeekNotifications));
+	                }
+
+	                if (!thisMonthNotifications.isEmpty()) {
+	                    notifications.add(buildNotificationMap("thismonth", thisMonthNotifications));
+	                }
+	                responseBody.put("status", true);
+
+	                responseBody.put("notifications", notifications);
+
+	                return new ResponseEntity<>(responseBody, HttpStatus.OK);
+	        	
+	        	
+	      
 	        }
 	        else
 	        {
@@ -75,37 +129,34 @@ public class UserNotificationController {
 	             return new ResponseEntity<>(responseBody, HttpStatus.OK); 
 	           
 	        }
+     	  }
+	  
+ 	  else
+ 	  {
+ 		 responseBody.put("status",false);
+    	 responseBody.put("message", "User Not Found");
+         return new ResponseEntity<>(responseBody, HttpStatus.UNAUTHORIZED); 
+ 		 
+ 	  }
 
 	         
 	    }
-	/*  @GetMapping("/notifications/all")
-	  public ResponseEntity<?> getAllUserNotificationsByUserId(@RequestParam Long userId) {
-	      List<UserNotification> allNotifications = userNotificationService.getAllUserNotificationsByUserId(userId);
+	  private Map<String, Object> buildNotificationMap(String name, List<UserNotification> data) {
+	        Map<String, Object> notificationMap = new HashMap<>();
+	        notificationMap.put("name", name);
+	        notificationMap.put("data", data);
+	        return notificationMap;
+	    }
+	  @GetMapping("/user/notifications/all")
+	  public ResponseEntity<Map<String, Object>> getAllUserNotificationsByUserId(@RequestHeader("Authorization") String authorizationHeader ) {
+		  Map<String, Object> responseBody = new HashMap<>();
+		  Optional<Users> user = userService.getUserByToken(authorizationHeader.substring(7));
+     	  if(user.isPresent()) {
+		  
+		  
+		  List<UserNotification> allNotifications = userNotificationService.getAllUserNotificationsByUserId(user.get().getId());
 
-	      Map<String, Object> responseBody = new HashMap<>();
-	     
 	      
-	     if (!allNotifications.isEmpty()) {
-	    	 for(UserNotification u:allNotifications) {
-	    		 Appointment a=appointmentService.getAppointmentById(u.getAppointmentId()).get();
-	    		 
-	    	 }
-	          responseBody.put("status", true);
-	          responseBody.put("notifications", allNotifications);
-	      } else {
-	          responseBody.put("status", false);
-	          responseBody.put("notifications", allNotifications);
-	      }
-
-	      return new ResponseEntity<>(responseBody, HttpStatus.OK);
-	      
-	  }
-	  */
-	  @GetMapping("/notifications/all")
-	  public ResponseEntity<Map<String, Object>> getAllUserNotificationsByUserId(@RequestParam Long userId) {
-	      List<UserNotification> allNotifications = userNotificationService.getAllUserNotificationsByUserId(userId);
-
-	      Map<String, Object> responseBody = new HashMap<>();
 	      List<Map<String, Object>> notificationDetailsList = new ArrayList<>();
 
 	      for (UserNotification userNotification : allNotifications) {
@@ -147,6 +198,19 @@ public class UserNotificationController {
 	      responseBody.put("notificationDetails", notificationDetailsList);
 
 	      return new ResponseEntity<>(responseBody, HttpStatus.OK);
+	      
+	      
+	      
+  }
+	  
+ 	  else
+ 	  {
+ 		 responseBody.put("status",false);
+    	 responseBody.put("message", "User Not Found");
+         return new ResponseEntity<>(responseBody, HttpStatus.UNAUTHORIZED); 
+ 		 
+ 	  }
+
 	  }
 
 

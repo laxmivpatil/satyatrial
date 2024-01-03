@@ -34,7 +34,7 @@ public class AdminNotificationService {
 	    }
 	    
     public void sendAppointmentNotificationToAdmin(Appointment appointment, Users user) {
-        String message = String.format("New appointment created by user %s. Appointment ID: %d", user.getName(), appointment.getId());
+        String message = String.format("New appointment created by user %s.  ", user.getName());
         String notificationType = "appointment";
         Long entityId = appointment.getId();
 try {
@@ -49,7 +49,7 @@ try {
 	  }
     }
     public void sendSuggestionNotificationToAdmin(Suggestion suggestion, Users user) {
-        String message = String.format("New suggestion created by user %s. Suggestion ID: %d", user.getName(), suggestion.getId());
+        String message = String.format("New suggestion created by user %s.", user.getName());
         String notificationType = "suggestion";
         Long entityId = suggestion.getId();
 try {
@@ -67,7 +67,7 @@ catch(Exception e){
     }
     
     public void sendCancelAppointmentNotificationToAdmin(Appointment appointment, Users user) {
-        String message = String.format("Appontment Cancel by user %s. Appointment ID: %d", user.getName(), appointment.getId());
+        String message = String.format("Appontment Cancel by user %s", user.getName() );
         String notificationType = "cancelAppointment";
         Long entityId = appointment.getId();
 try {
@@ -86,7 +86,7 @@ catch(Exception e){
         // sendNotificationToAdmin(message);
     }
     public void sendRescheduleAppointmentNotificationToAdmin(Appointment appointment, Users user,String oldTime) {
-    	 String message = String.format("Appontment Reschedule by user %s. Appointment ID: %d", user.getName(), appointment.getId());
+    	 String message = String.format("Appontment Reschedule by user %s. ", user.getName());
           Long entityId = appointment.getId();
 	        String title="Appointment Rescheduled";
 	        String notificationType = "rescheduleAppointment";
