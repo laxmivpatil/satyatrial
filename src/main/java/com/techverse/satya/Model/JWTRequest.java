@@ -6,15 +6,17 @@ import lombok.Builder;
 public class JWTRequest {
 	
 	private String mobileNo;
+	private String name;
 	
 	private String otp;
 	public JWTRequest() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public JWTRequest(String mobileNo, String otp) {
+	public JWTRequest(String mobileNo,String name, String otp) {
 		super();
 		this.mobileNo = mobileNo;
+		this.name=name;
 		this.otp = otp;
 	}
 	public String getMobileNo() {
@@ -28,6 +30,12 @@ public class JWTRequest {
 	}
 	public void setOtp(String otp) {
 		this.otp = otp;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	

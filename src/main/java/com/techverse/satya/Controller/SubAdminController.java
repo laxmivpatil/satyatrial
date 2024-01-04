@@ -22,7 +22,8 @@ import com.techverse.satya.DTO.ApiDataResponse;
 import com.techverse.satya.DTO.ApiResponse;
 import com.techverse.satya.DTO.SubAdminDTO;
 import com.techverse.satya.Model.JWTRequest;
-import com.techverse.satya.Model.SubAdmin; 
+import com.techverse.satya.Model.SubAdmin;
+import com.techverse.satya.Repository.SubAdminRepository;
 import com.techverse.satya.Security.JwtHelper;
 import com.techverse.satya.Service.AdminService;
 import com.techverse.satya.Service.SubAdminService;
@@ -31,7 +32,9 @@ import com.techverse.satya.Service.UserService;
 @RestController
 @RequestMapping("/subadmin")
 public class SubAdminController {
-	
+
+	@Autowired
+	SubAdminRepository subAdminRepository;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -58,7 +61,11 @@ public class SubAdminController {
 
 	          UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 	          String jwtToken = jwtHelper.generateToken(userDetails);
+	          
+	          
 	          Optional<SubAdmin> subAdmin = subAdminService.getSubAdminByToken(jwtToken);
+	          subAdmin.get().setName(jwtRequest.getName());
+	          subAdminRepository.save(subAdmin.get());
 	          return ResponseEntity.ok(new ApiDataResponse(true, jwtToken,new SubAdminDTO(subAdmin.get())));
 	      } catch (BadCredentialsException e) {
 	          return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -98,12 +105,12 @@ public class SubAdminController {
 	          return ResponseEntity.ok(new ApiDataResponse(true,"data available",new SubAdminDTO(subAdmin.get())));
 	          }
 	          else {
-	        	  return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-		                  .body(new ApiResponse(false, "Invalid Mobile No  or Otp."));
+	        	  return ResponseEntity.status(HttpStatus.OK)
+		                  .body(new ApiResponse(false, "Invalid Mobile No "));
 	          }
 	      } catch (BadCredentialsException e) {
-	          return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-	                  .body(new ApiResponse(false, "Invalid Mobile No  or Otp."));
+	          return ResponseEntity.status(HttpStatus.OK)
+	                  .body(new ApiResponse(false, "Invalid Mobile No "));
 	      } catch (Exception e) {
 	          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 	                  .body(new ApiResponse(false, "An error occurred during authentication."));
