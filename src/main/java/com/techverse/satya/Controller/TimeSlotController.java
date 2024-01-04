@@ -83,19 +83,18 @@ public class TimeSlotController {
     }
 
     @PutMapping("/admin/timeslots/rescheduled")
-    public ResponseEntity<ResponseDTO> rescheduleTimeSlot(@RequestHeader("Authorization") String authorizationHeader, @RequestBody TimeSlotRequest timeSlotRequest) {
+    public ResponseEntity<ResponseDTO> rescheduleTimeSlot(@RequestHeader("Authorization") String authorizationHeader, @RequestBody Map<String,String> req) {
         ResponseDTO<Object> response = new ResponseDTO<>();
 
        
         Optional<Admin> admin = adminService.getAdminByToken(authorizationHeader.substring(7));
         if (admin.isPresent()) {
             try {
-                String createdTimeSlot = timeSlotService.createTimeSlot(timeSlotRequest.getDates(), timeSlotRequest.getTimeSlotDetails(), timeSlotRequest.getAvailability(), admin.get());
-
+            		String createdTimeSlot = "";
                 if (createdTimeSlot.equals("Successfully created")) {
                     response.setStatus(true);
                     response.setMessage("Thank you for Submitting Time availability");
-                    response.setData(timeSlotRequest); // Return an empty JSON object as data
+               //     response.setData(timeSlotRequest); // Return an empty JSON object as data
                     return new ResponseEntity<>(response, HttpStatus.OK);
                 } else {
                     response.setStatus(false);
