@@ -38,7 +38,9 @@ import com.techverse.satya.DTO.AdminProfileRequest;
 import com.techverse.satya.DTO.EditAdmin;
 import com.techverse.satya.Model.Admin;
 import com.techverse.satya.Model.JWTRequestAdmin;
+import com.techverse.satya.Model.SubAdmin;
 import com.techverse.satya.Repository.AdminRepository;
+import com.techverse.satya.Repository.SubAdminRepository;
 import com.techverse.satya.Security.JwtHelper;
 
 @Service
@@ -47,6 +49,8 @@ public class AdminService {
 	String uploadPathurl="F:\\MyProject\\SatyaAdminApp\\Images\\";
     @Autowired
     private AdminRepository adminRepository;
+    @Autowired
+    private SubAdminRepository subAdminRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
@@ -125,11 +129,19 @@ public class AdminService {
         return adminRepository.findByUsername(username);
     }
     public Optional<Admin> getAdminByToken(String token) {
+    	Optional<Admin> admin;
     	String mobileNo=jwtHelper.getUsernameFromToken(token);
+    	 Optional<SubAdmin> subAdmin=subAdminRepository.findByMobileNumber(mobileNo);
+    	 if(subAdmin.isPresent()) {
+    		 admin=Optional.of(subAdmin.get().getAdmin());
+    	 }
+    	 else {
+    		 admin=adminRepository.findByMobileNumber(mobileNo);
+    	 }
    
 	//	 System.out.println("hi "+userName);
 		
-        return adminRepository.findByMobileNumber(mobileNo);
+        return  admin;
     }
     
     public Admin updateAdminProfile(Long adminId, AdminProfileRequest adminProfileRequest, MultipartFile profilePhoto,MultipartFile proof) throws IOException {

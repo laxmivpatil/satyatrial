@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.techverse.satya.DTO.AdminDTO;
+import com.techverse.satya.DTO.ApiDataResponse;
 import com.techverse.satya.DTO.ApiResponse;
 import com.techverse.satya.DTO.ResponseDTO;
 import com.techverse.satya.DTO.UserDTO;
@@ -46,6 +48,7 @@ import com.techverse.satya.Security.JwtHelper;
 import com.techverse.satya.Service.AdminService;
 import com.techverse.satya.Service.OtpService;
 import com.techverse.satya.Service.StorageService;
+import com.techverse.satya.Service.TokenBlacklistService;
 import com.techverse.satya.Service.UserService;
 
  
@@ -56,7 +59,8 @@ public class AuthController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
-
+    @Autowired
+    private TokenBlacklistService tokenBlacklistService;
     @Autowired
     private JwtHelper jwtHelper;
 
@@ -277,7 +281,75 @@ public class AuthController {
                   .body(new ApiResponse(false, "An error occurred during authentication."));
       }
   }
- 
+  
+  
+  
+
+	 @GetMapping("/admin/logout")
+	    public ResponseEntity<Object> adminLogout(@RequestHeader("Authorization") String authorizationHeader) {
+	       
+		  Optional<Admin> admin = adminService.getAdminByToken(authorizationHeader.substring(7));
+	        if (admin.isPresent()) {
+	            try {
+	            	 String extractedToken = authorizationHeader.substring(7);
+
+	                 // Add the token to the blacklist
+	                 tokenBlacklistService.blacklistToken(extractedToken);
+	           	  
+	           	 return ResponseEntity.status(HttpStatus.OK)
+	                        .body(new ApiDataResponse(true, "logout Succesfully", ""));
+	                     } catch (Exception e) {
+	                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                        .body(new ApiDataResponse(false, "Failed to logout Please try again later.",""));
+	            }
+	        } else {
+	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+	                    .body(new ApiDataResponse(false, "Invalid token. Please login again.", ""));
+	        }
+	
+	    }
+	 @GetMapping("/user/logout")
+	    public ResponseEntity<Object> userLogout(@RequestHeader("Authorization") String authorizationHeader) {
+	       
+		  Optional<Users> user = userService.getUserByToken(authorizationHeader.substring(7));
+	        if (user.isPresent()) {
+	            try {
+	            	 String extractedToken = authorizationHeader.substring(7);
+
+	                 // Add the token to the blacklist
+	                 tokenBlacklistService.blacklistToken(extractedToken);
+	           	  
+	           	 return ResponseEntity.status(HttpStatus.OK)
+	                        .body(new ApiDataResponse(true, "logout Succesfully", ""));
+	                     } catch (Exception e) {
+	                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                        .body(new ApiDataResponse(false, "Failed to logout Please try again later.",""));
+	            }
+	        } else {
+	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+	                    .body(new ApiDataResponse(false, "Invalid token. Please login again.", ""));
+	        }
+	
+	    }
+	 @GetMapping("/subadmin/logout")
+	    public ResponseEntity<Object> subAdminLogout(@RequestHeader("Authorization") String authorizationHeader) {
+	       
+		         try {
+	            	 String extractedToken = authorizationHeader.substring(7);
+
+	                 // Add the token to the blacklist
+	                 tokenBlacklistService.blacklistToken(extractedToken);
+	           	  
+	           	 return ResponseEntity.status(HttpStatus.OK)
+	                        .body(new ApiDataResponse(true, "logout Succesfully", ""));
+	                     } catch (Exception e) {
+	                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                        .body(new ApiDataResponse(false, "Failed to logout Please try again later.",""));
+	            }
+	        
+	
+	    }
+
     
 }
 

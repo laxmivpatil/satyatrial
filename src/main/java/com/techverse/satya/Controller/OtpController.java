@@ -170,6 +170,44 @@ public class OtpController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     } 
+    
+    @GetMapping("/subadmin/generateOtp")
+    public ResponseEntity<ResponseDTO<String>> generateOtpAll2(@RequestParam String mobileNo) {
+   	  	String role="";
+    	System.out.println();
+   	
+        ResponseDTO<String> response = new ResponseDTO<>();
+        response.setData("");
+
+        try {
+            if (mobileNo != null && !mobileNo.isEmpty()) {
+                
+                     String otp = otpService.generateOtp();
+                    if (otpService.sendOtp(mobileNo, otp)) {
+                    	System.out.println("Otp is "+otp);
+                        response.setStatus(true);
+                        response.setMessage("OTP sent successfully."+otp);
+                        return ResponseEntity.ok(response);
+                    } else {
+                        response.setStatus(false);
+                        response.setMessage("Failed to send OTP.");
+                       
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+                    }
+                 
+            } else {
+                response.setStatus(false);
+                
+                response.setMessage("Invalid Mobile No.");
+                return ResponseEntity.badRequest().body(response);
+            }
+        } catch (Exception e) {
+            response.setStatus(false);
+            response.setMessage("Error occurred while processing your request.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    } 
+
 
     /****final****/
     @PostMapping("/validateOtp")

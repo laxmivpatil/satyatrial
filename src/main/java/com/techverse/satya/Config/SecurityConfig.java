@@ -53,9 +53,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/pendingverification").permitAll()   
             .antMatchers("/updateverification").permitAll()   
             .antMatchers("/user/generateOtp").permitAll()   //done
+            .antMatchers("/subadmin/generateOtp").permitAll()   //done
              .antMatchers("/user/checkuserbymobileno").permitAll()		//done
              .antMatchers("/user/firstlogin").permitAll()    
             .antMatchers("/user/login").permitAll() 
+            .antMatchers("/user/logout").hasRole("USER")
             .antMatchers("/user/byConstitution").hasRole("USER")
             .antMatchers("/user/getcity").permitAll() 
             .antMatchers("/user/constitutions").permitAll() 
@@ -65,7 +67,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/admin/checkadminbymobileno").permitAll()
             .antMatchers("/admin/generateOtp").permitAll()   //done
             .antMatchers("/admin/firstlogin").permitAll() 
-            .antMatchers("/admin/login").permitAll()          
+            .antMatchers("/admin/login").permitAll()     
+            .antMatchers("/admin/logout").hasRole("ADMIN")
             .antMatchers("/user/getcity/{pincode}").permitAll() 
             .antMatchers("/admin/updateProfile").permitAll()
             .antMatchers("/admin/edit").hasRole("ADMIN")
@@ -82,6 +85,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/admin/suggestions/all").hasRole("ADMIN")
             .antMatchers("/admin/suggestions/today").hasRole("ADMIN")
             .antMatchers("/admin/suggestions/past").hasRole("ADMIN")
+            .antMatchers("/admin/suggestions/all").hasRole("SUBADMIN")
+            .antMatchers("/admin/suggestions/today").hasRole("SUBADMIN")
+            .antMatchers("/admin/suggestions/past").hasRole("SUBADMIN")
             .antMatchers("/admin/suggestions").hasRole("ADMIN")
             .antMatchers("/admin/getaddresses").hasRole("ADMIN")
                  .antMatchers("/admin/timeslots/create").hasRole("ADMIN")
@@ -89,6 +95,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                   .antMatchers("/admin/timeslots/all").hasRole("ADMIN")
                  .antMatchers("/admin/timeslots/allbymonthyear").hasRole("ADMIN")
                  .antMatchers("/admin/timeslots/delete/{id}").hasRole("ADMIN")
+                 .antMatchers("/admin/suggestions").hasRole("SUBADMIN")
+                 .antMatchers("/admin/getaddresses").hasRole("SUBADMIN")
+                      .antMatchers("/admin/timeslots/create").hasRole("SUBADMIN")
+                      .antMatchers("/admin/timeslots/getappointmentsbymonth").hasRole("SUBADMIN")
+                       .antMatchers("/admin/timeslots/all").hasRole("SUBADMIN")
+                      .antMatchers("/admin/timeslots/allbymonthyear").hasRole("SUBADMIN")
+                      .antMatchers("/admin/timeslots/delete/{id}").hasRole("SUBADMIN")
                  .antMatchers("/user/notifications/unread").hasRole("USER")
                  
                  
@@ -104,6 +117,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/appointments/reschedule").hasRole("USER")
                 .antMatchers("/user/appointments/in-progress/{appointmentId}").hasRole("USER")  
                 .antMatchers("/admin/appointments/todaybyadminid").hasRole("ADMIN")
+                .antMatchers("/admin/appointments/todaybyadminid").hasRole("SUBADMIN")
                 .antMatchers("/admin/appointments/upcomingbyadminid").hasRole("ADMIN")
                 .antMatchers("/admin/appointments/pastbyadminid").hasRole("ADMIN")
                 .antMatchers("/admin/appointments/pendingbyadminid").hasRole("ADMIN")
@@ -119,13 +133,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin/appointments/cancel").hasRole("ADMIN")
                 .antMatchers("/admin/appointments/reschedule").hasRole("ADMIN")
                 .antMatchers("/admin/notifications/unread").hasRole("ADMIN")
+                
+                .antMatchers("/admin/appointments/upcomingbyadminid").hasRole("SUBADMIN")
+                .antMatchers("/admin/appointments/pastbyadminid").hasRole("SUBADMIN")
+                .antMatchers("/admin/appointments/pendingbyadminid").hasRole("SUBADMIN")
+                .antMatchers("/admin/appointments/canceledbyadminid").hasRole("SUBADMIN")
+                .antMatchers("/admin/appointments/byappointmentid").hasRole("SUBADMIN")
+                .antMatchers("/admin/appointments/byType").hasRole("SUBADMIN")
+                .antMatchers("/admin/appointments/todaybytype").hasRole("SUBADMIN")
+                .antMatchers("/admin/appointments/upcomingbytype").hasRole("SUBADMIN")
+                .antMatchers("/admin/appointments/pastbytype").hasRole("SUBADMIN")
+                .antMatchers("/admin/appointments/pendingbytype").hasRole("SUBADMIN")
+                .antMatchers("/admin/appointments/canceledbytype").hasRole("SUBADMIN")
+                .antMatchers("/admin/appointments/byappointmentid").hasRole("SUBADMIN")
+                .antMatchers("/admin/appointments/cancel").hasRole("SUBADMIN")
+                .antMatchers("/admin/appointments/reschedule").hasRole("SUBADMIN")
+                .antMatchers("/admin/notifications/unread").hasRole("SUBADMIN")
+                
+                
+                
                 .antMatchers("/superadmin/create-admin").permitAll()
                 
-                .antMatchers("/subadmin/appointments/todaybyadminid").hasRole("SUBADMIN")
-                .antMatchers("/subadmin/appointments/upcomingbyadminid").hasRole("SUBADMIN")
-                .antMatchers("/subadmin/appointments/pastbyadminid").hasRole("SUBADMIN")
-                .antMatchers("/subadmin/appointments/pendingbyadminid").hasRole("SUBADMIN")
-                .antMatchers("/subadmin/appointments/canceledbyadminid").hasRole("SUBADMIN")
+                
+                .antMatchers("/subadmin/logout").hasRole("SUBADMIN")
+                
 
                 
                 .antMatchers("/login/generateOtp").permitAll() 

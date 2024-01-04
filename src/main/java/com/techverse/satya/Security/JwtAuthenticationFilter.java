@@ -19,7 +19,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-  
+
+import com.techverse.satya.Service.TokenBlacklistService;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -32,6 +33,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      private UserDetailsService userDetailsService;
  
   
+     @Autowired
+     private TokenBlacklistService tokenBlacklistService; // Assuming you have a service for token blacklisting
 
     @Autowired
     private JwtHelper jwtHelper;
@@ -78,8 +81,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-          
-         	
+        	System.out.println("Token Checked blacklisted");
+        	if (tokenBlacklistService.isTokenBlacklisted(token)) {
+        		System.out.println("Token Checked blacklisted");
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setContentType("application/json");
+                PrintWriter writer = response.getWriter();
+                writer.println("{\"error\": \"Unauthorized\", \"message\": \"Token invalid.\"}");
+                return;
+            }
         	System.out.println("4.....");
         	System.out.println("hi"+username+""+request.getRequestURI());
         	UserDetails userDetails = userDetailsService.loadUserByUsername(username);
