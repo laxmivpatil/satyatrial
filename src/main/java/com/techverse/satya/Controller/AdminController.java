@@ -1,5 +1,6 @@
 package com.techverse.satya.Controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,12 +63,22 @@ public class AdminController {
 	@Autowired
     private AdminRepository adminRepository;
 	@GetMapping("/user/constitutions")
-	public Map<String, List<String>> getAllConstitutions() {
-	    Map<String, List<String>> response = new HashMap<>();
+	public Map<String, List<Map<String, String>>> getAllConstitutions() {
+	    Map<String, List<Map<String, String>>> response = new HashMap<>();
+	    List<Map<String, String>> constitutionList = new ArrayList<>();
+
 	    List<String> constitutions = adminRepository.findAllConstitutions();
-	    response.put("constitution", constitutions);
+
+	    for (String constitution : constitutions) {
+	        Map<String, String> constitutionMap = new HashMap<>();
+	        constitutionMap.put("name", constitution);
+	        constitutionList.add(constitutionMap);
+	    }
+
+	    response.put("constitution", constitutionList);
 	    return response;
 	}
+
 
   
 	@PutMapping("/admin/updateProfile")
