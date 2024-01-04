@@ -68,7 +68,7 @@ public class SubAdminController {
 	          subAdminRepository.save(subAdmin.get());
 	          return ResponseEntity.ok(new ApiDataResponse(true, jwtToken,new SubAdminDTO(subAdmin.get())));
 	      } catch (BadCredentialsException e) {
-	          return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+	          return ResponseEntity.status(HttpStatus.OK)
 	                  .body(new ApiResponse(false, "Invalid Mobile No  or Otp."));
 	      } catch (Exception e) {
 	          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -83,7 +83,7 @@ public class SubAdminController {
 	    		 Optional<SubAdmin> subAdmin = subAdminService.getSubAdminByToken(authorizationHeader.substring(7));
 	    		        return ResponseEntity.ok(new ApiResponse(true, subAdmin.get().getMobileNumber()));
 	      } catch (BadCredentialsException e) {
-	          return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+	          return ResponseEntity.status(HttpStatus.OK)
 	                  .body(new ApiResponse(false, "Invalid Mobile No  or Otp."));
 	      } catch (Exception e) {
 	          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

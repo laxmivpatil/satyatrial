@@ -118,51 +118,9 @@ public class TimeSlotService {
 	}
 
 	@Transactional
-	public String rescheduledTimeSlot(String date, List<TimeSlotDetail> timeSlotDetails, String availability, Admin admin) {
+	public String rescheduledTimeSlot(Long timeSlotId,Admin admin,String startTime,String endTime) {
 	    
-	        TimeSlot timeSlot = new TimeSlot();
-	        timeSlot.setDate(date);
-	        timeSlot.setAvailability(availability);
-	        timeSlot.setAdmin(admin);
-
-	        List<SmallerTimeSlot> smallerTimeSlots = new ArrayList<>();
-
-	        for (TimeSlotDetail detail : timeSlotDetails) {
-	            LocalTime startTime = LocalTime.parse(detail.getStartTime(), DateTimeFormatter.ofPattern("hh:mma"));
-	            LocalTime endTime = LocalTime.parse(detail.getEndTime(), DateTimeFormatter.ofPattern("hh:mma"));
-	         //   System.out.println(timeSlot.getDate()+" "+ startTime +" "+ endTime+" "+ admin.getId());
-	            List<TimeSlotDetail> overlappingTimeSlots = isOverlapping(timeSlot.getDate(), startTime, endTime, admin);
-	            if (!overlappingTimeSlots.isEmpty()) {
-	                String overlappingSlotsMessage = "Overlapping time slots found:\n ";
-	                for (int i = 0; i < overlappingTimeSlots.size(); i++) {
-	                    TimeSlotDetail t = overlappingTimeSlots.get(i);
-	                    overlappingSlotsMessage +=timeSlot.getDate()+"===>"+ t.getStartTime() + " to " + t.getEndTime();
-	                    if (i < overlappingTimeSlots.size() - 1) {
-	                        overlappingSlotsMessage += ", ";
-	                    }
-	                }
-	                return overlappingSlotsMessage;
-	            }
-
-	            while (startTime.isBefore(endTime)) {
-	                LocalTime slotEndTime = startTime.plusMinutes(15);
-	                if (slotEndTime.isAfter(endTime)) {
-	                    slotEndTime = endTime;
-	                }
-
-	                SmallerTimeSlot smallerTimeSlot = new SmallerTimeSlot();
-	                smallerTimeSlot.setStartTime(startTime.format(DateTimeFormatter.ofPattern("hh:mma")));
-	                smallerTimeSlot.setEndTime(slotEndTime.format(DateTimeFormatter.ofPattern("hh:mma")));
-	                smallerTimeSlot.setTimeSlot(timeSlot);
-	                smallerTimeSlot.setAdmin(admin);
-	                smallerTimeSlots.add(smallerTimeSlot);
-	                startTime = slotEndTime;
-	            }
-	        }
-
-	        timeSlot.setSmallerTimeSlots(smallerTimeSlots);
-	    	timeSlot.setTimeSlotDetails(timeSlotDetails);
-	        timeSlotRepository.save(timeSlot);
+	       
 	    
 
 	    return "Successfully created";

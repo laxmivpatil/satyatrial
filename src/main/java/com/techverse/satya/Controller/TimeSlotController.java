@@ -90,7 +90,12 @@ public class TimeSlotController {
         Optional<Admin> admin = adminService.getAdminByToken(authorizationHeader.substring(7));
         if (admin.isPresent()) {
             try {
-            		String createdTimeSlot = "";
+            	System.out.println(req.get("timeslotid"));
+
+            	System.out.println(req.get("startTime"));
+            	System.out.println(req.get("endTime"));
+            	
+            		String createdTimeSlot = timeSlotService.rescheduledTimeSlot(Long.parseLong(req.get("timeslotid")), admin.get(),req.get("startTime"), req.get("endTime"));
                 if (createdTimeSlot.equals("Successfully created")) {
                     response.setStatus(true);
                     response.setMessage("Thank you for Submitting Time availability");
