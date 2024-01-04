@@ -149,6 +149,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin/appointments/cancel").hasRole("SUBADMIN")
                 .antMatchers("/admin/appointments/reschedule").hasRole("SUBADMIN")
                 .antMatchers("/admin/notifications/unread").hasRole("SUBADMIN")
+                .antMatchers("/subadmin/findbymobileno").permitAll()
+                
                 
                 
                 

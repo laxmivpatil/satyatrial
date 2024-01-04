@@ -1,5 +1,6 @@
 package com.techverse.satya.DTO;
- 
+
+import com.techverse.satya.Model.SubAdmin;
 
 public class SubAdminDTO {
  private Long id;
@@ -20,6 +21,14 @@ public class SubAdminDTO {
      this.mobileNumber = mobileNumber;
      this.joineddate = joineddate;
      this.name = name;
+    
+ }
+ 
+ public SubAdminDTO(SubAdmin subAdmin) {
+     this.id = subAdmin.getId();
+     this.mobileNumber = subAdmin.getMobileNumber();
+     this.joineddate = subAdmin.getJoineddate();
+     this.name = subAdmin.getName();
     
  }
 

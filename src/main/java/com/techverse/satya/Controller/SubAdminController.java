@@ -15,9 +15,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.techverse.satya.DTO.ApiDataResponse;
 import com.techverse.satya.DTO.ApiResponse;
+import com.techverse.satya.DTO.SubAdminDTO;
 import com.techverse.satya.Model.JWTRequest;
 import com.techverse.satya.Model.SubAdmin; 
 import com.techverse.satya.Security.JwtHelper;
@@ -46,14 +49,17 @@ public class SubAdminController {
 
     /****final***/
 	 @PostMapping("/login")
-	  public ResponseEntity<ApiResponse> authenticateUserlogin(@RequestBody JWTRequest jwtRequest) {
-	      try {
+	  public ResponseEntity<Object> authenticateUserlogin(@RequestBody JWTRequest jwtRequest) {
+	     
+		 
+		 try {
 	          Authentication authentication = authenticationManager.authenticate(
 	                  new UsernamePasswordAuthenticationToken(jwtRequest.getMobileNo(), jwtRequest.getOtp()));
 
 	          UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 	          String jwtToken = jwtHelper.generateToken(userDetails);
-	          return ResponseEntity.ok(new ApiResponse(true, jwtToken));
+	          Optional<SubAdmin> subAdmin = subAdminService.getSubAdminByToken(jwtToken);
+	          return ResponseEntity.ok(new ApiDataResponse(true, jwtToken,new SubAdminDTO(subAdmin.get())));
 	      } catch (BadCredentialsException e) {
 	          return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
 	                  .body(new ApiResponse(false, "Invalid Mobile No  or Otp."));
@@ -77,6 +83,33 @@ public class SubAdminController {
 	                  .body(new ApiResponse(false, "An error occurred during authentication."));
 	      }
 	  } 
+	 
+	 
+	 
+	 @GetMapping("/findbymobileno")
+	  public ResponseEntity<Object> findbymobileno(@RequestParam String mobileno) {
+	     
+		 
+		 try {
+	           
+ 
+	          Optional<SubAdmin> subAdmin = subAdminService.getSubAdminBymobileNo(mobileno);
+	          if(subAdmin.isPresent()) {
+	          return ResponseEntity.ok(new ApiDataResponse(true,"data available",new SubAdminDTO(subAdmin.get())));
+	          }
+	          else {
+	        	  return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+		                  .body(new ApiResponse(false, "Invalid Mobile No  or Otp."));
+	          }
+	      } catch (BadCredentialsException e) {
+	          return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+	                  .body(new ApiResponse(false, "Invalid Mobile No  or Otp."));
+	      } catch (Exception e) {
+	          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                  .body(new ApiResponse(false, "An error occurred during authentication."));
+	      }
+	  } 
+	 
 	 
 	
 }
