@@ -16,7 +16,7 @@ public class SmallerTimeSlot {
     private String startTime;
     private String endTime;
     
-    @ManyToOne
+    @ManyToOne 
     @JoinColumn(name = "admin_id")
     private Admin admin;
     
@@ -25,7 +25,7 @@ public class SmallerTimeSlot {
     private boolean slotBook=false;
 
 
-    @OneToOne(cascade = CascadeType.ALL)
+   @OneToOne 
     @JoinColumn(name = "appointment_id")
     private Appointment appointment;
     
@@ -49,8 +49,8 @@ public class SmallerTimeSlot {
 		this.slotBook = slotBook;
 	}
 
-	@ManyToOne(cascade = CascadeType.ALL )
-    @JoinColumn(name = "time_slot_id")
+	 @ManyToOne 
+	@JoinColumn(name = "time_slot_id")
     private TimeSlot timeSlot;
 
     // Constructors, getters, and setters

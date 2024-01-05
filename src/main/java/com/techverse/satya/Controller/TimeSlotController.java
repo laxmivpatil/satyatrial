@@ -82,44 +82,7 @@ public class TimeSlotController {
         }
     }
 
-    @PutMapping("/admin/timeslots/rescheduled")
-    public ResponseEntity<ResponseDTO> rescheduleTimeSlot(@RequestHeader("Authorization") String authorizationHeader, @RequestBody Map<String,String> req) {
-        ResponseDTO<Object> response = new ResponseDTO<>();
-
-       
-        Optional<Admin> admin = adminService.getAdminByToken(authorizationHeader.substring(7));
-        if (admin.isPresent()) {
-            try {
-            	System.out.println(req.get("timeslotid"));
-
-            	System.out.println(req.get("startTime"));
-            	System.out.println(req.get("endTime"));
-            	
-            		String createdTimeSlot = timeSlotService.rescheduledTimeSlot(Long.parseLong(req.get("timeslotid")), admin.get(),req.get("startTime"), req.get("endTime"));
-                if (createdTimeSlot.equals("Successfully created")) {
-                    response.setStatus(true);
-                    response.setMessage("Thank you for Submitting Time availability");
-               //     response.setData(timeSlotRequest); // Return an empty JSON object as data
-                    return new ResponseEntity<>(response, HttpStatus.OK);
-                } else {
-                    response.setStatus(false);
-                    response.setMessage("Failed to create TimeSlot due to Overlapping Slots");
-                    response.setData(createdTimeSlot); // Return overlapping time slots details as data
-                    return new ResponseEntity<>(response, HttpStatus.CONFLICT);
-                }
-            } catch (RuntimeException e) {
-                response.setStatus(false);
-                response.setMessage("Failed to create TimeSlot");
-                response.setData(e); // Return an empty JSON object as data
-                System.out.println(e);
-                return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        } else {
-            response.setStatus(false);
-            response.setMessage("Unauthorized Access");
-            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
-        }
-    }
+  
 
     
     @GetMapping("/user/timeslots/address")
@@ -189,7 +152,32 @@ public class TimeSlotController {
 	     }
 	 }
 	 
-
+	  
+	  @DeleteMapping("/admin/timeslots/rescheduled")
+		   public ResponseEntity<?> rescheduleTimeSlot(@RequestHeader("Authorization") String authorizationHeader, @RequestBody Map<String,String> req) {
+		    	 Optional<Admin> admin = adminService.getAdminByToken(authorizationHeader.substring(7));
+			   Map<String, Object> responseBody = new HashMap<String, Object>();
+			   try {	
+			   if (admin.isPresent()) {
+		      
+					   timeSlotService.rescheduledTimeSlot(Long.parseLong(req.get("timeslotid")), admin.get(),req.get("startTime"), req.get("endTime"));
+		              	  responseBody.put("status", true);
+			     		responseBody.put("message", "Time slot with ID " + Long.parseLong(req.get("timeslotid")) + " has been deleted.");
+			     		return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.OK);
+		        }
+		        else {
+			 		  responseBody.put("status", false);
+			     		responseBody.put("message", "Unauthorized User");
+			     		return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.UNAUTHORIZED);
+		      }
+	    	
+	            
+	        } catch (Exception e) {
+	        	  responseBody.put("status", false);
+		     		responseBody.put("message", "Time slot with ID " + Long.parseLong(req.get("timeslotid")) + " has not been deleted."+e);
+		     		return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.INTERNAL_SERVER_ERROR);
+	       }
+	    }
 	    @DeleteMapping("/admin/timeslots/delete/{id}")
 	    public ResponseEntity<?> deleteTimeSlot(@RequestHeader("Authorization") String authorizationHeader,@PathVariable Long id) {
 	    	 Optional<Admin> admin = adminService.getAdminByToken(authorizationHeader.substring(7));
@@ -197,7 +185,7 @@ public class TimeSlotController {
 			   try {	
 			   if (admin.isPresent()) {
 		      
-				   timeSlotService.deleteTimeSlotById(id);
+				  timeSlotService.deleteTimeSlotById(id);
 			 		  responseBody.put("status", true);
 			     		responseBody.put("message", "Time slot with ID " + id + " has been deleted.");
 			     		return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.OK);

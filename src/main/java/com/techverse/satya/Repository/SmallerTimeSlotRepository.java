@@ -22,6 +22,11 @@ public interface SmallerTimeSlotRepository extends JpaRepository<SmallerTimeSlot
     List<SmallerTimeSlot> findByTimeSlotDateAndTimeSlotAvailability(String date, String availability);
     List<SmallerTimeSlot> findByTimeSlotDateAndStartTimeAndEndTime(String date, String startTime, String endTime);
  //   List<SmallerTimeSlot> findByTimeSlotDateAndStartTime(TimeSlot timeSlot, String startTime);
+    @Modifying
+    @Query("DELETE FROM SmallerTimeSlot s WHERE s.id = :smallerTimeSlotId")
+    void deleteById(Long smallerTimeSlotId);
+
+    
     
     List<SmallerTimeSlot> findByAdminId(Long adminId);
     
