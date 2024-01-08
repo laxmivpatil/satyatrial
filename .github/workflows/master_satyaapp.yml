@@ -51,4 +51,5 @@ jobs:
           app-name: 'satyaapp'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_884681CF65304128A3D8D7552C1CE032 }}
-          package: 'satya.jar'
+          package: '${{ github.workspace }}/target/satya.jar'
+          
