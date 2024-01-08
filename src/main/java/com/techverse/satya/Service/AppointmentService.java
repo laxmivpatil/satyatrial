@@ -370,11 +370,11 @@ public class AppointmentService {
         String oldTime="";
         if (optionalAppointment.isPresent()) {
         	 oldTime=optionalAppointment.get().getTime();
+        	 
             Appointment appointment = optionalAppointment.get();
             Optional<SmallerTimeSlot> smallerTime= smallerTimeSlotRepository.findByDateAndStartTimeAndAvailabilityAndAdminId(appointment.getDate(), newTime, appointment.getAppointmentType(), appointment.getAdmin().getId());
-
+             
             
-          
             
             if(smallerTime.isPresent())
             	{
@@ -401,14 +401,16 @@ public class AppointmentService {
             	}
             else {
             	appointment.setTime(newTime);
-            	  SmallerTimeSlot smallerTimeSlot = appointment.getSmallerTimeSlot();
+               SmallerTimeSlot smallerTimeSlot = appointment.getSmallerTimeSlot();
                   smallerTimeSlot.setAppointment(null);
                   smallerTimeSlot.setSlotBook(false);
                   smallerTimeSlotRepository.save(smallerTimeSlot);
-            	
+            	 
             	  TimeSlot timeSlot = new TimeSlot();
       	        timeSlot.setDate(appointment.getDate());
       	        timeSlot.setAvailability(appointment.getAppointmentType());
+      	        
+      	          
       	        timeSlot.setAdmin(appointment.getAdmin());
       	      SmallerTimeSlot smallerTimeSlot1 = new SmallerTimeSlot();
       	    List<SmallerTimeSlot> smallerTimeSlots = new ArrayList<>();
@@ -423,8 +425,9 @@ public class AppointmentService {
               smallerTimeSlots.add(smallerTimeSlot1);
               timeSlot.setSmallerTimeSlots(smallerTimeSlots);
               List<TimeSlotDetail> timeSlotDetails=new ArrayList<>();
-              TimeSlotDetail t=new TimeSlotDetail();
-              t.setAddress(appointment.getSmallerTimeSlot().getTimeSlot().getTimeSlotDetails().get(0).getAddress());
+              TimeSlotDetail t=new TimeSlotDetail(startTime.format(DateTimeFormatter.ofPattern("hh:mma")),slotEndTime.format(DateTimeFormatter.ofPattern("hh:mma")),appointment.getSmallerTimeSlot().getTimeSlot().getTimeSlotDetails().get(0).getAddress());
+              timeSlotDetails.add(t);
+                      
   	    	timeSlot.setTimeSlotDetails(timeSlotDetails);
   	        timeSlotRepository.save(timeSlot);
   	      
