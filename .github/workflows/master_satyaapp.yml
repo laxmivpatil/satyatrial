@@ -42,7 +42,6 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: java-app
-          path: '${{ github.workspace }}/target'
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
@@ -50,5 +49,5 @@ jobs:
         with:
           app-name: 'satyaapp'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_62E487153FFB4436BAA4460DED38373B }}
-          package: 'satya.jar'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_884681CF65304128A3D8D7552C1CE032 }}
+          package: '*.jar'
