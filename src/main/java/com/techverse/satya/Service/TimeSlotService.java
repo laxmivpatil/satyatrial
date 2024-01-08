@@ -51,7 +51,7 @@ public class TimeSlotService {
 	 @Autowired
 	 EntityManager entityManager;  // Inject the EntityManager
 
-	    
+	  /*  
 	 
 	@Transactional
 	public String createTimeSlot(List<String> dates, List<TimeSlotDetail> timeSlotDetails, String availability, Admin admin) {
@@ -103,8 +103,7 @@ public class TimeSlotService {
 
 	    return "Successfully created";
 	}
-
-	private List<TimeSlotDetail> isOverlapping(String date, LocalTime newStartTime, LocalTime newEndTime, Admin admin) {
+private List<TimeSlotDetail> isOverlapping(String date, LocalTime newStartTime, LocalTime newEndTime, Admin admin) {
 	     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mma");
 	     String x=newStartTime.format(formatter);
 	   
@@ -120,11 +119,7 @@ public class TimeSlotService {
 	        LocalTime dbStartTime = LocalTime.parse(startTimeFromDB, DateTimeFormatter.ofPattern("hh:mma"));
 	        LocalTime dbEndTime = LocalTime.parse(endTimeFromDB, DateTimeFormatter.ofPattern("hh:mma"));
 
-	       /* // Check for overlap
-	        if ((newStartTime.isAfter(dbStartTime) && newStartTime.isBefore(dbEndTime)) ||
-	            (newEndTime.isAfter(dbStartTime) && newEndTime.isBefore(dbEndTime)) ||
-	            (newStartTime.isBefore(dbStartTime) && newEndTime.isAfter(dbEndTime))) {
-*/
+	        
 	            TimeSlotDetail overlappingSlot = new TimeSlotDetail();
 	            overlappingSlot.setStartTime(startTimeFromDB);
 	            overlappingSlot.setEndTime(endTimeFromDB);
@@ -134,7 +129,144 @@ public class TimeSlotService {
 
 	    return overlappingTimeSlots;
 	}
-	
+	*/
+	 
+	 @Transactional
+		public String createTimeSlot(List<String> dates, List<TimeSlotDetail> timeSlotDetails, String availability, Admin admin) {
+		 String overlappingSlotsMessage = "Overlapping time slots found:\n ";
+		 int flag=0;
+         
+		 for (String date : dates) {
+			 for (TimeSlotDetail detail : timeSlotDetails) {
+			        
+			 List<TimeSlotDetail> overlappingTimeSlots = isOverlapping(date, detail.getStartTime(), detail.getEndTime(), admin);
+			 if (!overlappingTimeSlots.isEmpty()) {
+				 flag=1;
+	                    for (int i = 0; i < overlappingTimeSlots.size(); i++) {
+	                    //TimeSlotDetail t = overlappingTimeSlots.get(i);
+	                    overlappingSlotsMessage +=date+"===>"+ overlappingTimeSlots.get(i).getStartTime()+ " to " + overlappingTimeSlots.get(i).getEndTime();
+	                    if (i < overlappingTimeSlots.size() - 1) {
+	                        overlappingSlotsMessage += ", ";
+	                    }
+	                }
+	                 
+	            }
+			 }
+		 }
+		 if(flag==1)
+		 {
+			 System.out.println(overlappingSlotsMessage);
+			 return overlappingSlotsMessage;
+		 }
+		 else {
+			 for (String date : dates) {
+			        System.out.println(date);
+			        
+			        for (TimeSlotDetail detail1 : timeSlotDetails) {
+			        	TimeSlotDetail detail=new TimeSlotDetail(detail1.getStartTime(),detail1.getEndTime(),detail1.getAddress());
+			            LocalTime startTime = LocalTime.parse(detail.getStartTime(), DateTimeFormatter.ofPattern("hh:mma"));
+			            LocalTime endTime = LocalTime.parse(detail.getEndTime(), DateTimeFormatter.ofPattern("hh:mma"));
+			         //   System.out.println(timeSlot.getDate()+" "+ startTime +" "+ endTime+" "+ admin.getId());
+			           // List<TimeSlotDetail> overlappingTimeSlots = isOverlapping(date, startTime, endTime, admin);
+			            TimeSlot timeSlot = new TimeSlot();
+				        timeSlot.setDate(date);
+				        timeSlot.setAvailability(availability);
+				        timeSlot.setAdmin(admin);
+				        List<SmallerTimeSlot> smallerTimeSlots = new ArrayList<>();
+
+			            while (startTime.isBefore(endTime)) {
+			                LocalTime slotEndTime = startTime.plusMinutes(15);
+			                if (slotEndTime.isAfter(endTime)) {
+			                    slotEndTime = endTime;
+			                }
+
+			                SmallerTimeSlot smallerTimeSlot = new SmallerTimeSlot();
+			                smallerTimeSlot.setStartTime(startTime.format(DateTimeFormatter.ofPattern("hh:mma")));
+			                smallerTimeSlot.setEndTime(slotEndTime.format(DateTimeFormatter.ofPattern("hh:mma")));
+			                smallerTimeSlot.setTimeSlot(timeSlot);
+			                smallerTimeSlot.setAdmin(admin);
+			                smallerTimeSlots.add(smallerTimeSlot);
+			                startTime = slotEndTime;
+			            }
+			        
+			            timeSlot.setSmallerTimeSlots(smallerTimeSlots);
+			            List<TimeSlotDetail> list=new ArrayList<>();
+			            list.add(detail);
+				    	timeSlot.setTimeSlotDetails(list);
+				        timeSlotRepository.save(timeSlot);
+				        entityManager.flush();
+			        }
+		 }
+		 }
+		 
+		/* 
+		 for (String date : dates) {
+		        System.out.println(date);
+		        
+		        for (TimeSlotDetail detail1 : timeSlotDetails) {
+		        	TimeSlotDetail detail=new TimeSlotDetail(detail1.getStartTime(),detail1.getEndTime(),detail1.getAddress());
+		            LocalTime startTime = LocalTime.parse(detail.getStartTime(), DateTimeFormatter.ofPattern("hh:mma"));
+		            LocalTime endTime = LocalTime.parse(detail.getEndTime(), DateTimeFormatter.ofPattern("hh:mma"));
+		         //   System.out.println(timeSlot.getDate()+" "+ startTime +" "+ endTime+" "+ admin.getId());
+		           // List<TimeSlotDetail> overlappingTimeSlots = isOverlapping(date, startTime, endTime, admin);
+		            List<TimeSlotDetail> overlappingTimeSlots = isOverlapping(date, detail.getStartTime(), detail.getEndTime(), admin);
+				       
+		            if (!overlappingTimeSlots.isEmpty()) {
+		                String overlappingSlotsMessage = "Overlapping time slots found:\n ";
+		                for (int i = 0; i < overlappingTimeSlots.size(); i++) {
+		                    //TimeSlotDetail t = overlappingTimeSlots.get(i);
+		                    overlappingSlotsMessage +=date+"===>"+ overlappingTimeSlots.get(i).getStartTime()+ " to " + overlappingTimeSlots.get(i).getEndTime();
+		                    if (i < overlappingTimeSlots.size() - 1) {
+		                        overlappingSlotsMessage += ", ";
+		                    }
+		                }
+		                return overlappingSlotsMessage;
+		            }
+
+		            TimeSlot timeSlot = new TimeSlot();
+			        timeSlot.setDate(date);
+			        timeSlot.setAvailability(availability);
+			        timeSlot.setAdmin(admin);
+			        List<SmallerTimeSlot> smallerTimeSlots = new ArrayList<>();
+
+		            while (startTime.isBefore(endTime)) {
+		                LocalTime slotEndTime = startTime.plusMinutes(15);
+		                if (slotEndTime.isAfter(endTime)) {
+		                    slotEndTime = endTime;
+		                }
+
+		                SmallerTimeSlot smallerTimeSlot = new SmallerTimeSlot();
+		                smallerTimeSlot.setStartTime(startTime.format(DateTimeFormatter.ofPattern("hh:mma")));
+		                smallerTimeSlot.setEndTime(slotEndTime.format(DateTimeFormatter.ofPattern("hh:mma")));
+		                smallerTimeSlot.setTimeSlot(timeSlot);
+		                smallerTimeSlot.setAdmin(admin);
+		                smallerTimeSlots.add(smallerTimeSlot);
+		                startTime = slotEndTime;
+		            }
+		        
+		            timeSlot.setSmallerTimeSlots(smallerTimeSlots);
+		            List<TimeSlotDetail> list=new ArrayList<>();
+		            list.add(detail);
+			    	timeSlot.setTimeSlotDetails(list);
+			        timeSlotRepository.save(timeSlot);
+			        entityManager.flush();
+		        }
+
+		       
+*/
+		    return "Successfully created";
+		}
+	 
+	 private List<TimeSlotDetail> isOverlapping(String date, String newStartTime, String newEndTime, Admin admin) {
+			List<TimeSlotDetail> overlappingDetails = timeSlotRepository.findOverlappingTimeSlotDetails(admin, date,newStartTime, newEndTime);
+
+			   return overlappingDetails;
+			}
+	 private List<TimeSlotDetail> isOverlapping1(String date, String newStartTime, String newEndTime, Admin admin,Long id) {
+			List<TimeSlotDetail> overlappingDetails = timeSlotRepository.findOverlappingTimeSlotDetails1(admin, date,newStartTime, newEndTime,id);
+
+			   return overlappingDetails;
+			}
 	public boolean doTimeRangesOverlap(LocalTime rangeStart, LocalTime rangeEnd, LocalTime slotStart, LocalTime slotEnd) {
 	    return !slotStart.isBefore(rangeStart) && !slotEnd.isAfter(rangeEnd);
 	}
@@ -207,13 +339,33 @@ public class TimeSlotService {
 
 	 @Transactional
 	    public String rescheduledTimeSlot(Long timeSlotId, Admin admin,String startTime, String endTime) {
-
+		String  overlappingSlotsMessage="Overlapping slots====>";
 		 Optional<TimeSlot> timeSlot = timeSlotRepository.findById(timeSlotId);
 
 			LocalTime startTime1 = LocalTime.parse(startTime, DateTimeFormatter.ofPattern("hh:mma"));
 			LocalTime endTime1 = LocalTime.parse(endTime, DateTimeFormatter.ofPattern("hh:mma"));
 
 			if (timeSlot.isPresent()) {
+				//check for overlapping
+				 List<TimeSlotDetail> overlappingTimeSlots = isOverlapping1(timeSlot.get().getDate(), startTime,endTime, admin,timeSlot.get().getId());
+				 if (!overlappingTimeSlots.isEmpty()) {
+					 
+		                    for (int i = 0; i < overlappingTimeSlots.size(); i++) {
+		                    //TimeSlotDetail t = overlappingTimeSlots.get(i);
+		                    overlappingSlotsMessage +=timeSlot.get().getDate()+"===>"+ overlappingTimeSlots.get(i).getStartTime()+ " to " + overlappingTimeSlots.get(i).getEndTime();
+		                    if (i < overlappingTimeSlots.size() - 1) {
+		                        overlappingSlotsMessage += ", ";
+		                    }
+		                }
+		                    return overlappingSlotsMessage;
+		                 
+		            }
+				 
+				
+				
+				
+				
+				//end
 				List<SmallerTimeSlot> list = timeSlot.get().getSmallerTimeSlots();
 				List<SmallerTimeSlot> list1 = new ArrayList<>();
 
@@ -266,6 +418,8 @@ public class TimeSlotService {
 	            }
 
 	            timeSlot.get().getSmallerTimeSlots().addAll(newSmallerTimeSlots);
+	              timeSlot.get().getTimeSlotDetails().get(0).setStartTime(startTime );
+	              timeSlot.get().getTimeSlotDetails().get(0).setEndTime(endTime );
 	              
 	            timeSlotRepository.save(timeSlot.get());
  

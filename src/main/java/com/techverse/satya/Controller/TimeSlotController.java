@@ -160,10 +160,26 @@ public class TimeSlotController {
 			   try {	
 			   if (admin.isPresent()) {
 		      
-					   timeSlotService.rescheduledTimeSlot(Long.parseLong(req.get("timeslotid")), admin.get(),req.get("startTime"), req.get("endTime"));
-		              	  responseBody.put("status", true);
+					  String op= timeSlotService.rescheduledTimeSlot(Long.parseLong(req.get("timeslotid")), admin.get(),req.get("startTime"), req.get("endTime"));
+		             
+					  if(op.equals("Successfully created")) {
+					  responseBody.put("status", true);
 			     		responseBody.put("message", "Time slot with ID " + Long.parseLong(req.get("timeslotid")) + " has been deleted.");
 			     		return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.OK);
+					  }
+					  else if(op.startsWith("Overlapping slots====>")){
+						  responseBody.put("status", true);
+				     		responseBody.put("message", " overlapping slots");
+				     		responseBody.put("data", op);
+				     		return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.CONFLICT);
+						  
+					  }
+					  else {
+						  responseBody.put("status", false);
+				     		responseBody.put("message", "Unauthorized User");
+				     		return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.UNAUTHORIZED);
+					  }
+					  
 		        }
 		        else {
 			 		  responseBody.put("status", false);
