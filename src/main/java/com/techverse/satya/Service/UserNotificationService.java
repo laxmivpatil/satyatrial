@@ -20,14 +20,14 @@ public class UserNotificationService {
 	PushNotificationService pushNotificationService;
 	
 	  public void sendCancelAppointmentNotificationToUser(Appointment appointment, Users user) {
-		  String message = String.format("\"Dear %s , your appointment scheduled for date %s and time %s has been Canceled by our administration team.", user.getName(), appointment.getDate(),appointment.getTime());
+		  String message = String.format("\"Hello %s , your appointment scheduled for date %s and time %s has been Canceled by %s", user.getName(), appointment.getDate(),appointment.getTime(),user.getAdmin().getName());
 		  try {    
 	        Long entityId = appointment.getId();
 	        String title="Appointment Canceled";
 	        UserNotification userNotification = new UserNotification(message,entityId,user.getId(),title,user.getAdmin().getProfilePhoto());
 	        userNotificationRepository.save(userNotification);
 	        
-	        PushNotificationRequest p=new PushNotificationRequest(user.getAdmin().getDeviceToken(),"Appointment Canceled","hello "+user.getName()+"Appontment Canceled by admin"+user.getAdmin().getName()+" Appointment ID:" +appointment.getId()+"go to notification section to check appointment details");
+	        PushNotificationRequest p=new PushNotificationRequest(user.getAdmin().getDeviceToken(),"Appointment Canceled", message);
 	        pushNotificationService.sendPushNotificationToToken(p);
 	        
 		  }
@@ -39,14 +39,14 @@ public class UserNotificationService {
 	        // sendNotificationToAdmin(message);
 	    }
 	  public void sendDeleteAppointmentNotificationToUser(Appointment appointment, Users user) {
-	        String message = String.format("\"Dear %s , your appointment scheduled for date %s and time %s has been canceled by our administration team.", user.getName(), appointment.getDate(),appointment.getTime());
+	        String message = String.format("\"Hello %s , your appointment scheduled for date %s and time %s has been canceled by  %s ", user.getName(), appointment.getDate(),appointment.getTime(),user.getAdmin().getName());
 	        try {
 	        Long entityId = appointment.getId();
 	        String title="Appointment Canceled";
 		    
 	        UserNotification userNotification = new UserNotification(message,entityId,user.getId(),title,user.getAdmin().getProfilePhoto());
 	        userNotificationRepository.save(userNotification);
-	        PushNotificationRequest p=new PushNotificationRequest(user.getAdmin().getDeviceToken(),"Appointment Canceled","hello "+user.getName()+"Appontment Canceled by admin"+user.getAdmin().getName()+" Appointment ID:" +appointment.getId()+"go to notification section to check appointment details");
+	        PushNotificationRequest p=new PushNotificationRequest(user.getAdmin().getDeviceToken(),"Appointment Canceled",message);
 	        pushNotificationService.sendPushNotificationToToken(p);
 	 	   
 	        }
@@ -58,14 +58,9 @@ public class UserNotificationService {
 	        // sendNotificationToAdmin(message);
 	    }
 	  public void sendRescheduleAppointmentNotificationToUser(Appointment appointment, Users user,String oldTime) {
-		  String message = String.format("Dear %s,\n\nWe would like to inform you that your appointment has been rescheduled by our administration team.\n\nOriginal Appointment Details:\nDate: %s\nTime: %s\n\nNew Appointment Details:\nDate: %s\nTime: %s\n\nWe apologize for any inconvenience caused and appreciate your understanding.\n\nBest regards,\n[Your Company/Organization Name]", 
-                
-				  user.getName(), 
-                  appointment.getDate(), 
-                  oldTime,
-                  appointment.getDate(),
-                  appointment.getTime());  
-		  message="rescheduled";
+		   String message = String.format("Hello %s , your appointment scheduled for date %s and time %s has been rescheduled by  %s ", user.getName(), appointment.getDate(),appointment.getTime(),user.getAdmin().getName());
+		              
+				  
 		  try {
 	        Long entityId = appointment.getId();
 	        String title="Appointment Rescheduled";
@@ -73,7 +68,7 @@ public class UserNotificationService {
 	        UserNotification userNotification = new UserNotification(message,entityId,user.getId(),title,user.getAdmin().getProfilePhoto());
 	        userNotificationRepository.save(userNotification);
 	        
-	        PushNotificationRequest p=new PushNotificationRequest(user.getAdmin().getDeviceToken(),"Appointment Rescheduled","hello "+user.getName()+"Appontment Rescheduled by admin"+user.getAdmin().getName()+" Appointment ID:" +appointment.getId()+"go to notification section to check appointment details");
+	        PushNotificationRequest p=new PushNotificationRequest(user.getAdmin().getDeviceToken(),"Appointment Rescheduled" ,message);
 	        pushNotificationService.sendPushNotificationToToken(p);
 		      
 		  }
