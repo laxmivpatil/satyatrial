@@ -1,5 +1,7 @@
 package com.techverse.satya.Controller;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -436,7 +438,9 @@ public class AppointmentController {
         		ar.setPurpose(a.getPurpose());
         		ar.setStatus(a.getStatus());
         		ar.setTime(a.getTime());
-        		if(ar.getStatus().equals("Deleted")||ar.getStatus().equals("cancel")||ar.getStatus().equals("Cancel"))
+        		ar.setEndTime(plusTime(a.getTime()));
+        		
+        		if(ar.getStatus().equals("cancel"))
         		{
         			ar.setAppointmentAddress("");
         		}
@@ -450,6 +454,19 @@ public class AppointmentController {
     	return arr;
     	
     }
+        
+       public String plusTime(String timeString)
+       {
+    	   DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mma");
+           LocalTime time = LocalTime.parse(timeString, formatter);
+
+           // Add 15 minutes to the time
+           LocalTime newTime = time.plusMinutes(15);
+
+           // Format the new time as hh:mma
+           String formattedNewTime = newTime.format(formatter);
+           return formattedNewTime;
+       }
     public  AppointmentResponse  toAppointmentResponseOne(Appointment a)
     {
     	 	 AppointmentResponse ar=new  AppointmentResponse();
@@ -462,7 +479,7 @@ public class AppointmentController {
         		ar.setPurpose(a.getPurpose());
         		ar.setStatus(a.getStatus());
         		ar.setTime(a.getTime());
-        		
+        		ar.setEndTime(plusTime(a.getTime()));
         	 	//ar.setAppointmentAddress(a.getSmallerTimeSlot().getTimeSlot().getTimeSlotDetails().get(0).getAddress());
     	
     	return ar;

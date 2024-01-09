@@ -16,9 +16,17 @@ public class AppointmentResponse {
 	    private String appointmentAddress="";
 	    private String status;
 	    
+	    private String endTime="";
 	    
 	    
-	    
+
+		public String getEndTime() {
+			return endTime;
+		}
+
+		public void setEndTime(String endTime) {
+			this.endTime = endTime;
+		}
 
 		public String getAppointmentAddress() {
 			return appointmentAddress;

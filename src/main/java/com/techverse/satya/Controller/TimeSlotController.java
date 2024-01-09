@@ -164,7 +164,7 @@ public class TimeSlotController {
 		             
 					  if(op.equals("Successfully created")) {
 					  responseBody.put("status", true);
-			     		responseBody.put("message", "Time slot with ID " + timeslotId + " has been deleted.");
+			     		responseBody.put("message", "Availability with ID " + timeslotId + " has been rescheduled");
 			     		return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.OK);
 					  }
 					  else if(op.startsWith("Overlapping slots====>")){
@@ -190,7 +190,7 @@ public class TimeSlotController {
 	            
 	        } catch (Exception e) {
 	        	  responseBody.put("status", false);
-		     		responseBody.put("message", "Time slot with ID " + timeslotId + " has not been deleted."+e);
+		     		responseBody.put("message", "Availability with ID " + timeslotId + " has not been rescheduled"+e);
 		     		return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.INTERNAL_SERVER_ERROR);
 	       }
 	    }
@@ -203,7 +203,7 @@ public class TimeSlotController {
 		      
 				  timeSlotService.deleteTimeSlotById(timeslotId);
 			 		  responseBody.put("status", true);
-			     		responseBody.put("message", "Time slot with ID " + timeslotId + " has been deleted.");
+			     		responseBody.put("message", "Availability with ID " + timeslotId + " has been deleted");
 			     		return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.OK);
 		        }
 		        else {
@@ -215,7 +215,7 @@ public class TimeSlotController {
 	            
 	        } catch (Exception e) {
 	        	  responseBody.put("status", false);
-		     		responseBody.put("message", "Time slot with ID " + timeslotId + " has not been deleted."+e);
+		     		responseBody.put("message", "Availabilty with ID " + timeslotId + " has not been deleted."+e);
 		     		return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.INTERNAL_SERVER_ERROR);
 	       }
 	    }
