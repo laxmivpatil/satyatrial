@@ -13,19 +13,20 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     // You can define custom query methods here if needed
 	   // Query method to find today's appointments for a specific user
    // List<Appointment> findByUserIdAndDate(Long userId, String date);
-    List<Appointment> findByUserIdAndDate(Long userId, String date);
+    List<Appointment> findByUserIdAndDateAndStatus(Long userId, String date,String status);
 
     List<Appointment> findByUserId(Long userId);
     
-    List<Appointment> findByAdminIdAndDate(Long userId, String date);
-    List<Appointment> findByAdminIdAndAppointmentTypeAndDate(Long adminId, String availabilityType, String date);
+    List<Appointment> findByAdminIdAndDateAndStatus(Long userId, String date,String status);
+    List<Appointment> findByAdminIdAndAppointmentTypeAndDateAndStatus(Long adminId, String availabilityType, String date,String status);
     List<Appointment> findByAdminId(Long userId);
     
 
     // Query method to find upcoming appointments for a specific user
-    List<Appointment> findByUserIdAndDateAfter(Long userId, String date);
-    List<Appointment> findByAdminIdAndDateAfter(Long userId, String date);
+    List<Appointment> findByUserIdAndDateAfterAndStatus(Long userId, String date,String status);
+    List<Appointment> findByAdminIdAndDateAfterAndStatus(Long userId, String date,String status);
     List<Appointment> findByAdminIdAndAppointmentTypeAndDateAfter(Long adminId, String availabilityType, String date);
+    List<Appointment> findByAdminIdAndAppointmentTypeAndDateAfterAndStatus(Long adminId, String availabilityType, String date,String status);
     
 
     // Query method to find past appointments for a specific user

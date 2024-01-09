@@ -99,13 +99,13 @@ public class AppointmentService {
     public List<Appointment> getTodaysAppointments(String userId) {
         LocalDate today = LocalDate.now();
         String formattedDate = today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        return appointmentRepository.findByUserIdAndDate(Long.parseLong(userId), formattedDate);
+        return appointmentRepository.findByUserIdAndDateAndStatus(Long.parseLong(userId), formattedDate,"pending");
     }
 
     public List<Appointment> getUpcomingAppointments(String userId) {
         LocalDate today = LocalDate.now();
         String formattedDate = today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        return appointmentRepository.findByUserIdAndDateAfter(Long.parseLong(userId), formattedDate);
+        return appointmentRepository.findByUserIdAndDateAfterAndStatus(Long.parseLong(userId), formattedDate,"pending");
     }
 
     public List<Appointment> getPastAppointments(String userId) {
@@ -130,13 +130,13 @@ public class AppointmentService {
     public List<Appointment> getTodaysAppointmentsByAdmin(String adminId) {
         LocalDate today = LocalDate.now();
         String formattedDate = today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        return appointmentRepository.findByAdminIdAndDate(Long.parseLong(adminId), formattedDate);
+        return appointmentRepository.findByAdminIdAndDateAndStatus(Long.parseLong(adminId), formattedDate,"pending");
     }
 
     public List<Appointment> getUpcomingAppointmentsByAdmin(String adminId) {
         LocalDate today = LocalDate.now();
         String formattedDate = today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        return appointmentRepository.findByAdminIdAndDateAfter(Long.parseLong(adminId), formattedDate);
+        return appointmentRepository.findByAdminIdAndDateAfterAndStatus(Long.parseLong(adminId), formattedDate,"pending");
     }
 
     public List<Appointment> getPastAppointmentsByAdmin(String adminId) {
@@ -160,14 +160,14 @@ public class AppointmentService {
     public List<Appointment> getTodaysAppointmentsByType(String adminId,String type) {
         LocalDate today = LocalDate.now();
         String formattedDate = today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        return appointmentRepository.findByAdminIdAndAppointmentTypeAndDate(Long.parseLong(adminId), type, formattedDate);
+        return appointmentRepository.findByAdminIdAndAppointmentTypeAndDateAndStatus(Long.parseLong(adminId), type, formattedDate,"pending");
    
     }
 
     public List<Appointment> getUpcomingAppointmentsByType(String adminId,String type) {
         LocalDate today = LocalDate.now();
         String formattedDate = today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        return appointmentRepository.findByAdminIdAndAppointmentTypeAndDateAfter(Long.parseLong(adminId), type, formattedDate);
+        return appointmentRepository.findByAdminIdAndAppointmentTypeAndDateAfterAndStatus(Long.parseLong(adminId), type, formattedDate,"pending");
         		       }
 
     public List<Appointment> getPastAppointmentsByType(String adminId,String type) {
@@ -182,7 +182,7 @@ public class AppointmentService {
     }
     public List<Appointment> getCanceledAppointmentsByType(String adminId,String type) {
         // Assuming 'PENDING' is the status you are looking for
-        return appointmentRepository.findByAdminIdAndAppointmentTypeAndStatus(Long.parseLong(adminId),type, "Deleted");
+        return appointmentRepository.findByAdminIdAndAppointmentTypeAndStatus(Long.parseLong(adminId),type, "cancel");
     }
     
     
