@@ -153,18 +153,18 @@ public class TimeSlotController {
 	 }
 	 
 	  
-	  @DeleteMapping("/admin/timeslots/rescheduled")
-		   public ResponseEntity<?> rescheduleTimeSlot(@RequestHeader("Authorization") String authorizationHeader, @RequestBody Map<String,String> req) {
+	  @DeleteMapping("/admin/timeslots/rescheduledavailability")
+		   public ResponseEntity<?> rescheduleTimeSlot(@RequestHeader("Authorization") String authorizationHeader, @RequestParam Long timeslotId,@RequestParam String startTime,@RequestParam String endTime) {
 		    	 Optional<Admin> admin = adminService.getAdminByToken(authorizationHeader.substring(7));
 			   Map<String, Object> responseBody = new HashMap<String, Object>();
 			   try {	
 			   if (admin.isPresent()) {
 		      
-					  String op= timeSlotService.rescheduledTimeSlot(Long.parseLong(req.get("timeslotid")), admin.get(),req.get("startTime"), req.get("endTime"));
+					  String op= timeSlotService.rescheduledTimeSlot(timeslotId, admin.get(),startTime,endTime);
 		             
 					  if(op.equals("Successfully created")) {
 					  responseBody.put("status", true);
-			     		responseBody.put("message", "Time slot with ID " + Long.parseLong(req.get("timeslotid")) + " has been deleted.");
+			     		responseBody.put("message", "Time slot with ID " + timeslotId + " has been deleted.");
 			     		return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.OK);
 					  }
 					  else if(op.startsWith("Overlapping slots====>")){
@@ -190,20 +190,20 @@ public class TimeSlotController {
 	            
 	        } catch (Exception e) {
 	        	  responseBody.put("status", false);
-		     		responseBody.put("message", "Time slot with ID " + Long.parseLong(req.get("timeslotid")) + " has not been deleted."+e);
+		     		responseBody.put("message", "Time slot with ID " + timeslotId + " has not been deleted."+e);
 		     		return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.INTERNAL_SERVER_ERROR);
 	       }
 	    }
-	    @DeleteMapping("/admin/timeslots/delete/{id}")
-	    public ResponseEntity<?> deleteTimeSlot(@RequestHeader("Authorization") String authorizationHeader,@PathVariable Long id) {
+	    @DeleteMapping("/admin/timeslots/deleteavailability")
+	    public ResponseEntity<?> deleteTimeSlot(@RequestHeader("Authorization") String authorizationHeader,@RequestParam Long timeslotId) {
 	    	 Optional<Admin> admin = adminService.getAdminByToken(authorizationHeader.substring(7));
 			   Map<String, Object> responseBody = new HashMap<String, Object>();
 			   try {	
 			   if (admin.isPresent()) {
 		      
-				  timeSlotService.deleteTimeSlotById(id);
+				  timeSlotService.deleteTimeSlotById(timeslotId);
 			 		  responseBody.put("status", true);
-			     		responseBody.put("message", "Time slot with ID " + id + " has been deleted.");
+			     		responseBody.put("message", "Time slot with ID " + timeslotId + " has been deleted.");
 			     		return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.OK);
 		        }
 		        else {
@@ -215,7 +215,7 @@ public class TimeSlotController {
 	            
 	        } catch (Exception e) {
 	        	  responseBody.put("status", false);
-		     		responseBody.put("message", "Time slot with ID " + id + " has not been deleted."+e);
+		     		responseBody.put("message", "Time slot with ID " + timeslotId + " has not been deleted."+e);
 		     		return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.INTERNAL_SERVER_ERROR);
 	       }
 	    }
