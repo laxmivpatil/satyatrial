@@ -291,7 +291,7 @@ public class AdminController {
 		    
 	             
 	    }
-	 @PostMapping("/admin/editaddresses")
+	 @GetMapping("/admin/editaddresses")
 	    public ResponseEntity<?> editaddresses(  @RequestHeader("Authorization") String authorizationHeader,
 	            @RequestParam(value = "homeAddress", required = false) String homeAddress,
 	            @RequestParam(value = "officeAddress", required = false) String officeAddress) {
