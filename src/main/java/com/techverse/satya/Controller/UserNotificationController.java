@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,13 +25,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.techverse.satya.DTO.AdminNotificationDTO;
 import com.techverse.satya.DTO.AppointmentResponse;
+import com.techverse.satya.DTO.ResponseDTO;
 import com.techverse.satya.DTO.SuggestionResponseDTO;
+import com.techverse.satya.DTO.UserDTO;
 import com.techverse.satya.Model.AdminNotification;
 import com.techverse.satya.Model.Appointment;
 import com.techverse.satya.Model.Suggestion;
 import com.techverse.satya.Model.UserNotification;
 import com.techverse.satya.Model.Users;
 import com.techverse.satya.Repository.UserNotificationRepository;
+import com.techverse.satya.Repository.UserRepository;
 import com.techverse.satya.Service.AppointmentService;
 import com.techverse.satya.Service.UserNotificationService;
 import com.techverse.satya.Service.UserService;
@@ -41,7 +45,9 @@ public class UserNotificationController {
 
 	@Autowired
 	UserNotificationService userNotificationService;
-
+	@Autowired
+	 UserRepository userRepository;
+	 
 	
 	@Autowired
 	UserService userService;
@@ -49,6 +55,33 @@ public class UserNotificationController {
 	AppointmentService appointmentService;
 	@Autowired
 	UserNotificationRepository userNotificationRepository;
+	
+	
+	@PatchMapping("/user/setnotification")
+	public ResponseEntity<ResponseDTO<UserDTO>> getUserById(@RequestHeader("Authorization") String authorizationHeader,@RequestParam boolean notification) {
+		 Optional<Users> user = userService.getUserByToken(authorizationHeader.substring(7));
+	     
+		ResponseDTO<UserDTO> responseBody = new ResponseDTO<>();
+		  	try {
+	         if (user.isPresent()) {
+	        	 user.get().setNotificationEnabled(notification);
+	        	userRepository.save(user.get());
+	            responseBody.setStatus(true);
+	            responseBody.setMessage("User notification settings saved successfully.");
+	      return ResponseEntity.ok(responseBody);
+	        } else {
+	        	 responseBody.setStatus(false);
+	   		    responseBody.setMessage("User not found.");
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
+	        }
+	    } catch (Exception e) {
+	    	 responseBody.setStatus(false);
+		        responseBody.setMessage( "Failed to retrive user.");
+		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
+		    }
+	}
+
+	
 	
 	 /* @GetMapping("/notifications/unread")
 	    public ResponseEntity<?> getUnreadAdminNotifications() {

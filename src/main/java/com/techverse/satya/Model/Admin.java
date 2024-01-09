@@ -59,7 +59,21 @@ public class Admin {
 	
 	private String deviceToken="";
 	
-	  @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL)
+	
+	 @Column(name = "notification_enabled")
+	    private boolean notificationEnabled=true;
+	 
+	 
+	 
+	 
+	  public boolean isNotificationEnabled() {
+		return notificationEnabled;
+	}
+
+	public void setNotificationEnabled(boolean notificationEnabled) {
+		this.notificationEnabled = notificationEnabled;
+	}
+	@OneToMany(mappedBy = "admin", cascade = CascadeType.ALL)
 	    private List<AdminNotification> adminNotifications;
     
     @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL)

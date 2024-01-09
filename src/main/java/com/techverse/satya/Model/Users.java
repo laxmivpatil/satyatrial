@@ -49,11 +49,22 @@ public class Users {
     
     private String role="";
 
+    
+	 @Column(name = "notification_enabled")
+	 private boolean notificationEnabled=true;
     // getters and setters
 
      
        public String getJoineddate() {
 		return joineddate;
+	}
+
+	public boolean isNotificationEnabled() {
+		return notificationEnabled;
+	}
+
+	public void setNotificationEnabled(boolean notificationEnabled) {
+		this.notificationEnabled = notificationEnabled;
 	}
 
 	public String getRole() {
