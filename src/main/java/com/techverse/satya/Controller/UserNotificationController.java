@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.techverse.satya.DTO.AdminNotificationDTO;
+import com.techverse.satya.DTO.ApiDataResponse;
 import com.techverse.satya.DTO.AppointmentResponse;
 import com.techverse.satya.DTO.ResponseDTO;
 import com.techverse.satya.DTO.SuggestionResponseDTO;
@@ -57,8 +58,8 @@ public class UserNotificationController {
 	UserNotificationRepository userNotificationRepository;
 	
 	
-	@PatchMapping("/user/setnotification")
-	public ResponseEntity<ResponseDTO<UserDTO>> getUserById(@RequestHeader("Authorization") String authorizationHeader,@RequestParam boolean notification) {
+	@PatchMapping("/user/setnotificationsetting")
+	public ResponseEntity<ResponseDTO<?>> setnotification(@RequestHeader("Authorization") String authorizationHeader,@RequestParam boolean notification) {
 		 Optional<Users> user = userService.getUserByToken(authorizationHeader.substring(7));
 	     
 		ResponseDTO<UserDTO> responseBody = new ResponseDTO<>();
@@ -69,6 +70,28 @@ public class UserNotificationController {
 	            responseBody.setStatus(true);
 	            responseBody.setMessage("User notification settings saved successfully.");
 	      return ResponseEntity.ok(responseBody);
+	        } else {
+	        	 responseBody.setStatus(false);
+	   		    responseBody.setMessage("User not found.");
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
+	        }
+	    } catch (Exception e) {
+	    	 responseBody.setStatus(false);
+		        responseBody.setMessage( "Failed to retrive user.");
+		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
+		    }
+	}
+	@GetMapping("/user/getnotificationsetting")
+	public ResponseEntity<?> getnotification(@RequestHeader("Authorization") String authorizationHeader) {
+		 Optional<Users> user = userService.getUserByToken(authorizationHeader.substring(7));
+	     
+		ResponseDTO<UserDTO> responseBody = new ResponseDTO<>();
+		  	try {
+	         if (user.isPresent()) {
+	        	 return ResponseEntity.status(HttpStatus.OK)
+	                        .body(new ApiDataResponse(true, "Notification setting ",user.get().isNotificationEnabled()));
+	               	 
+	                  
 	        } else {
 	        	 responseBody.setStatus(false);
 	   		    responseBody.setMessage("User not found.");

@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.techverse.satya.DTO.AddressInfoDTO;
 import com.techverse.satya.DTO.AdminNotificationDTO;
 import com.techverse.satya.DTO.ApiDataResponse;
+import com.techverse.satya.DTO.ApiResponse;
 import com.techverse.satya.DTO.AppointmentResponse;
 import com.techverse.satya.DTO.ResponseDTO;
 import com.techverse.satya.DTO.SuggestionResponseDTO;
@@ -68,20 +69,43 @@ public class AdminNotificationController {
     
     
 
-	 @PatchMapping("/admin/setnotification")
-	    public ResponseEntity<?> getaddresses(@RequestHeader("Authorization") String authorizationHeader ,@RequestParam boolean notification ) {
-	  
-	          
+	 @PatchMapping("/admin/setnotificationsetting")
+	    public ResponseEntity<?> setnotification(@RequestHeader("Authorization") String authorizationHeader ,@RequestParam boolean notification ) {
+	   
+	         
 	            Optional<Admin> admin = adminService.getAdminByToken(authorizationHeader.substring(7));
 		        if (admin.isPresent()) {
 		            try {
 		            	 admin.get().setNotificationEnabled(notification);
 		            	 adminRepository.save(admin.get());
 		           	 return ResponseEntity.status(HttpStatus.OK)
-		                        .body(new ApiDataResponse(true, "Notification setting saved successfull",""));
+		                        .body(new ApiResponse(true, "Notification setting saved successfull"));
 		                     } catch (Exception e) {
 		                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-		                        .body(new ApiDataResponse(false, "Failed to fetch admin addresses Please try again later.", ""));
+		                        .body(new ApiResponse(false, "Failed to fetch admin addresses Please try again later."));
+		            }
+		        } else {
+		            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+		                    .body(new ApiDataResponse(false, "Invalid token. Please login again.", ""));
+		        }
+		
+		    
+	             
+	    }
+	 
+	 @GetMapping("/admin/getnotificationsetting")
+	    public ResponseEntity<?> getnotification(@RequestHeader("Authorization") String authorizationHeader ) {
+	   
+	         
+	            Optional<Admin> admin = adminService.getAdminByToken(authorizationHeader.substring(7));
+		        if (admin.isPresent()) {
+		            try {
+		            	 
+		           	 return ResponseEntity.status(HttpStatus.OK)
+		                        .body(new ApiDataResponse(true, "Notification setting ",admin.get().isNotificationEnabled()));
+		                     } catch (Exception e) {
+		                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+		                        .body(new ApiDataResponse(false, "Failed to fetch admin  Please try again later.", ""));
 		            }
 		        } else {
 		            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
