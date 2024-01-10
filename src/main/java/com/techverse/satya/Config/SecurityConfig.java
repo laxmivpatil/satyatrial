@@ -50,6 +50,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .csrf().disable()
             .authorizeRequests()  
+            .antMatchers("/user/setstatusvideo").permitAll()  
+            .antMatchers("/user/getstatusvideo").permitAll()  
             .antMatchers("/pendingverification").permitAll()   
             .antMatchers("/updateverification").permitAll()   
             .antMatchers("/user/generateOtp").permitAll()   //done
