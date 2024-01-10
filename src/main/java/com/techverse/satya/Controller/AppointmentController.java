@@ -481,6 +481,15 @@ public class AppointmentController {
         		ar.setTime(a.getTime());
         		ar.setEndTime(plusTime(a.getTime()));
         	 	//ar.setAppointmentAddress(a.getSmallerTimeSlot().getTimeSlot().getTimeSlotDetails().get(0).getAddress());
+        		if(ar.getStatus().equals("cancel"))
+        		{
+        			ar.setAppointmentAddress("");
+        		}
+        		else
+        		{
+        			ar.setAppointmentAddress(a.getSmallerTimeSlot().getTimeSlot().getTimeSlotDetails().get(0).getAddress());
+            		
+        		}
     	
     	return ar;
     	
