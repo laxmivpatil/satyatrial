@@ -143,7 +143,7 @@ public class TimeSlotController {
 
 	     if (admin.isPresent()) {
 	         responseBody.put("status", true);
-	         responseBody.put("data", timeSlotService.getTimeSlotsByMonthYear(year, month));
+	         responseBody.put("data", timeSlotService.getTimeSlotsByMonthYear(year, month,admin.get().getId()));
 	         return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.OK);
 	     } else {
 	         responseBody.put("status", false);

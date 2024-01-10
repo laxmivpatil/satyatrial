@@ -444,7 +444,7 @@ private List<TimeSlotDetail> isOverlapping(String date, LocalTime newStartTime, 
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
-	public List<TimeSlotDetailDto> getTimeSlotsByMonthYear(int year, int month) {
+	/*public List<TimeSlotDetailDto> getTimeSlotsByMonthYear(int year, int month) {
 	    // Fetch time slots by year and month from the repository
 	    List<TimeSlot> timeSlots = timeSlotRepository.findAll();
 
@@ -461,6 +461,32 @@ private List<TimeSlotDetail> isOverlapping(String date, LocalTime newStartTime, 
 	            .map(this::convertToDto)
 	            .collect(Collectors.toList());
 	}
+	*/
+	public List<TimeSlotDetailDto> getTimeSlotsByMonthYear(int year, int month, Long adminId) {
+	    // Fetch time slots by year and month from the repository
+	    List<TimeSlot> timeSlots = timeSlotRepository.findAll();
+
+	    // Filter time slots by year, month, and adminId
+	    List<TimeSlot> filteredTimeSlots = timeSlots.stream()
+	            .filter(timeSlot -> {
+	                LocalDate localDate = LocalDate.parse(timeSlot.getDate(), dateFormatter1);
+
+	                // Add condition for year and month
+	                boolean isMatchingDate = localDate.getYear() == year && localDate.getMonthValue() == month;
+
+	                // Add condition for adminId
+	                boolean isAdminIdMatch = adminId.equals(timeSlot.getAdmin().getId());  // Adjust as per your entity structure
+
+	                return isMatchingDate && isAdminIdMatch;
+	            })
+	            .collect(Collectors.toList());
+
+	    // Convert TimeSlot entities to TimeSlotDetailDto objects using Java 8 stream API
+	    return filteredTimeSlots.stream()
+	            .map(this::convertToDto)
+	            .collect(Collectors.toList());
+	}
+
 	     
     // Convert TimeSlot entity to TimeSlotDetailDto
     private TimeSlotDetailDto convertToDto(TimeSlot timeSlot) {

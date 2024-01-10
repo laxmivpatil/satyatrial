@@ -29,7 +29,12 @@
     <artifactId>azure-identity</artifactId>
     <version>1.4.0</version> <!-- Use the latest version -->
 </dependency>
+ <!-- https://mvnrepository.com/artifact/org.jcodec/jcodec -->
+<!-- https://mvnrepository.com/artifact/com.github.bumptech.glide/glide -->
+ 
 
+<!-- https://mvnrepository.com/artifact/org.jcodec/jcodec -->
+ 
  
 		<dependency>
     <groupId>com.squareup.okhttp3</groupId>

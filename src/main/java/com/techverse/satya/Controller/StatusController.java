@@ -1,13 +1,20 @@
 package com.techverse.satya.Controller;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.imageio.ImageIO;
+ 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
+ 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,6 +39,29 @@ public class StatusController {
 	
 	@Autowired
     private StatusRepository statusRepository;
+	
+	
+	/* 
+	 * 
+	 * 
+	 *  @GetMapping("/generate-thumbnail")
+    public String generateThumbnail(@RequestParam("videoPath") String videoPath) throws Exception {
+        // Create a new GlideRequest object.
+        GlideRequest<Drawable> request = Glide.with(this)
+                .load(videoPath);
+
+        // Create a new ThumbnailRequest object.
+        ThumbnailRequest<Drawable> thumbnailRequest = request.thumbnail(0.1f);
+
+        // Load the thumbnail into an ImageView object.
+        thumbnailRequest.into(imageView);
+
+        return "Thumbnail generated successfully!";
+    }
+    
+    */
+	 
+	
 	
 	 @PostMapping("/user/setstatusvideo")
 	    public ResponseEntity<?> handleFileUpload(@RequestParam("videofile") MultipartFile file) {
@@ -64,7 +94,8 @@ public class StatusController {
 	            return new ResponseEntity<>(responseBody, HttpStatus.INTERNAL_SERVER_ERROR);
 	        }
 	    }
-
+	  
+	 
 	 
 	 @GetMapping("/user/getstatusvideo")
 	    public ResponseEntity<?> getVideo() {		 
