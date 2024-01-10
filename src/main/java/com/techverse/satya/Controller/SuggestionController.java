@@ -191,14 +191,19 @@ public class SuggestionController {
                return new ResponseEntity<>(responseBody, HttpStatus.UNAUTHORIZED);	   }
     	 
     }
-    @GetMapping("/user/suggestions")
-    public ResponseEntity<?> getSuggestionById(@RequestParam Long suggestionId) {
-        Map<String, Object> responseBody = new HashMap<>();
+    @GetMapping("/user/suggestions/bysuggestionid")
+    public ResponseEntity<?> getSuggestionById(@RequestHeader("Authorization") String authorizationHeader,@RequestParam Long suggestionId) {
+    	Optional<Users> user = userService.getUserByToken(authorizationHeader.substring(7));
+    	
+    	Map<String, Object> responseBody = new HashMap<>();
+    	 if (user.isPresent()) {
+ 	        
        
         Optional<Suggestion> optionalSuggestion = suggestionService.getSuggestionById(suggestionId);
         if (optionalSuggestion.isPresent()) {
             Suggestion suggestion = optionalSuggestion.get();
             SuggestionResponseDTO suggestionResponseDTO = new SuggestionResponseDTO();
+            suggestionResponseDTO.setId(suggestionId);
             suggestionResponseDTO.setName(suggestion.getUser().getName());
             suggestionResponseDTO.setAddress(suggestion.getAddress());
             suggestionResponseDTO.setPurpose(suggestion.getPurpose());
@@ -215,15 +220,25 @@ public class SuggestionController {
             responseBody.put("message", "Suggestion not found for the given ID");
             return new ResponseEntity<>(responseBody, HttpStatus.NOT_FOUND);
         }
+    	 }
+    	 else {
+  		   responseBody.put("status", false);
+             responseBody.put("message", "User not valid");
+             return new ResponseEntity<>(responseBody, HttpStatus.UNAUTHORIZED);	   
+             }
     }
-    @GetMapping("/admin/suggestions")
-    public ResponseEntity<?> getSuggestionById1(@RequestParam Long suggestionId) {
+    @GetMapping("/admin/suggestions/bysuggestionid")
+    public ResponseEntity<?> getSuggestionById1(@RequestHeader("Authorization") String authorizationHeader,@RequestParam Long suggestionId) {
+    	Optional<Admin> admin= adminService.getAdminByToken(authorizationHeader.substring(7));
+   	 
         Map<String, Object> responseBody = new HashMap<>();
-       
+   	 if (admin.isPresent()) {
+	        
         Optional<Suggestion> optionalSuggestion = suggestionService.getSuggestionById(suggestionId);
         if (optionalSuggestion.isPresent()) {
             Suggestion suggestion = optionalSuggestion.get();
             SuggestionResponseDTO suggestionResponseDTO = new SuggestionResponseDTO();
+            suggestionResponseDTO.setId(suggestionId);
             suggestionResponseDTO.setName(suggestion.getUser().getName());
             suggestionResponseDTO.setAddress(suggestion.getAddress());
             suggestionResponseDTO.setPurpose(suggestion.getPurpose());
@@ -240,6 +255,12 @@ public class SuggestionController {
             responseBody.put("message", "Suggestion not found for the given ID");
             return new ResponseEntity<>(responseBody, HttpStatus.NOT_FOUND);
         }
+   	}
+	 else {
+		   responseBody.put("status", false);
+           responseBody.put("message", "User not valid");
+           return new ResponseEntity<>(responseBody, HttpStatus.UNAUTHORIZED);	   }
+	 
     }
     @DeleteMapping("/user/suggestions/delete")
     public ResponseEntity<?> deleteSuggestion(@RequestParam Long suggestionId) {
