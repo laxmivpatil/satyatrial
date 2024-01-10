@@ -40,8 +40,10 @@ public class AdminNotificationService {
 try {
         AdminNotification adminNotification = new AdminNotification(message, notificationType, entityId,user.getProfilePphoto(),user.getAdmin());
         adminNotificationRepository.save(adminNotification);
+        if(user.getAdmin().isNotificationEnabled()) {
         PushNotificationRequest p=new PushNotificationRequest(user.getAdmin().getDeviceToken(),"New Appointment",message);
         pushNotificationService.sendPushNotificationToToken(p);
+        }
         
     }
 	  catch(Exception e){
@@ -55,8 +57,11 @@ try {
 try {
         AdminNotification adminNotification = new AdminNotification(message, notificationType, entityId,user.getProfilePphoto(),user.getAdmin());
         adminNotificationRepository.save(adminNotification);
+        if(user.getAdmin().isNotificationEnabled()) {
+            
         PushNotificationRequest p=new PushNotificationRequest(user.getAdmin().getDeviceToken(),"New Suggestion",message);
         pushNotificationService.sendPushNotificationToToken(p);
+        }
         // Here you can add logic to send the notification to admin using email, SMS, etc.
         // For example, you can use the previously defined sendNotificationToAdmin method for this purpose.
         // sendNotificationToAdmin(message);
@@ -73,10 +78,11 @@ catch(Exception e){
 try {
         AdminNotification adminNotification = new AdminNotification(message, notificationType, entityId,user.getProfilePphoto(),user.getAdmin());
         adminNotificationRepository.save(adminNotification);
- 
+        if(user.getAdmin().isNotificationEnabled()) {
+            
         PushNotificationRequest p=new PushNotificationRequest(user.getAdmin().getDeviceToken(),"Appointment Cancel",message);
         pushNotificationService.sendPushNotificationToToken(p);
-        
+        }
 }
 catch(Exception e){
 	  System.out.println("error to send push notification");
@@ -93,10 +99,11 @@ catch(Exception e){
 		  try {
 	        AdminNotification adminNotification = new AdminNotification(message, notificationType, entityId,user.getProfilePphoto(),user.getAdmin());
 	        adminNotificationRepository.save(adminNotification);	  // Here you can add logic to send the notification to admin using email, SMS, etc.
-	      
+	        if(user.getAdmin().isNotificationEnabled()) {
+	            
 	        PushNotificationRequest p=new PushNotificationRequest(user.getAdmin().getDeviceToken(),"Appointment Rescheduled",message);
 	        pushNotificationService.sendPushNotificationToToken(p);
-	        
+	        }
 		  }
 		  catch(Exception e){
 			  System.out.println("error to send push notification");

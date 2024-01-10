@@ -26,9 +26,10 @@ public class UserNotificationService {
 	        String title="Appointment Canceled";
 	        UserNotification userNotification = new UserNotification(message,entityId,user.getId(),title,user.getAdmin().getProfilePhoto());
 	        userNotificationRepository.save(userNotification);
-	        
+	        if(user.isNotificationEnabled()) {
 	        PushNotificationRequest p=new PushNotificationRequest(user.getAdmin().getDeviceToken(),"Appointment Canceled", message);
 	        pushNotificationService.sendPushNotificationToToken(p);
+	        }
 	        
 		  }
 		  catch(Exception e){
@@ -46,8 +47,12 @@ public class UserNotificationService {
 		    
 	        UserNotification userNotification = new UserNotification(message,entityId,user.getId(),title,user.getAdmin().getProfilePhoto());
 	        userNotificationRepository.save(userNotification);
+	       
+	        if(user.isNotificationEnabled()) {
+	 	       
 	        PushNotificationRequest p=new PushNotificationRequest(user.getAdmin().getDeviceToken(),"Appointment Canceled",message);
 	        pushNotificationService.sendPushNotificationToToken(p);
+	        }
 	 	   
 	        }
 			  catch(Exception e){
@@ -68,8 +73,11 @@ public class UserNotificationService {
 	        UserNotification userNotification = new UserNotification(message,entityId,user.getId(),title,user.getAdmin().getProfilePhoto());
 	        userNotificationRepository.save(userNotification);
 	        
+	        if(user.isNotificationEnabled()) {
+	 	       
 	        PushNotificationRequest p=new PushNotificationRequest(user.getAdmin().getDeviceToken(),"Appointment Rescheduled" ,message);
 	        pushNotificationService.sendPushNotificationToToken(p);
+	        }
 		      
 		  }
 		  catch(Exception e){
