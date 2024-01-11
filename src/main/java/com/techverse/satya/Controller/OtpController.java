@@ -95,7 +95,6 @@ public class OtpController {
  
 
 
-	
     
     /****final****/
     @GetMapping("/user/generateOtp")

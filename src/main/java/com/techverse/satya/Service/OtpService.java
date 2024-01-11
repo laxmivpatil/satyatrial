@@ -50,7 +50,7 @@ public class OtpService {
         int otp = 1000 + random.nextInt(9000);
         return String.valueOf(otp);
     }
-
+    /* please remove this comment to send sms on mobile and comment above simple sendotp method
     public boolean sendOtp(String phoneNumber, String otp) {
         LocalDateTime expiryTime = LocalDateTime.now().plusMinutes(5);
         String messageBody = "Your OTP is: " + otp;
@@ -63,7 +63,7 @@ public class OtpService {
            
          
     }
-    /* please remove this comment to send sms on mobile and comment above simple sendotp method
+    */
     public boolean sendOtp(String phoneNumber, String otp) {
         LocalDateTime expiryTime = LocalDateTime.now().plusMinutes(5);
         String messageBody = "Your OTP is: " + otp;
@@ -93,7 +93,7 @@ public class OtpService {
             System.out.println("Error occurred while sending OTP: " + e.getMessage());
             return false;
         }
-    }*/
+    }
     public int verifyOtp(String phoneNumber, String otp) {
         Optional<OtpEntity> otpEntityOptional = otpRepository.findByPhoneNumber(phoneNumber);
 
