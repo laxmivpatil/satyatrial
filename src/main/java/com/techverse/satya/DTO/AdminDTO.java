@@ -24,6 +24,9 @@ public class AdminDTO {
     private String profession;
     private String party;
     private String verification;
+    private boolean isNotificationEnabled;
+    
+    
 
     // Updated constructor to set default values
     public AdminDTO() {
@@ -73,6 +76,7 @@ public class AdminDTO {
             this.profession=admin.getProfession();
             this.proof=admin.getProof();
             this.party=admin.getParty();
+            this.isNotificationEnabled=admin.isNotificationEnabled();
         }
     }
 
@@ -87,6 +91,14 @@ public class AdminDTO {
  
 	 
 	 
+
+	public boolean isNotificationEnabled() {
+		return isNotificationEnabled;
+	}
+
+	public void setNotificationEnabled(boolean isNotificationEnabled) {
+		this.isNotificationEnabled = isNotificationEnabled;
+	}
 
 	public String getProfilePhoto() {
 		return profilePhoto;
