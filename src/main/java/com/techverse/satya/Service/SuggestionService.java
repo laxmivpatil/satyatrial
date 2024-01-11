@@ -198,7 +198,7 @@ public class SuggestionService {
  
     public String convert(String videoUrl) throws MalformedURLException {
 		 URL url = new URL(videoUrl);
- 		 String outputFile = "Files\\output.mp4";
+ 		 String outputFile = "Images\\output.mp4";
  		try (InputStream in = url.openStream()) {
            Path outputPath = Path.of(outputFile);
            Files.copy(in, outputPath, StandardCopyOption.REPLACE_EXISTING);
@@ -207,7 +207,7 @@ public class SuggestionService {
  		Picture picture = FrameGrab.getFrameFromFile(
 				new File(outputFile), frameNumber);
 		BufferedImage bufferedImage = AWTUtil.toBufferedImage(picture);
-		File img=new File("Files\\" + UUID.randomUUID().toString() + ".jpeg");
+		File img=new File("Images\\" + UUID.randomUUID().toString() + ".jpeg");
 		ImageIO.write(bufferedImage, "jpeg", img);
 		 byte[] fileContent = Files.readAllBytes(img.toPath());
 		 return service.uploadImgOnAzure(img);
