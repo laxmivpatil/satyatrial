@@ -63,7 +63,7 @@ public class OtpService {
            
          
     }
-    */
+*/
     public boolean sendOtp(String phoneNumber, String otp) {
         LocalDateTime expiryTime = LocalDateTime.now().plusMinutes(5);
         String messageBody = "Your OTP is: " + otp;
@@ -80,8 +80,8 @@ public class OtpService {
             // Check if the message was sent successfully
             
             if (message.getSid()!=null) {
-                System.out.println("OTP sent successfully! SID: " + message.getSid());
-                OtpEntity otpEntity = new OtpEntity(phoneNumber, otp, expiryTime);
+                System.out.println("OTP sent successfully! SID: " +  passwordEncoder.encode(otp));
+                OtpEntity otpEntity = new OtpEntity(phoneNumber,  passwordEncoder.encode(otp), expiryTime);
                 otpRepository.save(otpEntity);
                 return true;
             } else {
