@@ -16,7 +16,16 @@ public class SuggestionResponseDTO {
 	    private String video;
 	    private LocalDateTime dateTime;
 	    
+	    private String thumbnail="";
 	    
+	    
+	    
+		public String getThumbnail() {
+			return thumbnail;
+		}
+		public void setThumbnail(String thumbnail) {
+			this.thumbnail = thumbnail;
+		}
 		public Long getId() {
 			return Id;
 		}

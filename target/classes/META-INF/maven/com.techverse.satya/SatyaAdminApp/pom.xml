@@ -31,7 +31,14 @@
 </dependency>
  <!-- https://mvnrepository.com/artifact/org.jcodec/jcodec -->
 <!-- https://mvnrepository.com/artifact/com.github.bumptech.glide/glide -->
- 
+ <dependency>
+        <groupId>org.bytedeco</groupId>
+        <artifactId>javacv</artifactId>
+        <version>1.5.5</version> <!-- Adjust the version as needed -->
+    </dependency>
+
+    <!-- FFmpeg (required by JavaCV for video processing) -->
+    
 
 <!-- https://mvnrepository.com/artifact/org.jcodec/jcodec -->
  <dependency>
@@ -74,7 +81,23 @@
 </dependency>
   <!-- https://mvnrepository.com/artifact/io.agora.rtm/rtm-sdk -->
 		<!-- Exclude conflicting dependencies -->
-	 
+	 <!-- https://mvnrepository.com/artifact/org.bytedeco/ffmpeg -->
+<dependency>
+    <groupId>org.bytedeco</groupId>
+    <artifactId>ffmpeg</artifactId>
+    <version>6.0-1.5.9</version>
+</dependency>
+<!-- https://mvnrepository.com/artifact/org.bytedeco/javacv -->
+<dependency>
+    <groupId>org.bytedeco</groupId>
+    <artifactId>javacv</artifactId>
+    <version>1.5.9</version>
+</dependency>
+<dependency>
+    <groupId>commons-fileupload</groupId>
+    <artifactId>commons-fileupload</artifactId>
+    <version>1.4</version>
+</dependency>
 		
 		<dependency>
 			<groupId>io.netty</groupId>

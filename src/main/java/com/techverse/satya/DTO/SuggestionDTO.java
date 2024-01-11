@@ -12,7 +12,6 @@ public class SuggestionDTO {
     private MultipartFile video;
     
     
-    
 	public Long getAdminId() {
 		return adminId;
 	}

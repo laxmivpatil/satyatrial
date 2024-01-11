@@ -29,8 +29,21 @@ public class Suggestion {
     private String comment;
     private String photoUrl;
     private String videoUrl;
+    private String thumbnail="";
+    
+    
+    
+    
+    public String getThumbnail() {
+		return thumbnail;
+	}
 
-    @CreatedDate
+	public void setThumbnail(String thumbnail) {
+		this.thumbnail = thumbnail;
+	}
+
+
+	@CreatedDate
     @Column(nullable = false, updatable = false)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dateTime;

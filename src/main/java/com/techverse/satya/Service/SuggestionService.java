@@ -2,27 +2,70 @@ package com.techverse.satya.Service;
 
 
 
+import com.azure.storage.blob.BlobServiceClient;
+import com.azure.storage.blob.BlobServiceClientBuilder;
 import com.techverse.satya.DTO.SuggestionDTO;
 import com.techverse.satya.DTO.SuggestionResponseDTO;
 import com.techverse.satya.Model.Suggestion;
 import com.techverse.satya.Model.Users;
 import com.techverse.satya.Repository.SuggestionRepository;
 import com.techverse.satya.Repository.UserRepository;
+import org.bytedeco.javacpp.BytePointer;
+import org.bytedeco.javacpp.Loader;
+ 
+import org.bytedeco.javacv.FFmpegFrameGrabber;
+import org.bytedeco.javacv.Frame;
+import org.bytedeco.javacv.Java2DFrameUtils;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.RandomAccessFile;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.UUID;
+
+import org.bytedeco.javacv.FFmpegFrameGrabber;
+import org.bytedeco.javacv.Frame;
+import org.jcodec.api.FrameGrab;
+import org.jcodec.common.model.Picture;
+import org.jcodec.scale.AWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.RandomAccessFile;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
+import javax.imageio.ImageIO;
 import javax.persistence.EntityNotFoundException;
 
 @Service
 public class SuggestionService {
+
+	
+	@Value("${azure.storage.container-string}")
+    private String container_string;
 
 
 	@Autowired
@@ -39,6 +82,7 @@ public class SuggestionService {
 	@Autowired
 	private UserService userService;
 	public SuggestionResponseDTO  addSuggestion(SuggestionDTO suggestionDTO) {
+		try {
 		// Retrieve user by userId from the database
 		SuggestionResponseDTO suggestionResponseDTO=new SuggestionResponseDTO();
 		Optional<Users> user = userRepository.findById(suggestionDTO.getUserId());
@@ -65,11 +109,14 @@ public class SuggestionService {
 				// Save videoFile to storage (local disk, AWS S3, etc.)
 				//String videoUrl=service.uploadSuggestionVideo(videoFile, user.get().getId()+"");
 				String videoUrl= service.uploadVideoToBlobStorage(videoFile);
+				
+			     String thumbnailUrl = convert(videoFile.getInputStream());
+		          
+				suggestion.setThumbnail(thumbnailUrl);
 				suggestion.setVideoUrl(videoUrl);
 			}
 
-			System.out.println("jdshfjdshjfhdsjhf");
-			suggestion.setUser(user.get());
+			 suggestion.setUser(user.get());
 			suggestion.setDateTime(LocalDateTime.now());
 			System.out.println(suggestion);
 			// Save the suggestion to the database
@@ -78,8 +125,14 @@ public class SuggestionService {
 		       
 			return mapToDTO(suggestion);
 		}
-
 		return suggestionResponseDTO;
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		
 	}
 
 	public Optional<Suggestion> getSuggestionById(Long suggestionId) {
@@ -138,9 +191,43 @@ public class SuggestionService {
         dto.setVideo(suggestion.getVideoUrl());
         dto.setDateTime(suggestion.getDateTime());
         dto.setProfile(userRepository.findById(suggestion.getUser().getId()).get().getProfilePphoto());
+        dto.setThumbnail(suggestion.getThumbnail());
         dto.setId(suggestion.getId());
         return dto;
     }
-   
-     
+ 
+    public String convert(InputStream in) {
+        try {
+            // Save the input stream to a temporary file
+            Path outputPath = Files.createTempFile("video", ".mp4");
+            Files.copy(in, outputPath, StandardCopyOption.REPLACE_EXISTING);
+
+            // Create an FFmpegFrameGrabber using the temporary file path
+            FFmpegFrameGrabber frameGrabber = new FFmpegFrameGrabber(outputPath.toString());
+            frameGrabber.start();
+
+            int frameNumber = 0;
+            
+            frameGrabber.setFrameNumber(frameNumber);
+            Frame frame = frameGrabber.grabImage(); BufferedImage bufferedImage = Java2DFrameUtils.toBufferedImage(frame);
+
+            // Generate a random image file name
+            String imageFileName = "Files/" + UUID.randomUUID().toString() + ".jpeg";
+            File img = new File(imageFileName);
+
+            // Write the BufferedImage to the image file
+            ImageIO.write(bufferedImage, "jpeg", img);
+           
+            // Upload the image file to Azure or perform any other desired action
+            service.uploadImgOnAzure(img);
+            img.delete();
+            return imageFileName;
+        } catch (Exception  e) {
+            e.printStackTrace();
+        }
+
+        return "";
+    }
+
+ 
 }

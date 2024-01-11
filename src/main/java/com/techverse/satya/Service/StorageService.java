@@ -133,7 +133,7 @@ public class StorageService {
   
   
   
-  public String uploadImgOnAzure( File file) {
+  public String uploadImgOnAzure(File file) {
 	  
 	  try {
           // Construct Azure Blob Storage URL
