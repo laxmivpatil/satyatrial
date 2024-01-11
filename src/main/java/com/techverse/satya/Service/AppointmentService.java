@@ -66,8 +66,10 @@ public class AppointmentService {
 	    System.out.println("Formatted Time: " + formattedTime);
 
 	    // Find the smaller time slot by date and time
-	    Optional<SmallerTimeSlot> optionalSmallerTimeSlot = smallerTimeSlotRepository.findByDateAndStartTimeAndAvailabilityAndSlotBookAndAdminId(appointmentRequest.getDate(), appointmentRequest.getTime(), appointmentRequest.getAppointmentType(), admin.getId());
-	    
+	  Optional<SmallerTimeSlot> optionalSmallerTimeSlot = smallerTimeSlotRepository.findByDateAndStartTimeAndAvailabilityAndSlotBookAndAdminId(appointmentRequest.getDate(), appointmentRequest.getTime(), appointmentRequest.getAppointmentType(), admin.getId());
+	 //   Optional<SmallerTimeSlot> optionalSmallerTimeSlot = smallerTimeSlotRepository.findByDateAndStartTimeAndAvailabilityAndSlotBookAndAdminId(appointmentRequest.getDate(), formattedTime, appointmentRequest.getAppointmentType(), admin.getId());
+		   
+	    System.out.println(optionalSmallerTimeSlot.get());
 	    System.out.println("Smaller Time Slot: " + optionalSmallerTimeSlot.map(SmallerTimeSlot::getStartTime).orElse("Not found"));
 
 	    if (optionalSmallerTimeSlot.isPresent()) {
