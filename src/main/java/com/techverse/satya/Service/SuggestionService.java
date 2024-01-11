@@ -110,9 +110,9 @@ public class SuggestionService {
 				//String videoUrl=service.uploadSuggestionVideo(videoFile, user.get().getId()+"");
 				String videoUrl= service.uploadVideoToBlobStorage(videoFile);
 				
-			     String thumbnailUrl = convert(videoUrl);
+			     //String thumbnailUrl = convert(videoUrl);
 		          
-			 	suggestion.setThumbnail(thumbnailUrl);
+			 	//suggestion.setThumbnail(thumbnailUrl);
 				suggestion.setVideoUrl(videoUrl);
 			}
 
