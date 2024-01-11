@@ -110,9 +110,9 @@ public class SuggestionService {
 				//String videoUrl=service.uploadSuggestionVideo(videoFile, user.get().getId()+"");
 				String videoUrl= service.uploadVideoToBlobStorage(videoFile);
 				
-			     String thumbnailUrl = convert(videoFile.getInputStream());
+			     String thumbnailUrl = convert(videoUrl);
 		          
-				suggestion.setThumbnail(thumbnailUrl);
+			 	suggestion.setThumbnail(thumbnailUrl);
 				suggestion.setVideoUrl(videoUrl);
 			}
 
@@ -196,38 +196,30 @@ public class SuggestionService {
         return dto;
     }
  
-    public String convert(InputStream in) {
-        try {
-            // Save the input stream to a temporary file
-            Path outputPath = Files.createTempFile("video", ".mp4");
-            Files.copy(in, outputPath, StandardCopyOption.REPLACE_EXISTING);
-
-            // Create an FFmpegFrameGrabber using the temporary file path
-            FFmpegFrameGrabber frameGrabber = new FFmpegFrameGrabber(outputPath.toString());
-            frameGrabber.start();
-
-            int frameNumber = 0;
-            
-            frameGrabber.setFrameNumber(frameNumber);
-            Frame frame = frameGrabber.grabImage(); BufferedImage bufferedImage = Java2DFrameUtils.toBufferedImage(frame);
-
-            // Generate a random image file name
-            String imageFileName = "Files/" + UUID.randomUUID().toString() + ".jpeg";
-            File img = new File(imageFileName);
-
-            // Write the BufferedImage to the image file
-            ImageIO.write(bufferedImage, "jpeg", img);
-           
-            // Upload the image file to Azure or perform any other desired action
-            service.uploadImgOnAzure(img);
-            img.delete();
-            return imageFileName;
-        } catch (Exception  e) {
-            e.printStackTrace();
-        }
-
-        return "";
-    }
+    public String convert(String videoUrl) throws MalformedURLException {
+		 URL url = new URL(videoUrl);
+ 		 String outputFile = "Files\\output.mp4";
+ 		try (InputStream in = url.openStream()) {
+           Path outputPath = Path.of(outputFile);
+           Files.copy(in, outputPath, StandardCopyOption.REPLACE_EXISTING);
+       
+ 		 int frameNumber = 0;
+ 		Picture picture = FrameGrab.getFrameFromFile(
+				new File(outputFile), frameNumber);
+		BufferedImage bufferedImage = AWTUtil.toBufferedImage(picture);
+		File img=new File("Files\\" + UUID.randomUUID().toString() + ".jpeg");
+		ImageIO.write(bufferedImage, "jpeg", img);
+		 byte[] fileContent = Files.readAllBytes(img.toPath());
+		 return service.uploadImgOnAzure(img);
+ 		 
+ 		}
+ 		catch (Exception e) {
+           e.printStackTrace();
+          
+       }
+ 		return "";
+	 }
+	 
 
  
 }
