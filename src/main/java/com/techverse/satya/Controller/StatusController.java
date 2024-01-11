@@ -135,8 +135,8 @@ public class StatusController {
   		Picture picture = FrameGrab.getFrameFromFile(
 				new File(outputFile), frameNumber);
 		BufferedImage bufferedImage = AWTUtil.toBufferedImage(picture);
-		File img=new File("F:\\MyProject\\Woof\\Files\\" + UUID.randomUUID().toString() + ".png");
-		ImageIO.write(bufferedImage, "png", img);
+		File img=new File("F:\\MyProject\\Woof\\Files\\" + UUID.randomUUID().toString() + ".jpeg");
+		ImageIO.write(bufferedImage, "jpeg", img);
 		 byte[] fileContent = Files.readAllBytes(img.toPath());
 		 return service.uploadImgOnAzure(img);
   		 
