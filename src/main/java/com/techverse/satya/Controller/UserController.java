@@ -354,7 +354,7 @@ else
 		  }
 		  
 		  return ResponseEntity.status(HttpStatus.OK)
-				  .body(new ApiResponse(false, "User not Registered"));
+				  .body(new ApiResponse(true, "User not Registered"));
 	     
 	    } catch (Exception e) {
 	    	 responseBody.setStatus(false);
@@ -449,7 +449,7 @@ else
 			  }
 			  
 			  return ResponseEntity.status(HttpStatus.OK)
-					  .body(new ApiResponse(false, "Politician not Registered"));
+					  .body(new ApiResponse(true, "Politician not Registered"));
 		     
 		    } catch (Exception e) {
 		    	 responseBody.setStatus(false);
