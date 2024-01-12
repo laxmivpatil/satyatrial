@@ -394,12 +394,11 @@ else
 			ResponseDTO<String> responseBody = new ResponseDTO<>();
 			  	try {
 		         if (user.isPresent()) {
-		        	 if(user.get().getDeviceToken().equals("")||user.get().getDeviceToken()==null) {
-		        		 System.out.println("token updated");
+		        	 	 System.out.println("token updated");
 		        	 user.get().setDeviceToken(token);
 		        	 
 		        	 userRepository.save(user.get());
-		        	 }
+		        	 
 		            responseBody.setStatus(true);
 		            responseBody.setMessage("device token Saved successfully.");
 		            responseBody.setData("");

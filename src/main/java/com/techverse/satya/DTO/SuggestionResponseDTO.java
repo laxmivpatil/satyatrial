@@ -20,6 +20,7 @@ public class SuggestionResponseDTO {
 	    
 	    
 	    
+	    
 		public String getThumbnail() {
 			return thumbnail;
 		}

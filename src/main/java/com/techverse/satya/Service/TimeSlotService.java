@@ -176,9 +176,13 @@ private List<TimeSlotDetail> isOverlapping(String date, LocalTime newStartTime, 
 
 			            while (startTime.isBefore(endTime)) {
 			                LocalTime slotEndTime = startTime.plusMinutes(15);
+			                
 			                if (slotEndTime.isAfter(endTime)) {
-			                    slotEndTime = endTime;
+			                    break; // Stop generating slots if the remaining time is less than 15 minutes
 			                }
+			              /*  if (slotEndTime.isAfter(endTime)) {
+			                    slotEndTime = endTime;
+			                }*/
 
 			                SmallerTimeSlot smallerTimeSlot = new SmallerTimeSlot();
 			                smallerTimeSlot.setStartTime(startTime.format(DateTimeFormatter.ofPattern("hh:mma")));

@@ -358,12 +358,11 @@ public class AdminController {
 				  		System.out.println("hi token");
 			        if(user.isPresent()) {
 			        	System.out.println("hi token");
-			        	if(user.get().getDeviceToken().equals("")||user.get().getDeviceToken().equals(null)) {
-			        		System.out.println("token updated");
+			         		System.out.println("token updated");
 			        	 user.get().setDeviceToken(token);
 			        	 
 			        	adminRepository.save(user.get());
-			        	 }
+			        	 
 			        	
 			        	
 			            responseBody.setStatus(true);

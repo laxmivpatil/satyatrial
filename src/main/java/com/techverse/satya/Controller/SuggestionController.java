@@ -212,7 +212,7 @@ public class SuggestionController {
             suggestionResponseDTO.setVideo(suggestion.getVideoUrl());
             suggestionResponseDTO.setDateTime(suggestion.getDateTime());
             // You can set other fields like photo and video based on your logic
-
+            suggestionResponseDTO.setProfile(suggestion.getUser().getProfilePphoto());
             responseBody.put("suggestion", suggestionResponseDTO);
             return new ResponseEntity<>(responseBody, HttpStatus.OK);
         } else {
@@ -246,6 +246,7 @@ public class SuggestionController {
             suggestionResponseDTO.setPhoto(suggestion.getPhotoUrl());
             suggestionResponseDTO.setVideo(suggestion.getVideoUrl());
             suggestionResponseDTO.setDateTime(suggestion.getDateTime());
+            suggestionResponseDTO.setProfile(suggestion.getUser().getProfilePphoto());
             // You can set other fields like photo and video based on your logic
 
             responseBody.put("suggestion", suggestionResponseDTO);
