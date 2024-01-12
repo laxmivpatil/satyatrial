@@ -76,7 +76,7 @@ public class AppointmentController {
         	 
         	 responseBody.put("status", true);
      		responseBody.put("message","Appointment created Successfully");
-     		responseBody.put("Appointment",toAppointmentResponseOne(appointment));
+     		//responseBody.put("Appointment",toAppointmentResponseOne(appointment));
      		return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.OK);
 
         } else {

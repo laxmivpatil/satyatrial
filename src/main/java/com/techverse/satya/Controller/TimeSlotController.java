@@ -93,13 +93,13 @@ public class TimeSlotController {
          
    	  Long adminId = user.get().getAdmin().getId();
 
-    	 
+    	 System.out.println(adminId);
         // Call your service method to get the address based on date and start time
         String address="";
  
          address=timeSlotRepository.findAddressByDateStartTimeAndAdminId(date, startTime, adminId);
        // String address = timeSlotService.getAddressByDateAndStartTime(date, startTime);
-
+System.out.println(address+" hfjgjdfhghdfh");
         if (address != null) {
         	 responseBody.put("status", true);
      		responseBody.put("address", address);
