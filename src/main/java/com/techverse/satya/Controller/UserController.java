@@ -339,8 +339,8 @@ else
 		  try {  
 		  if(adminService.getAdminBymobileNo(mobileNo).isPresent())
 	    	{
-	    		return ResponseEntity.status(HttpStatus.FOUND)
-	            .body(new ApiResponse(true, "User Allready Registered as a Politician Please Login as a Politician"));
+	    		return ResponseEntity.status(HttpStatus.OK)
+	            .body(new ApiResponse(false, "User Allready Registered as a Politician Please Login as a Politician"));
 	    	}
 	    
 		  else if(userService.findByPhoneNumber(mobileNo).isPresent()) {
@@ -421,8 +421,8 @@ else
 			  try {  
 				  if(userService.findByPhoneNumber(mobileNo).isPresent())
 		    	{
-		    		return ResponseEntity.status(HttpStatus.FOUND)
-		            .body(new ApiResponse(true, "User Allready Registered as a Citizen Please Login as a Citizen"));
+		    		return ResponseEntity.status(HttpStatus.OK)
+		            .body(new ApiResponse(false, "User Allready Registered as a Citizen Please Login as a Citizen"));
 		    	}
 		    
 			  else if(adminService.getAdminBymobileNo(mobileNo).isPresent()) {

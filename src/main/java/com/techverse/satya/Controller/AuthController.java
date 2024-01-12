@@ -206,7 +206,7 @@ public class AuthController {
 	  try {
     	if(adminService.getAdminBymobileNo(jwtRequest.getMobileNo()).isPresent())
     	{
-    		return ResponseEntity.status(HttpStatus.FOUND)
+    		return ResponseEntity.status(HttpStatus.OK)
             .body(new ApiResponse(false, "Please Login as a politician"));
     	}
     
@@ -233,7 +233,7 @@ public class AuthController {
  
           
            } catch (BadCredentialsException e) {
-          return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+          return ResponseEntity.status(HttpStatus.OK)
                   .body(new ApiResponse(false, "Invalid Otp."));
       } catch (Exception e) {
           return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -249,7 +249,7 @@ public class AuthController {
 	  try {
     	if(userRepository.findByPhoneNumber(jwtRequest.getMobileNo()).isPresent())
     	{
-    		return ResponseEntity.status(HttpStatus.FOUND)
+    		return ResponseEntity.status(HttpStatus.OK)
             .body(new ApiResponse(false, "Please Login as a citizen"));
     	}
     
@@ -274,7 +274,7 @@ public class AuthController {
           
          return new ResponseEntity<>(response, HttpStatus.OK);
       } catch (BadCredentialsException e) {
-          return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+          return ResponseEntity.status(HttpStatus.OK)
                   .body(new ApiResponse(false, "Invalid Otp."));
       } catch (Exception e) {
           return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
