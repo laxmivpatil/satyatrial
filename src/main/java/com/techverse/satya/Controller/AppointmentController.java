@@ -519,7 +519,7 @@ public class AppointmentController {
             return ResponseEntity.ok(responseBody);
         } else {
             responseBody.put("status", false);
-            responseBody.put("message", "Appointment not found with ID: " + appointmentId);
+            responseBody.put("message", "Appointment not found ");
             return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.OK);
                   }
     	 }else {
@@ -544,7 +544,7 @@ public class AppointmentController {
             return ResponseEntity.ok(responseBody);
         } else {
             responseBody.put("status", false);
-            responseBody.put("message", "Appointment not found with ID: " + appointmentId);
+            responseBody.put("message", "Appointment not found ");
             return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.OK);
                   }
     	 }else {
@@ -590,7 +590,7 @@ public class AppointmentController {
             return ResponseEntity.ok(responseBody);
         } else {
             responseBody.put("status", false);
-            responseBody.put("message", "Appointment not found with ID: " + appointmentId);
+            responseBody.put("message", "Appointment not found ");
             return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.OK);
             
         }
@@ -618,7 +618,7 @@ public class AppointmentController {
               return ResponseEntity.ok(responseBody);
    } else {
 	   responseBody.put("status", false);
-       responseBody.put("message", "Appointment not found with ID: " + appointmentId);
+       responseBody.put("message", "Appointment not found");
        return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.OK);
              }
         
@@ -671,7 +671,7 @@ public class AppointmentController {
               return ResponseEntity.ok(responseBody);
    } else {
 	   responseBody.put("status", false);
-       responseBody.put("message", "Appointment not found with ID: " + appointmentId);
+       responseBody.put("message", "Appointment not found");
        return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.OK);
        }
     	}
@@ -730,7 +730,7 @@ public ResponseEntity<?> rescheduledAppointmentByAdmin(@RequestHeader("Authoriza
     		        return ResponseEntity.ok(responseBody);
     		    } else {
     		        responseBody.put("status", false);
-    		        responseBody.put("message", "Appointment not found with ID: " + appointmentId);
+    		        responseBody.put("message", "Appointment not found");
     		        return new ResponseEntity<>(responseBody, HttpStatus.OK);
     		    }
     	 }else {

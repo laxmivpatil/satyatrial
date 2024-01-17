@@ -2,11 +2,6 @@ package com.techverse.satya.Config;
  
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration; 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 
 
