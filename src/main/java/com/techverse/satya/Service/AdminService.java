@@ -154,6 +154,7 @@ public class AdminService {
             // Update admin profile details from adminProfileRequest
              admin.setEmail(adminProfileRequest.getEmail());
             admin.setQualification(adminProfileRequest.getQualification());
+            admin.setHomeAddress(adminProfileRequest.getHomeAddress());
               admin.setOfficeAddress(adminProfileRequest.getOfficeAddress());
             admin.setPincode(adminProfileRequest.getPincode());
             admin.setCity(adminProfileRequest.getCity());
