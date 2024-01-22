@@ -19,14 +19,7 @@ public interface TimeSlotRepository extends JpaRepository<TimeSlot, Long> {
 		       "WHERE ts.date = :date AND tsd.startTime = :startTime")
 		String findAddressByDateAndStartTime(@Param("date") String date, @Param("startTime") String startTime);
 
-	/* @Query("SELECT tsd.address FROM TimeSlot t " +
-		       "JOIN t.timeSlotDetails tsd " +
-		       "WHERE t.date = :date AND :startTime BETWEEN tsd.startTime AND tsd.endTime AND t.admin.id = :adminId")
-		String findAddressByDateStartTimeAndAdminId(@Param("date") String date,
-		                                            @Param("startTime") String startTime,
-		                                            @Param("adminId") Long adminId); 
-	 
-*/
+  
 	@Query("SELECT tsd.address FROM TimeSlot t " +
 		       "JOIN t.timeSlotDetails tsd " +
 		       "WHERE t.date = :date " +
@@ -37,7 +30,7 @@ public interface TimeSlotRepository extends JpaRepository<TimeSlot, Long> {
 		                                            @Param("startTime") String startTime,
 		                                            @Param("adminId") Long adminId);
 
-	
+	 
 	 
 	  
 	  List<TimeSlot> findByAdminAndDate(Admin admin, String date);

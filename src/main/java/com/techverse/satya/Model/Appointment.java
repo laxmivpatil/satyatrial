@@ -34,6 +34,8 @@ public class Appointment {
     private Admin admin;
     
     
+    private String channelName="";
+    
     
 
     public String getStatus() {
@@ -134,6 +136,15 @@ public class Appointment {
 	public Appointment() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+
+	
+	public String getChannelName() {
+		return channelName;
+	}
+
+	public void setChannelName(String channelName) {
+		this.channelName = channelName;
 	}
 
 	public Admin getAdmin() {

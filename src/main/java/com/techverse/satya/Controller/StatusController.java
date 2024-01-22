@@ -1,6 +1,7 @@
 package com.techverse.satya.Controller;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +14,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,11 +32,15 @@ import java.util.Optional;
 import java.util.UUID;
 import javax.imageio.ImageIO;
 
+import org.bytedeco.javacpp.Loader;
+import org.bytedeco.javacv.FFmpegFrameGrabber;
+import org.bytedeco.javacv.Java2DFrameConverter;
 import org.jcodec.api.FrameGrab;
 import org.jcodec.api.JCodecException;
 import org.jcodec.common.model.Picture;
 import org.jcodec.scale.AWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.jcodec.common.io.NIOUtils;
@@ -48,6 +55,9 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.azure.storage.blob.BlobClientBuilder;
+import com.azure.storage.blob.sas.BlobSasPermission;
+import com.azure.storage.blob.sas.BlobServiceSasSignatureValues;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.techverse.satya.Model.Status;
 import com.techverse.satya.Repository.StatusRepository;
@@ -59,12 +69,18 @@ public class StatusController {
 
 	@Autowired
     private StorageService service;
+
+    @Value("${azure.storage.container-string}")
+    private String container_string;
+
+    @Value("${azure.storage.container-name}")
+    private String containerName;
 	
 	
 	@Autowired
     private StatusRepository statusRepository;
 	
-	
+	 
 	  @GetMapping("/generate-thumbnail")
     public String generateThumbnail(@RequestParam("videoPath") String videoUrl) throws Exception {
 		  int frameNumber = 0;
@@ -180,4 +196,84 @@ public class StatusController {
 	            return new ResponseEntity<>(responseBody, HttpStatus.INTERNAL_SERVER_ERROR);
 	        }
 	    }
+	 
+	 
+	 
+	 //above code is final
+	 
+	 @PostMapping("/user/setstatusvideo1")
+	 public ResponseEntity<?> handleFileUpload1(@RequestParam("videofile") MultipartFile file) {
+
+	     Map<String, Object> responseBody = new HashMap<>();
+	     if (file.isEmpty()) {
+	         responseBody.put("status", false);
+	         responseBody.put("message", "Please select a file to upload");
+	         return new ResponseEntity<>(responseBody, HttpStatus.BAD_REQUEST);
+
+	     }
+
+	     try {
+	         String videoUrl = service.uploadFileOnAzure(file);
+	         Long id = 1L;
+	         Optional<Status> s = statusRepository.findById(id);
+	         String thumbnailUrl = convertAndUploadThumbnail(videoUrl);
+	         s.get().setThumbnail(thumbnailUrl);
+	         s.get().setVideoUrl(videoUrl);
+	         statusRepository.save(s.get());
+	         responseBody.put("status", true);
+	         responseBody.put("message", "File uploaded successfully");
+	         responseBody.put("VideoStatus", s);
+	         return new ResponseEntity<>(responseBody, HttpStatus.OK);
+
+	     } catch (Exception e) {
+	         e.printStackTrace();
+	         responseBody.put("status", false);
+	         responseBody.put("message", "Failed to upload file");
+	         return new ResponseEntity<>(responseBody, HttpStatus.INTERNAL_SERVER_ERROR);
+	     }
+	 }
+
+
+public String convertAndUploadThumbnail(String videoPath) {
+    try (FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(videoPath)) {
+        grabber.start();
+
+        int frameNumber = 0;
+        grabber.setFrameNumber(frameNumber);
+
+        Java2DFrameConverter converter = new Java2DFrameConverter();
+        BufferedImage bufferedImage = converter.convert(grabber.grab());
+
+        // Upload thumbnail directly to Azure Blob Storage
+        
+        String thumbnailFileName = UUID.randomUUID().toString() + ".jpeg";
+
+        BlobClientBuilder blobClientBuilder = new BlobClientBuilder()
+                .connectionString(container_string)
+                .containerName(containerName)
+                .blobName(thumbnailFileName);
+
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            ImageIO.write(bufferedImage, "jpeg", baos);
+            byte[] fileContent = baos.toByteArray();
+            blobClientBuilder.buildClient().upload(new ByteArrayInputStream(fileContent), fileContent.length);
+        }
+
+        // Create a SAS token for the thumbnail
+        OffsetDateTime expiryTime = OffsetDateTime.of(2099, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC);
+        BlobSasPermission sasPermission = new BlobSasPermission().setReadPermission(true);
+        BlobServiceSasSignatureValues sasSignatureValues = new BlobServiceSasSignatureValues(expiryTime, sasPermission);
+        String sasToken = blobClientBuilder.buildClient().generateSas(sasSignatureValues);
+
+        // Return the URL of the uploaded thumbnail with the SAS token
+        String thumbnailUrlWithSas = blobClientBuilder.buildClient().getBlobUrl() + "?" + sasToken;
+        return thumbnailUrlWithSas;
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        return null;
+    }
+
+	 
 	}
+}

@@ -439,7 +439,7 @@ public class AppointmentController {
         		ar.setStatus(a.getStatus());
         		ar.setTime(a.getTime());
         		ar.setEndTime(plusTime(a.getTime()));
-        		
+        		ar.setChannelName(a.getChannelName());
         		if(ar.getAppointmentType().equals("online"))
         		{
         			ar.setAppointmentAddress("");
@@ -484,6 +484,7 @@ public class AppointmentController {
         		ar.setStatus(a.getStatus());
         		ar.setTime(a.getTime());
         		ar.setEndTime(plusTime(a.getTime()));
+        		ar.setChannelName(a.getChannelName());
         	 	//ar.setAppointmentAddress(a.getSmallerTimeSlot().getTimeSlot().getTimeSlotDetails().get(0).getAddress());
         		if(ar.getAppointmentType().equals("online"))
         		{

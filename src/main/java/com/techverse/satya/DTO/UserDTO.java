@@ -22,7 +22,7 @@ public class UserDTO {
     private String qualification;
     private String email;
     private String occupation;
-    
+    private String admin;
     private boolean isNotificationEnabled;
     
     
@@ -141,13 +141,19 @@ public Long getId() {
         this.occupation=user.getOccupation();
         this.email=user.getEmail();
         this.isNotificationEnabled=user.isNotificationEnabled();
-         
+        this.admin=user.getAdmin().getName();        
     }
 	public String getJoinedDate() {
 		return joinedDate;
 	}
 	public void setJoinedDate(String joinedDate) {
 		this.joinedDate = joinedDate;
+	}
+	public String getAdmin() {
+		return admin;
+	}
+	public void setAdmin(String admin) {
+		this.admin = admin;
 	}
 
     

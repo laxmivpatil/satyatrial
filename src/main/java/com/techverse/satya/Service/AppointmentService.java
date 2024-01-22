@@ -1,5 +1,7 @@
 package com.techverse.satya.Service;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -58,6 +60,7 @@ public class AppointmentService {
 	    // Create a new appointment from the request
 	    Admin admin = user.getAdmin();  // Assuming each user has an associated admin
 	    Appointment appointment = new Appointment(appointmentRequest, user, admin);
+	    appointment.setChannelName(generateUniqueString());
 
 	    // Parse the input time (in 06:30PM format) into the database format
 	    DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("hh:mma");
@@ -452,4 +455,20 @@ public class AppointmentService {
         return false; // Appointment not found
     }
     // other methods...
+    
+    public static String generateUniqueString() {
+        SecureRandom secureRandom = new SecureRandom();
+        String uniqueString = new BigInteger(50, secureRandom).toString(32);
+
+        // Ensure the string is exactly 10 characters long
+        while (uniqueString.length() < 10) {
+            uniqueString = new BigInteger(50, secureRandom).toString(32);
+        }
+
+        return uniqueString.substring(0, 10);
+    }
+
+    
+    
+    
 }
