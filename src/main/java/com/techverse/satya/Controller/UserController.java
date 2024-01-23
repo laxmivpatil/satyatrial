@@ -344,7 +344,12 @@ else
 	    	}
 	    
 		  else if(userService.findByPhoneNumber(mobileNo).isPresent()) {
-			  UserDTO userDTO = new UserDTO(userService.findByPhoneNumber(mobileNo).get());
+			Users user=  userService.findByPhoneNumber(mobileNo).get();
+			
+			  UserDTO userDTO = new UserDTO(user);
+			  if(user.getAdmin()!=null) {
+				  userDTO.setAdmin(user.getAdmin().getName());
+			  }
 	          responseBody.setStatus(true);
 	          responseBody.setMessage("User Allready Registered as a Citizen");
 	           responseBody.setData(userDTO);

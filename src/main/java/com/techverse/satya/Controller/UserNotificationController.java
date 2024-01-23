@@ -241,6 +241,7 @@ public class UserNotificationController {
 	              appointmentData.put("purpose", appointment.getPurpose());
 	              appointmentData.put("comment", appointment.getComment());
 	              appointmentData.put("status", appointment.getStatus());
+	              appointmentData.put("channelName",appointment.getChannelName());
 	          } else {
 	              appointmentData = null; // No appointment found
 	          }
@@ -293,6 +294,7 @@ public class UserNotificationController {
 	    		ar.setPurpose(a.getPurpose());
 	    		ar.setStatus(a.getStatus());
 	    		ar.setTime(a.getTime());
+	    		ar.setChannelName(a.getChannelName());
 			
 	    		   responseBody.put("Notifications", ar);
 	               return new ResponseEntity<>(responseBody, HttpStatus.OK); 

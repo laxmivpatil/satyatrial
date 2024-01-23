@@ -202,7 +202,7 @@ public class AuthController {
   @PostMapping("/user/firstlogin")
   public ResponseEntity<?> userfirstlogin(@RequestBody JWTRequestUser jwtRequest) {
 	  ResponseDTO<Object> response = new ResponseDTO<>();
-	 
+	  
 	  try {
     	if(adminService.getAdminBymobileNo(jwtRequest.getMobileNo()).isPresent())
     	{
@@ -214,6 +214,7 @@ public class AuthController {
     		
     	 
     		Users user=userService.createUser(jwtRequest);
+    		 
     	}
     	 
     	   
@@ -224,11 +225,18 @@ public class AuthController {
 
           UserDetails userDetails = (UserDetails) authentication.getPrincipal();
           String jwtToken = jwtHelper.generateToken(userDetails);
-          UserDTO userDTO = new UserDTO(userService.getUserByToken(jwtToken).get());
+          Users user=userService.getUserByToken(jwtToken).get();
+          UserDTO userDTO = new UserDTO(user);
+          System.out.println(user.getAdmin());
+          if(user.getAdmin()!=null)
+          {
+        	  
+        	  userDTO.setAdmin(user.getAdmin().getName());
+          }
           response.setStatus(true);
           response.setMessage("User login successfully");
            response.setToken(jwtToken);
-          response.setData(userDTO);
+         response.setData(userDTO);
           return new ResponseEntity<>(response, HttpStatus.OK);
  
           
@@ -237,7 +245,7 @@ public class AuthController {
                   .body(new ApiResponse(false, "Invalid Otp."));
       } catch (Exception e) {
           return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                  .body(new ApiResponse(false, "An error occurred during authentication."));
+                  .body(new ApiResponse(false, "An error occurred during authentication."+e));
       }
   }
  
