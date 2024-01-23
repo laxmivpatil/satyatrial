@@ -360,7 +360,7 @@ else
 		  
 		  responseBody.setStatus(true);
 	        responseBody.setMessage( "User not Registered");
-	        responseBody.setData("");
+	         
 	        return ResponseEntity.status(HttpStatus.OK).body(responseBody);
 		  
 	     
