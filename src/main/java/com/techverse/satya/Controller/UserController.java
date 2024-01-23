@@ -335,7 +335,7 @@ else
 	//final
 	@GetMapping("/user/checkuserbymobileno")
 	public ResponseEntity<?> checkuserbymobileno(@RequestParam String mobileNo) {
-		  ResponseDTO<UserDTO> responseBody = new ResponseDTO<>();
+		  ResponseDTO<Object> responseBody = new ResponseDTO<>();
 		  try {  
 		  if(adminService.getAdminBymobileNo(mobileNo).isPresent())
 	    	{
@@ -358,8 +358,9 @@ else
 	    		 
 		  }
 		  
-		  responseBody.setStatus(false);
+		  responseBody.setStatus(true);
 	        responseBody.setMessage( "User not Registered");
+	        responseBody.setData("");
 	        return ResponseEntity.status(HttpStatus.OK).body(responseBody);
 		  
 	     
