@@ -141,6 +141,9 @@ public Long getId() {
         this.occupation=user.getOccupation();
         this.email=user.getEmail();
         this.isNotificationEnabled=user.isNotificationEnabled();
+        if(user.getAdmin()!=null) {
+			  this.setAdmin(user.getAdmin().getName());
+		  }
                  
     }
 	public String getJoinedDate() {
