@@ -209,7 +209,7 @@ public class AdminNotificationController {
     		ar.setPurpose(a.getPurpose());
     		ar.setStatus(a.getStatus());
     		ar.setTime(a.getTime());
-		
+    		ar.setChannelName(a.getChannelName());
     		   responseBody.put("appointment", ar);
                return new ResponseEntity<>(responseBody, HttpStatus.OK); 
        
@@ -244,7 +244,7 @@ public class AdminNotificationController {
     		ar.setPurpose(a.getPurpose());
     		ar.setStatus(a.getStatus());
     		ar.setTime(a.getTime());
-		
+    		ar.setChannelName(a.getChannelName());
     		responseBody.put("appointment", ar);
             return new ResponseEntity<>(responseBody, HttpStatus.OK); 
         	 

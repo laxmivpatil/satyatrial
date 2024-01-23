@@ -1,17 +1,24 @@
 package com.techverse.satya.Controller;
 
  
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
- 
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.techverse.satya.DTO.ResponseDTO; 
+import com.techverse.satya.DTO.ResponseDTO;
+import com.techverse.satya.DTO.TimeSlotDetail;
 import com.techverse.satya.DTO.TimeSlotRequest; 
 import com.techverse.satya.Model.Admin; 
 import com.techverse.satya.Model.Users;
@@ -48,6 +55,12 @@ public class TimeSlotController {
 
         if (admin.isPresent()) {
             try {
+            	
+            	// Validate time slot details
+                if (!isValidTimeSlotDetails(timeSlotRequest.getTimeSlotDetails())) {
+                	System.out.println("fhdgjfgf");
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDTO<>(false, "Invalid TimeSlot details. Minimum 15 minutes difference required.", ""));
+                }
                 String createdTimeSlot = timeSlotService.createTimeSlot(
                         timeSlotRequest.getDates(),
                         timeSlotRequest.getTimeSlotDetails(),
@@ -66,9 +79,31 @@ public class TimeSlotController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDTO<>(false, "Unauthorized Access",""));
         }
     }
+    private boolean isValidTimeSlotDetails(List<TimeSlotDetail> timeSlotDetails) {
+        System.out.println("hfjhgjhdfgjfghfjgjf");
 
-  
+       boolean isValid=true;
 
+        for (int i = 0; i < timeSlotDetails.size(); i++) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mma", Locale.ENGLISH);
+
+            LocalDateTime endTime1 = LocalDateTime.parse(timeSlotDetails.get(i).getEndTime(), formatter);
+            LocalDateTime startTime2 = LocalDateTime.parse(timeSlotDetails.get(i + 1).getStartTime(), formatter);
+
+            System.out.println("endTime1: " + endTime1);
+            System.out.println("startTime2: " + startTime2);
+
+            if (Duration.between(endTime1, startTime2).toMinutes() < 15) {
+                isValid=false;
+            }
+        }
+
+        return isValid;
+    }
+
+
+       
+    
     
     @GetMapping("/user/timeslots/address")
     public ResponseEntity<?> getAddressByDateAndStartTime(@RequestHeader("Authorization") String authorizationHeader,@RequestParam String date,@RequestParam String startTime) {

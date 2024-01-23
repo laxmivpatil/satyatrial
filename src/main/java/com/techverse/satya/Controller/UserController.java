@@ -353,12 +353,14 @@ else
 	    		 
 		  }
 		  
-		  return ResponseEntity.status(HttpStatus.OK)
-				  .body(new ApiResponse(true, "User not Registered"));
+		  responseBody.setStatus(false);
+	        responseBody.setMessage( "User not Registered");
+	        return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+		  
 	     
 	    } catch (Exception e) {
 	    	 responseBody.setStatus(false);
-		        responseBody.setMessage( "Failed to retrive user.");
+		        responseBody.setMessage( "Failed to retrive user."+e);
 		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
 		}
 	}

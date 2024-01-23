@@ -143,6 +143,7 @@ public ResponseEntity<?> getAllSlotsFromCurrentTime(@RequestHeader("Authorizatio
                 appointmentDetails.put("comment", appointment.getComment());
                 appointmentDetails.put("status", appointment.getStatus());
 
+                appointmentDetails.put("channelName", appointment.getChannelName());
                 Users user = appointment.getUser();
                 Map<String, Object> userDetails = new HashMap<>();
                 userDetails.put("userId", user.getId());
@@ -224,6 +225,7 @@ public ResponseEntity<?> getAllSlotsByMonthYear(
                     appointmentDetails.put("status", appointment.getStatus());
                     appointmentDetails.put("startTime", s.getStartTime());
                     appointmentDetails.put("endTime", s.getEndTime());
+                    appointmentDetails.put("channelName", appointment.getChannelName());
                     Users user = appointment.getUser();
                     Map<String, Object> userDetails = new HashMap<>();
                     userDetails.put("userId", user.getId());
