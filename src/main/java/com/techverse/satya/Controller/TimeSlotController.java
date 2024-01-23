@@ -57,10 +57,10 @@ public class TimeSlotController {
             try {
             	
             	// Validate time slot details
-                if (!isValidTimeSlotDetails(timeSlotRequest.getTimeSlotDetails())) {
+               /* if (!isValidTimeSlotDetails(timeSlotRequest.getTimeSlotDetails())) {
                 	System.out.println("fhdgjfgf");
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDTO<>(false, "Invalid TimeSlot details. Minimum 15 minutes difference required.", ""));
-                }
+                }*/
                 String createdTimeSlot = timeSlotService.createTimeSlot(
                         timeSlotRequest.getDates(),
                         timeSlotRequest.getTimeSlotDetails(),

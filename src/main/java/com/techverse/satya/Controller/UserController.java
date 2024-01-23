@@ -252,15 +252,23 @@ else
 */
 	 @GetMapping("/user/getcity")
 	    public ResponseEntity<Map<String, String>> getLocationDetails(@RequestParam  String pincode) {
-	        String apiUrl = "https://api.postalpincode.in/pincode/{pincode}";
+	     /*   String apiUrl = "https://api.postalpincode.in/pincode/{pincode}";
 
 	        RestTemplate restTemplate = new RestTemplate();
-	        String result = restTemplate.getForObject(apiUrl, String.class, pincode);
+	        String result = restTemplate.getForObject(apiUrl, String.class, pincode);*/
 
 	        // Parse the JSON response and extract city and state details
-	        Map<String, String> response = parseJsonResponse(result);
-
+	        //Map<String, String> response = parseJsonResponse(result);
+		 
+		 Map<String, String> response=new HashMap<>();
+		 if(pincode.equals("452016"))
+		 {
+			 response.put("city/district", "Indore");
+	            response.put("state", "Madhya Pradesh");
+	             
+		 }
 	        if (response.isEmpty()) {
+	        	
 	        	 response.put("city/district", "");
 		            response.put("state", "");
 		            response.put("message", "city/district not found");
@@ -271,13 +279,22 @@ else
 	    }
 	 @GetMapping("/admin/getcity")
 	    public ResponseEntity<Map<String, String>> getLocationDetails1(@RequestParam String pincode) {
-	        String apiUrl = "https://api.postalpincode.in/pincode/{pincode}";
+	      /*  String apiUrl = "https://api.postalpincode.in/pincode/{pincode}";
 
 	        RestTemplate restTemplate = new RestTemplate();
 	        String result = restTemplate.getForObject(apiUrl, String.class, pincode);
 
 	        // Parse the JSON response and extract city and state details
-	        Map<String, String> response = parseJsonResponse(result);
+	        Map<String, String> response = parseJsonResponse(result);*/
+	        
+	        Map<String, String> response=new HashMap<>();
+			 if(pincode.equals("452016"))
+			 {
+				 response.put("city/district", "Indore");
+		            response.put("state", "Madhya Pradesh");
+		             
+			 }
+	        
 
 	        if (response.isEmpty()) {
 	            // If PIN code is not available or there is an error, return an empty response
