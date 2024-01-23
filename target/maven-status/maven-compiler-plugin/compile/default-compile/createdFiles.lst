@@ -3,6 +3,7 @@ com\techverse\satya\Controller\SubAdminController.class
 com\techverse\satya\DTO\MutableLocalTime.class
 com\techverse\satya\Controller\SuggestionController.class
 com\techverse\satya\DTO\SuggestionResponseDTO.class
+com\techverse\satya\Repository\PincodeRepository.class
 com\techverse\satya\Repository\StatusRepository.class
 com\techverse\satya\Repository\AdminNotificationRepository.class
 com\techverse\satya\DTO\AppointmentResponse.class
@@ -24,6 +25,7 @@ com\techverse\satya\Model\JWTRequestAdmin.class
 com\techverse\satya\Controller\SmallerSlotController.class
 com\techverse\satya\Model\JWTResponse$JWTResponseBuilder.class
 com\techverse\satya\Config\DataSourceConfig.class
+com\techverse\satya\Controller\PincodeController.class
 com\techverse\satya\DTO\TimeSlotRequest.class
 com\techverse\satya\Controller\OtpController.class
 com\techverse\satya\Model\Users.class
@@ -41,6 +43,7 @@ com\techverse\satya\Service\UserService.class
 com\techverse\satya\Model\JWTRequestAdmin$JWTRequestAdminBuilder.class
 com\techverse\satya\DTO\ChannelResponse.class
 com\techverse\satya\DTO\TimeSlotResponse.class
+com\techverse\satya\Service\PincodeService.class
 com\techverse\satya\Model\TimeSlot.class
 com\techverse\satya\Model\UserNotification.class
 com\techverse\satya\DTO\AdminNotificationDTO.class
@@ -50,6 +53,7 @@ com\techverse\satya\Config\SecurityConfig.class
 com\techverse\satya\Controller\AppointmentController.class
 com\techverse\satya\DTO\UserDTO.class
 com\techverse\satya\Model\SmallerTimeSlot.class
+com\techverse\satya\Model\Pincode.class
 com\techverse\satya\Repository\UserRepository.class
 com\techverse\satya\DTO\SmallerTimeSlotResponse.class
 com\techverse\satya\Repository\AppointmentRepository.class
@@ -66,6 +70,7 @@ com\techverse\satya\DTO\TimeSlotDetail.class
 com\techverse\satya\Security\JwtAuthenticationEntryPoint.class
 com\techverse\satya\Repository\SmallerTimeSlotRepository.class
 com\techverse\satya\Service\OtpService.class
+com\techverse\satya\Service\ExcelReader.class
 com\techverse\satya\Controller\TimeSlotController.class
 com\techverse\satya\Model\JWTRequest.class
 com\techverse\satya\DTO\OtpVerificationResult.class

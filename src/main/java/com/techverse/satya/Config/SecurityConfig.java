@@ -49,6 +49,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .csrf().disable()
             .authorizeRequests()  
+            
+            .antMatchers("/api/pincode/upload").permitAll()  
             .antMatchers("/user/setstatusvideo").permitAll()  
             .antMatchers("/user/setstatusvideo1").permitAll()  
             .antMatchers("/user/getstatusvideo").permitAll()  
@@ -62,6 +64,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/user/logout").hasRole("USER")
             .antMatchers("/user/byConstitution").hasRole("USER")
             .antMatchers("/user/getcity").permitAll() 
+            .antMatchers("/admin/getcity").permitAll() 
             .antMatchers("/user/constitutions").permitAll() 
             .antMatchers("/user/update").hasRole("USER")
             .antMatchers("/user/edit").hasRole("USER")

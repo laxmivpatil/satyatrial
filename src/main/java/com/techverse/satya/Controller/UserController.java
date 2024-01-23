@@ -194,142 +194,7 @@ else
  }
 	}
 	
-	 
-	 
-	 
-//for all region in city (remove comment)
-	 /* @GetMapping("/pincode/{pincode}")
-	    public ResponseEntity<List<Map<String, String>>> getLocationDetails(@PathVariable String pincode) {
-	        String apiUrl = "https://api.postalpincode.in/pincode/{pincode}";
-
-	        RestTemplate restTemplate = new RestTemplate();
-	        String result = restTemplate.getForObject(apiUrl, String.class, pincode);
-
-	        // Parse the JSON response and extract names of post offices, district, and state details
-	        List<Map<String, String>> responseList = parseJsonResponse(result);
-
-	        if (responseList.isEmpty()) {
-	            // If PIN code is not available or there is an error, return an empty response
-	        	 Map<String, String> response = new HashMap<>();
-
-	               // response.put("name",""); for all region for eg jalgaon-->navipeth,ramanand etc
-	                response.put("district","");
-	                response.put("state", "");
-
-	                responseList.add(response);
-	                return ResponseEntity.ok(responseList);
-	        } else {
-	            return ResponseEntity.ok(responseList);
-	        }
-	    }
-
-	    private List<Map<String, String>> parseJsonResponse(String jsonResponse) {
-	        List<Map<String, String>> responseList = new ArrayList<>();
-
-	        try {
-	            ObjectMapper objectMapper = new ObjectMapper();
-	            JsonNode rootNode = objectMapper.readTree(jsonResponse);
-
-	            // Assuming a basic JSON structure, modify as per the actual structure
-	            JsonNode postOfficeArray = rootNode.get(0).get("PostOffice");
-
-	            for (JsonNode postOfficeNode : postOfficeArray) {
-	                Map<String, String> response = new HashMap<>();
-
-	                response.put("name", postOfficeNode.get("Name").asText());
-	                response.put("district", postOfficeNode.get("District").asText());
-	                response.put("state", postOfficeNode.get("State").asText());
-
-	                responseList.add(response);
-	            }
-	        } catch (IOException | NullPointerException e) {
-	            e.printStackTrace();
-	            // Handle exception
-	        }
-
-	        return responseList;
-	    }
-*/
-	 @GetMapping("/user/getcity")
-	    public ResponseEntity<Map<String, String>> getLocationDetails(@RequestParam  String pincode) {
-	     /*   String apiUrl = "https://api.postalpincode.in/pincode/{pincode}";
-
-	        RestTemplate restTemplate = new RestTemplate();
-	        String result = restTemplate.getForObject(apiUrl, String.class, pincode);*/
-
-	        // Parse the JSON response and extract city and state details
-	        //Map<String, String> response = parseJsonResponse(result);
-		 
-		 Map<String, String> response=new HashMap<>();
-		 if(pincode.equals("452016"))
-		 {
-			 response.put("city/district", "Indore");
-	            response.put("state", "Madhya Pradesh");
-	             
-		 }
-	        if (response.isEmpty()) {
-	        	
-	        	 response.put("city/district", "");
-		            response.put("state", "");
-		            response.put("message", "city/district not found");
-		            return ResponseEntity.status(HttpStatus.OK).body(response);
-	        } else {
-	            return ResponseEntity.ok(response);
-	        }
-	    }
-	 @GetMapping("/admin/getcity")
-	    public ResponseEntity<Map<String, String>> getLocationDetails1(@RequestParam String pincode) {
-	      /*  String apiUrl = "https://api.postalpincode.in/pincode/{pincode}";
-
-	        RestTemplate restTemplate = new RestTemplate();
-	        String result = restTemplate.getForObject(apiUrl, String.class, pincode);
-
-	        // Parse the JSON response and extract city and state details
-	        Map<String, String> response = parseJsonResponse(result);*/
-	        
-	        Map<String, String> response=new HashMap<>();
-			 if(pincode.equals("452016"))
-			 {
-				 response.put("city/district", "Indore");
-		            response.put("state", "Madhya Pradesh");
-		             
-			 }
-	        
-
-	        if (response.isEmpty()) {
-	            // If PIN code is not available or there is an error, return an empty response
-	        	 response.put("city/district", "");
-		            response.put("state", "");
-		            response.put("message", "city/district not found");
-	            return ResponseEntity.status(HttpStatus.OK).body(response);
-	        } else {
-	            return ResponseEntity.ok(response);
-	        }
-	    }
-
-	    private Map<String, String> parseJsonResponse(String jsonResponse) {
-	        Map<String, String> response = new HashMap<>();
-
-	        try {
-	            ObjectMapper objectMapper = new ObjectMapper();
-	            JsonNode rootNode = objectMapper.readTree(jsonResponse);
-
-	            // Assuming a basic JSON structure, modify as per the actual structure
-	            JsonNode postOfficeNode = rootNode.get(0).get("PostOffice").get(0);
-	            String city = postOfficeNode.get("District").asText();
-	            String state = postOfficeNode.get("State").asText();
-
-	            response.put("city/district", city);
-	            response.put("state", state);
-	        } catch (IOException | NullPointerException e) {
-	            e.printStackTrace();
-	            // Handle exception
-	        }
-
-	        return response;
-	    }
-	 
-	 
+	  	 
 	 //final
 	@DeleteMapping("/delete")
 	public ResponseEntity<?> deleteUser(@RequestParam Long userId) {
@@ -364,9 +229,7 @@ else
 			Users user=  userService.findByPhoneNumber(mobileNo).get();
 			
 			  UserDTO userDTO = new UserDTO(user);
-			  if(user.getAdmin()!=null) {
-				  userDTO.setAdmin(user.getAdmin().getName());
-			  }
+			  
 	          responseBody.setStatus(true);
 	          responseBody.setMessage("User Allready Registered as a Citizen");
 	           responseBody.setData(userDTO);
