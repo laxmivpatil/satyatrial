@@ -1,16 +1,13 @@
 package com.techverse.satya.Controller;
 
  
-import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.Duration; 
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
+import java.util.List; 
 import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.IntStream;
+import java.util.Optional;  
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,8 +25,7 @@ import com.techverse.satya.Service.TimeSlotService;
 import com.techverse.satya.Service.UserService;
  
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+ 
 @RestController
 @RequestMapping("")
 public class TimeSlotController {
@@ -39,7 +35,8 @@ public class TimeSlotController {
 	
 	@Autowired
     private UserService userService;
-	
+	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("hh:mma");
+
 	
 	 
     @Autowired
@@ -48,10 +45,9 @@ public class TimeSlotController {
     private TimeSlotRepository timeSlotRepository;
     
     /***********admin create a timeslots*/
-    @PostMapping("/admin/timeslots/create")
-    public ResponseEntity<ResponseDTO> createTimeSlot(@RequestHeader("Authorization") String authorizationHeader, @RequestBody TimeSlotRequest timeSlotRequest) {
-    	ResponseDTO<Object> response = new ResponseDTO<Object>();
-    	Optional<Admin> admin = adminService.getAdminByToken(authorizationHeader.substring(7));
+    @PostMapping("/admin/timeslots/create1")
+    public ResponseEntity<ResponseDTO> createTimeSlot1(@RequestHeader("Authorization") String authorizationHeader, @RequestBody TimeSlotRequest timeSlotRequest) {
+    	 Optional<Admin> admin = adminService.getAdminByToken(authorizationHeader.substring(7));
 
         if (admin.isPresent()) {
             try {
@@ -79,31 +75,63 @@ public class TimeSlotController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDTO<>(false, "Unauthorized Access",""));
         }
     }
-    private boolean isValidTimeSlotDetails(List<TimeSlotDetail> timeSlotDetails) {
-        System.out.println("hfjhgjhdfgjfghfjgjf");
 
-       boolean isValid=true;
+    @PostMapping("/admin/timeslots/create")
+    public ResponseEntity<ResponseDTO> createTimeSlot(@RequestHeader("Authorization") String authorizationHeader, @RequestBody TimeSlotRequest timeSlotRequest) {
+    	 Optional<Admin> admin = adminService.getAdminByToken(authorizationHeader.substring(7));
 
-        for (int i = 0; i < timeSlotDetails.size(); i++) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mma", Locale.ENGLISH);
+        if (admin.isPresent()) {
+            try {
+            	
+            	// Validate time slot details
+                if (!isValidTimeSlotDetails(timeSlotRequest.getTimeSlotDetails())) {
+                	    return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO<>(false, "Invalid Availability details. Minimum 15 minutes difference required or availabilty timeslots must be different", ""));
+                }
+                
+               String createdTimeSlot = timeSlotService.createTimeSlot(
+                        timeSlotRequest.getDates(),
+                        timeSlotRequest.getTimeSlotDetails(),
+                        timeSlotRequest.getAvailability(),
+                        admin.get());
 
-            LocalDateTime endTime1 = LocalDateTime.parse(timeSlotDetails.get(i).getEndTime(), formatter);
-            LocalDateTime startTime2 = LocalDateTime.parse(timeSlotDetails.get(i + 1).getStartTime(), formatter);
-
-            System.out.println("endTime1: " + endTime1);
-            System.out.println("startTime2: " + startTime2);
-
-            if (Duration.between(endTime1, startTime2).toMinutes() < 15) {
-                isValid=false;
+                if ("Successfully created".equals(createdTimeSlot)) {
+                    return ResponseEntity.ok(new ResponseDTO<>(true, "Thank you for Submitting Time availability", timeSlotRequest));
+                } else {
+                    return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO<>(false, "Failed to create TimeSlot due to Overlapping Slots", createdTimeSlot));
+                } 
+            } catch ( Exception e) {
+                return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO<>(false, "Failed to create TimeSlot", ""));
             }
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO<>(false, "Unauthorized Access",""));
         }
-
-        return isValid;
     }
 
+     
 
-       
-    
+    private boolean isValidTimeSlotDetails(List<TimeSlotDetail> timeSlotDetails) {
+        for (int i = 0; i < timeSlotDetails.size(); i++) {
+            LocalTime startTime1 = LocalTime.parse(timeSlotDetails.get(i).getStartTime(), FORMATTER);
+            LocalTime endTime1 = LocalTime.parse(timeSlotDetails.get(i).getEndTime(), FORMATTER);
+
+            for (int j = i + 1; j < timeSlotDetails.size(); j++) {
+                LocalTime startTime2 = LocalTime.parse(timeSlotDetails.get(j).getStartTime(), FORMATTER);
+                LocalTime endTime2 = LocalTime.parse(timeSlotDetails.get(j).getEndTime(), FORMATTER);
+
+                // Check for overlap
+                if (startTime1.isBefore(endTime2) && endTime1.isAfter(startTime2)) {
+                    return false; // Overlapping time slots
+                }
+            }
+
+            // Check if the duration is at least 15 minutes
+            long durationMinutes = Duration.between(startTime1, endTime1).toMinutes();
+            if (durationMinutes < 15) {
+                return false;
+            }
+        }
+        return true;
+    }
     
     @GetMapping("/user/timeslots/address")
     public ResponseEntity<?> getAddressByDateAndStartTime(@RequestHeader("Authorization") String authorizationHeader,@RequestParam String date,@RequestParam String startTime) {

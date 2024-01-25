@@ -51,6 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .authorizeRequests()  
             
             .antMatchers("/api/pincode/upload").permitAll()  
+            .antMatchers("/send-sms").permitAll()  
             .antMatchers("/user/setstatusvideo").permitAll()  
             .antMatchers("/user/setstatusvideo1").permitAll()  
             .antMatchers("/user/getstatusvideo").permitAll()  

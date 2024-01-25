@@ -94,9 +94,7 @@ public class TimeSlotService {
 			                if (slotEndTime.isAfter(endTime)) {
 			                    break; // Stop generating slots if the remaining time is less than 15 minutes
 			                }
-			              /*  if (slotEndTime.isAfter(endTime)) {
-			                    slotEndTime = endTime;
-			                }*/
+			             
 
 			                SmallerTimeSlot smallerTimeSlot = new SmallerTimeSlot();
 			                smallerTimeSlot.setStartTime(startTime.format(DateTimeFormatter.ofPattern("hh:mma")));
@@ -122,7 +120,7 @@ public class TimeSlotService {
 		}
 	 
 	 private List<TimeSlotDetail> isOverlapping(String date, String newStartTime, String newEndTime, Admin admin) {
-			List<TimeSlotDetail> overlappingDetails = timeSlotRepository.findOverlappingTimeSlotDetails(admin, date,newStartTime, newEndTime);
+			List<TimeSlotDetail> overlappingDetails = timeSlotRepository.findOverlappingTimeSlotDetails2(admin, date,newStartTime, newEndTime);
 
 			   return overlappingDetails;
 			}

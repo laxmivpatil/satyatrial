@@ -28,8 +28,7 @@ import io.jsonwebtoken.MalformedJwtException;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
-     @Autowired
+      @Autowired
      private UserDetailsService userDetailsService;
  
   
@@ -44,35 +43,29 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
     	
-    	System.out.println("2.....");
-        String requestHeader = request.getHeader("Authorization");
+    	   String requestHeader = request.getHeader("Authorization");
         String username = null;
         String token = null;
-        System.out.println("3.....");
-        
+         
         if (requestHeader != null && requestHeader.startsWith("Bearer ")) {
             token = requestHeader.substring(7); // Remove "Bearer " to get the token
             System.out.println(requestHeader);
             try {
                 username = this.jwtHelper.getUsernameFromToken(token);
-                logger.debug("Extracted username from token: " + username);
-            } catch (IllegalArgumentException e) {
-                logger.error("Invalid JWT token: " + e.getMessage());
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+             } catch (IllegalArgumentException e) {
+                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 response.setContentType("application/json");
                 PrintWriter writer = response.getWriter();
                 writer.println("{\"error\": \"Bad Request\", \"message\": \"Invalid JWT token.\"}");
                 return;
             } catch (ExpiredJwtException e) {
-                logger.error("JWT token expired: " + e.getMessage());
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.setContentType("application/json");
                 PrintWriter writer = response.getWriter();
                 writer.println("{\"error\": \"Unauthorized\", \"message\": \"JWT token has expired.\"}");
                 return;
             } catch (MalformedJwtException e) {
-                logger.error("Malformed JWT token: " + e.getMessage());
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 response.setContentType("application/json");
                 PrintWriter writer = response.getWriter();
                 writer.println("{\"error\": \"Bad Request\", \"message\": \"Malformed JWT token.\"}");
@@ -81,18 +74,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-        	System.out.println("Token Checked blacklisted");
-        	if (tokenBlacklistService.isTokenBlacklisted(token)) {
-        		System.out.println("Token Checked blacklisted");
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        	 if (tokenBlacklistService.isTokenBlacklisted(token)) {
+        		  response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.setContentType("application/json");
                 PrintWriter writer = response.getWriter();
                 writer.println("{\"error\": \"Unauthorized\", \"message\": \"Token invalid.\"}");
                 return;
             }
-        	System.out.println("4.....");
-        	System.out.println("hi"+username+""+request.getRequestURI());
-        	UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        	 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
              	     
         	//UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
