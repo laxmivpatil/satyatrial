@@ -31,7 +31,7 @@ public interface TimeSlotRepository extends JpaRepository<TimeSlot, Long> {
 		                                            @Param("adminId") Long adminId);
 
 	 
-	 
+	 ///hi i am changing code
 	  
 	  List<TimeSlot> findByAdminAndDate(Admin admin, String date);
 	 
