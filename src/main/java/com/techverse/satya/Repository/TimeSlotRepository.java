@@ -53,7 +53,7 @@ public interface TimeSlotRepository extends JpaRepository<TimeSlot, Long> {
 
 
 	
-
+//
 
 	  @Query("SELECT tsd FROM TimeSlot t JOIN t.timeSlotDetails tsd WHERE t.admin = :admin AND t.date = :date " +
 		        "AND (" +
