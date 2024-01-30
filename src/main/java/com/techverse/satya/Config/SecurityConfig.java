@@ -99,11 +99,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                   .antMatchers("/admin/timeslots/all").hasAnyRole("ADMIN","SUBADMIN")
                  .antMatchers("/admin/timeslots/allbymonthyear").hasAnyRole("ADMIN","SUBADMIN")
                  .antMatchers("/admin/timeslots/delete/{id}").hasAnyRole("ADMIN","SUBADMIN")
-                  
                  .antMatchers("/user/notifications/unread").hasRole("USER")
-                 
-                 
-                .antMatchers("/user/timeslots/get").hasRole("USER")
+                 .antMatchers("/user/timeslots/get").hasRole("USER")
                 .antMatchers("/user/timeslots/address").hasRole("USER")
                 .antMatchers("/user/appointments/todaybyuserid").hasRole("USER")
                 .antMatchers("/user/appointments/upcomingbyuserid").hasRole("USER")
@@ -115,7 +112,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/appointments/reschedule").hasRole("USER")
                 .antMatchers("/user/appointments/in-progress/{appointmentId}").hasRole("USER")  
                 .antMatchers("/admin/appointments/todaybyadminid").hasAnyRole("ADMIN","SUBADMIN")
-                  
                 .antMatchers("/admin/appointments/upcomingbyadminid").hasAnyRole("ADMIN","SUBADMIN")
                 .antMatchers("/admin/appointments/pastbyadminid").hasAnyRole("ADMIN","SUBADMIN")
                 .antMatchers("/admin/appointments/pendingbyadminid").hasAnyRole("ADMIN","SUBADMIN")
@@ -131,28 +127,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin/appointments/cancel").hasAnyRole("ADMIN","SUBADMIN")
                 .antMatchers("/admin/appointments/reschedule").hasAnyRole("ADMIN","SUBADMIN")
                 .antMatchers("/admin/notifications/unread").hasAnyRole("ADMIN","SUBADMIN")
-                
-                
                 .antMatchers("/subadmin/findbymobileno").permitAll()
-                
-                
-                
-                
                 .antMatchers("/superadmin/create-admin").permitAll()
-                
-                
                 .antMatchers("/subadmin/logout").hasRole("SUBADMIN")
-                
-
-                
                 .antMatchers("/login/generateOtp").permitAll() 
                 .antMatchers("/signup/generateOtp").permitAll() 
                 .antMatchers("/signup/**").permitAll()            
                 .antMatchers("/update").permitAll() 
-                 .antMatchers("/send-whatsapp").permitAll()
+                .antMatchers("/send-whatsapp").permitAll()
                 .antMatchers("/send-update").permitAll()
                 .antMatchers("/notification/token").permitAll()
-                
                 .anyRequest().authenticated()
                 .and()
             .exceptionHandling()
