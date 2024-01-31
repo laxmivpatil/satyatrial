@@ -36,70 +36,19 @@ public interface TimeSlotRepository extends JpaRepository<TimeSlot, Long> {
 	  List<TimeSlot> findByAdminAndDate(Admin admin, String date);
 	 
 	  
-	  @Query("SELECT tsd FROM TimeSlot t JOIN t.timeSlotDetails tsd WHERE t.admin = :admin AND t.date = :date " +
-		       "AND (" +
-		       "  (tsd.startTime < :newEndTime AND tsd.endTime > :newStartTime)" +
-		       "  OR (tsd.startTime >= :newStartTime AND tsd.startTime < :newEndTime)" +
-		       "  OR (tsd.endTime > :newStartTime AND tsd.endTime <= :newEndTime)" +
-		       "  OR (tsd.startTime <= :newStartTime AND tsd.endTime >= :newEndTime)" +
-		       "  OR (tsd.startTime <= :newEndTime AND tsd.endTime >= :newStartTime)" +
-		       "  OR (tsd.startTime <= :newStartTime AND tsd.endTime >= :newEndTime)" +
-		       "  OR (tsd.startTime >= :newStartTime AND tsd.endTime <= :newEndTime)" +
-		       ")")
-		List<TimeSlotDetail> findOverlappingTimeSlotDetails(@Param("admin") Admin admin,
-		                                                   @Param("date") String date,
-		                                                   @Param("newStartTime") String newStartTime,
-		                                                   @Param("newEndTime") String newEndTime);
+	 
 
 
-	  @Query("SELECT tsd FROM TimeSlot t JOIN t.timeSlotDetails tsd WHERE t.admin = :admin AND t.date = :date " +
-		        "AND (" +
-		        "  (tsd.startTime < :newEndTime AND tsd.endTime > :newStartTime) " +
-		        "  OR (tsd.startTime >= :newStartTime AND tsd.startTime < :newEndTime) " +
-		        "  OR (tsd.endTime > :newStartTime AND tsd.endTime <= :newEndTime) " +
-		        "  OR (tsd.startTime <= :newStartTime AND tsd.endTime >= :newEndTime) " +
-		        "  OR (tsd.startTime <= :newEndTime AND tsd.endTime >= :newStartTime) " +
-		        "  OR (tsd.startTime <= :newStartTime AND tsd.endTime >= :newEndTime) " +
-		        "  OR (tsd.startTime >= :newStartTime AND tsd.endTime <= :newEndTime) " +
-		        ")")
-		List<TimeSlotDetail> findOverlappingTimeSlotDetails3(@Param("admin") Admin admin,
-		                                                    @Param("date") String date,
-		                                                    @Param("newStartTime") String newStartTime,
-		                                                    @Param("newEndTime") String newEndTime);
+	 
+ 
+	  @Query("SELECT tsd FROM TimeSlot t JOIN t.timeSlotDetails tsd WHERE t.admin = :admin AND t.date = :date ")
+		List<TimeSlotDetail> findTimeSlotByAdminandDate(@Param("admin") Admin admin,
+		                                                    @Param("date") String date
+		                                                     );
 
-
-	  @Query("SELECT tsd FROM TimeSlot t JOIN t.timeSlotDetails tsd WHERE t.admin = :admin AND t.date = :date " +
-		        "AND (" +
-		        "  (tsd.startTime < :newStartTime AND tsd.endTime < :newEndTime) " +
-		        " OR (tsd.startTime > :newStartTime AND tsd.endTime > :newEndTime) " +
-		         " OR (tsd.startTime < :newEndTime AND tsd.endTime > :newStartTime) " +
-		        "  OR (tsd.startTime >= :newStartTime AND tsd.startTime < :newEndTime AND tsd.endTime > :newStartTime) " +
-		        "  OR (tsd.endTime > :newStartTime AND tsd.endTime <= :newEndTime AND tsd.startTime < :newEndTime) " +
-		        "  OR (tsd.startTime <= :newStartTime AND tsd.endTime >= :newEndTime)" +
-		        "  OR (tsd.startTime >= :newStartTime AND tsd.endTime <= :newEndTime)" +
-		        "  OR (tsd.startTime <= :newStartTime AND tsd.endTime >= :newEndTime)" +
-		        "  OR (tsd.startTime >= :newStartTime AND tsd.endTime > :newStartTime AND tsd.endTime <= :newEndTime)" +
-		        "  OR (tsd.startTime < :newStartTime AND tsd.endTime >= :newEndTime)" +
-		        "  OR (tsd.startTime <= :newStartTime AND tsd.endTime >= :newEndTime AND tsd.startTime >= :newStartTime)" +
-		        "  OR (tsd.startTime < :newStartTime AND tsd.endTime <= :newEndTime AND tsd.endTime > :newStartTime)" +
-		        "  OR (tsd.startTime >= :newStartTime AND tsd.startTime < :newEndTime AND tsd.endTime > :newEndTime)" + // Existing slot ends within new slot
-		        "  OR (tsd.startTime < :newStartTime AND tsd.endTime > :newEndTime)" + // New slot starts after and ends after existing slot
-		        ")")
-		List<TimeSlotDetail> findOverlappingTimeSlotDetails2(@Param("admin") Admin admin,
-		                                                    @Param("date") String date,
-		                                                    @Param("newStartTime") String newStartTime,
-		                                                    @Param("newEndTime") String newEndTime);
-
-
-
-//7507568660 Sunil Verma 12500 
-
-//250  2015
-
-
-		                    
-
-
+ 
+	  
+	
 	  @Query("SELECT tsd FROM TimeSlot t JOIN t.timeSlotDetails tsd WHERE t.admin = :admin AND t.date = :date " +
 		       "AND t.id != :excludeId " +  // Exclude the specified time slot ID
 		       "AND (" +

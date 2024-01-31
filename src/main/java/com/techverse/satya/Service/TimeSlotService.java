@@ -120,8 +120,29 @@ public class TimeSlotService {
 		}
 	 
 	 private List<TimeSlotDetail> isOverlapping(String date, String newStartTime, String newEndTime, Admin admin) {
-			List<TimeSlotDetail> overlappingDetails = timeSlotRepository.findOverlappingTimeSlotDetails2(admin, date,newStartTime, newEndTime);
+	 
+		 LocalTime nstartTime = LocalTime.parse(newStartTime, DateTimeFormatter.ofPattern("hh:mma"));
+         LocalTime nendTime = LocalTime.parse(newEndTime, DateTimeFormatter.ofPattern("hh:mma"));
 
+		 
+			List<TimeSlotDetail> timeSlot = timeSlotRepository.findTimeSlotByAdminandDate(admin, date);
+			List<TimeSlotDetail> overlappingDetails=new ArrayList<TimeSlotDetail>();
+			for(TimeSlotDetail t :timeSlot) {
+				 LocalTime startTime = LocalTime.parse(t.getStartTime(), DateTimeFormatter.ofPattern("hh:mma"));
+		         LocalTime endTime = LocalTime.parse(t.getEndTime(), DateTimeFormatter.ofPattern("hh:mma"));
+		         System.out.println("new time =>"+nstartTime+" "+nendTime);
+		         System.out.println("db time =>"+startTime+" "+endTime);
+				if(doTimeRangesOverlap1(startTime, endTime, nstartTime, nendTime))
+				{
+					
+					 System.out.println("Overlapping time =>"+startTime+" "+endTime);
+					overlappingDetails.add(t);
+				}
+			}
+			
+			
+
+			
 			   return overlappingDetails;
 			}
 	 private List<TimeSlotDetail> isOverlapping1(String date, String newStartTime, String newEndTime, Admin admin,Long id) {
@@ -134,6 +155,10 @@ public class TimeSlotService {
 	}
 
 
+	public boolean doTimeRangesOverlap1(LocalTime existingStart, LocalTime existingEnd, LocalTime newStart, LocalTime newEnd) {
+	    // Overlapping if new slot starts before existing ends and new slot ends after existing starts
+	    return newStart.isBefore(existingEnd) && newEnd.isAfter(existingStart);
+	}
 
 	 @Transactional
 	    public String rescheduledTimeSlot(Long timeSlotId, Admin admin,String startTime, String endTime) {
