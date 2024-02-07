@@ -25,10 +25,19 @@ public class AdminDTO {
     private String party;
     private String verification;
     private boolean isNotificationEnabled;
+    private String role="admin";
     
     
 
-    // Updated constructor to set default values
+    public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+	// Updated constructor to set default values
     public AdminDTO() {
         this.id = 0L;
          this.profilePhoto = "";
@@ -77,6 +86,7 @@ public class AdminDTO {
             this.proof=admin.getProof();
             this.party=admin.getParty();
             this.isNotificationEnabled=admin.isNotificationEnabled();
+            this.role="admin";
         }
     }
 

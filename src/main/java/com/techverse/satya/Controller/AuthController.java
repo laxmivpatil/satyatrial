@@ -262,8 +262,6 @@ public class AuthController {
     	}
     
     	if(!adminService.getAdminBymobileNo(jwtRequest.getMobileNo()).isPresent()) {
-    		
-    	 
     		Admin admin=adminService.createAdmin(jwtRequest);
     	}
     	
@@ -277,7 +275,7 @@ public class AuthController {
          AdminDTO adminDTO = new AdminDTO(adminService.getAdminByToken(jwtToken).get());
          response.setStatus(true);
          response.setMessage("Admin login successfully");
-          response.setToken(jwtToken);
+         response.setToken(jwtToken);
          response.setData(adminDTO);
           
          return new ResponseEntity<>(response, HttpStatus.OK);

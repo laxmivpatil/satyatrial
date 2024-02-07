@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.techverse.satya.DTO.ApiDataResponse;
 import com.techverse.satya.DTO.ApiResponse;
+import com.techverse.satya.DTO.ResponseDTO;
 import com.techverse.satya.DTO.SubAdminDTO;
+import com.techverse.satya.Model.Admin;
 import com.techverse.satya.Model.JWTRequest;
 import com.techverse.satya.Model.SubAdmin;
 import com.techverse.satya.Repository.SubAdminRepository;
@@ -118,5 +120,32 @@ public class SubAdminController {
 	  } 
 	 
 	 
+	 /****new***********/
+	 @GetMapping("/subadmin/adddevicetoken")
+		public ResponseEntity<ResponseDTO<?>> addDeviceToken(@RequestHeader("Authorization") String authorizationHeader,@RequestParam(value="deviceToken", required=true)String token) {
+			Optional<SubAdmin> user = adminService.getAdminByToken1(authorizationHeader.substring(7));
+
+			ResponseDTO<String> responseBody = new ResponseDTO<>();
+			try {
+				System.out.println("hi token");
+				if(user.isPresent()) {
+					user.get().setDeviceToken(token);
+					subAdminRepository.save(user.get());
+					responseBody.setStatus(true);
+					responseBody.setMessage("Sub Admin device token saved successfully.");
+					responseBody.setData("");
+					return ResponseEntity.ok(responseBody);
+				} else {
+					responseBody.setStatus(false);
+					responseBody.setMessage("Sub Admin not found.");
+					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
+				}
+			} catch (Exception e) {
+				responseBody.setStatus(false);
+				responseBody.setMessage( "Failed to retrive Sub Admin.");
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
+			}
+		}
+		
 	
 }

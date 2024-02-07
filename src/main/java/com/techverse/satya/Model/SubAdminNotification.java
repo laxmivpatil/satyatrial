@@ -1,5 +1,7 @@
 package com.techverse.satya.Model;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,19 +10,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import java.time.LocalDateTime;
-
 @Entity
-public class AdminNotification {
+public class SubAdminNotification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String message;
     private String notificationType; // "appointment" or "suggestion"
-    private String appointmentType=""; // "appointment" or "suggestion"
-    private String appointmentStatus=""; // "appointment" or "suggestion"
-    
     private Long entityId; // ID of the appointment or suggestion
     @Column(name = "is_read")  
     private boolean read=false; // Indicates whether the notification has been read or not
@@ -29,52 +26,18 @@ public class AdminNotification {
 
     // Constructors, getters, and setters
 
-    public AdminNotification() {
+    public SubAdminNotification() {
         this.createdAt = LocalDateTime.now();
         this.read = false; // By default, the notification is unread when created
     }
-    
-    
-    
 
-    public String getAppointmentType() {
-		return appointmentType;
-	}
-
-
-
-
-	public String getAppointmentStatus() {
-		return appointmentStatus;
-	}
-
-
-
-
-	public void setAppointmentStatus(String appointmentStatus) {
-		this.appointmentStatus = appointmentStatus;
-	}
-
-
-
-
-	public void setAppointmentType(String appointmentType) {
-		this.appointmentType = appointmentType;
-	}
-
-
-
-
-	public AdminNotification(String message, String notificationType, Long entityId,String profilePhoto,Admin admin,String appointmentType, String appointmentStatus) {
+    public SubAdminNotification(String message, String notificationType, Long entityId,String profilePhoto,SubAdmin subAdmin) {
         this();
         this.message = message;
         this.notificationType = notificationType;
         this.entityId = entityId;
         this.profilePhoto=profilePhoto;
-        this.admin=admin;
-        this.appointmentType=appointmentType;
-        this.appointmentStatus=appointmentStatus;
-        
+        this.subAdmin=subAdmin;
     }
 
 	public Long getId() {
@@ -134,17 +97,19 @@ public class AdminNotification {
 	}
 
 	 @ManyToOne
-	    @JoinColumn(name = "admin_id")  // adjust the column name accordingly
-	    private Admin admin;
+	    @JoinColumn(name = "subadmin_id")  // adjust the column name accordingly
+	    private SubAdmin subAdmin;
     // Getters and setters
 
-	public Admin getAdmin() {
-		return admin;
+	public SubAdmin getSubAdmin() {
+		return subAdmin;
 	}
 
-	public void setAdmin(Admin admin) {
-		this.admin = admin;
+	public void setSubAdmin(SubAdmin subAdmin) {
+		this.subAdmin = subAdmin;
 	}
+
+	 
 	 
 	 
 }

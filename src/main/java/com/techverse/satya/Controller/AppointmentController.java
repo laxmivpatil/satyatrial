@@ -742,7 +742,64 @@ public ResponseEntity<?> rescheduledAppointmentByAdmin(@RequestHeader("Authoriza
     	 
     }
 
-  
+/*******new***/
+    @PatchMapping("/subadmin/appointments/reschedule")
+    public ResponseEntity<?> rescheduledAppointmentBySubAdmin(@RequestHeader("Authorization") String authorizationHeader,@RequestParam Long appointmentId,@RequestParam String newTime) {
+        	  
+        	Optional<SubAdmin> user = adminService.getAdminByToken1(authorizationHeader.substring(7));
+        	Map<String, Object> responseBody = new HashMap<>();
+
+        	if(user.isPresent()) { 
+           
+        	  
+        	boolean isRescheduled = appointmentService.rescheduledAppointmentbySubAdmin(appointmentId,newTime,user.get());
+        
+         
+        if (isRescheduled) {
+            responseBody.put("status", true);
+            responseBody.put("message", "Appointment Rescheduled successfully.");
+            return ResponseEntity.ok(responseBody);
+        } else {
+            responseBody.put("status", false);
+            responseBody.put("message", "Appointment allerady booked in the new time please choose another time  " + appointmentId);
+            return new ResponseEntity<>(responseBody, HttpStatus.OK);
+        }
+        }
+        else {
+      		responseBody.put("status",false);
+             responseBody.put("message","Unauthorized Access");
+             return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.UNAUTHORIZED);
+         }
+        }
+        
+        
+    @PatchMapping("/subadmin/appointments/delete")
+    public ResponseEntity<?> deleteAppointmentBySubAdmin(@RequestHeader("Authorization") String authorizationHeader,@RequestParam Long appointmentId) {
+    	Optional<SubAdmin> user = adminService.getAdminByToken1(authorizationHeader.substring(7));
+    	 
+    	Map<String, Object> responseBody = new HashMap<>();
+    	 if(user.isPresent()) { 
+    	        
+    		 boolean isDeleted = appointmentService.deleteAppointmentbySubAdmin(appointmentId,user.get());
+    		     
+
+    		    if (isDeleted) {
+    		        responseBody.put("status", true);
+    		        responseBody.put("message", "Appointment deleted successfully.");
+    		        return ResponseEntity.ok(responseBody);
+    		    } else {
+    		        responseBody.put("status", false);
+    		        responseBody.put("message", "Appointment not found");
+    		        return new ResponseEntity<>(responseBody, HttpStatus.OK);
+    		    }
+    	 }else {
+  	  		responseBody.put("status",false);
+	         responseBody.put("message","Unauthorized Access");
+	         return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.UNAUTHORIZED);
+	     }
+    	 
+    }
+/********end********/
     @GetMapping("/admin/appointments/todaybytype")
     public ResponseEntity<?> getTodayAppointmentsByType(@RequestHeader("Authorization") String authorizationHeader,@RequestParam String type) {
     	 Optional<Admin> user = adminService.getAdminByToken(authorizationHeader.substring(7));

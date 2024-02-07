@@ -150,15 +150,15 @@ public class AdminNotificationController {
                 List<Map<String, Object>> notifications = new ArrayList<>();
 
                 if (!todayNotifications.isEmpty()) {
-                    notifications.add(buildNotificationMap("today", todayNotifications));
+                    notifications.add(buildNotificationMap("Today", todayNotifications));
                 }
 
                 if (!thisWeekNotifications.isEmpty()) {
-                    notifications.add(buildNotificationMap("thisweek", thisWeekNotifications));
+                    notifications.add(buildNotificationMap("This Week", thisWeekNotifications));
                 }
 
                 if (!thisMonthNotifications.isEmpty()) {
-                    notifications.add(buildNotificationMap("thismonth", thisMonthNotifications));
+                    notifications.add(buildNotificationMap("This Month", thisMonthNotifications));
                 }
                 responseBody.put("status", true);
 

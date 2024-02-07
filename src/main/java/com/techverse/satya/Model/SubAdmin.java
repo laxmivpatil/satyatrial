@@ -28,9 +28,26 @@ public class SubAdmin {
     private String gender="";
     private String role="";
 
+	private String deviceToken="";
+	
+	
+	
+	
     @ManyToOne
     @JoinColumn(name = "admin_id")
     private Admin admin;
+
+    
+    
+    
+    
+	public String getDeviceToken() {
+		return deviceToken;
+	}
+
+	public void setDeviceToken(String deviceToken) {
+		this.deviceToken = deviceToken;
+	}
 
 	public Long getId() {
 		return id;

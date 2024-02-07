@@ -7,6 +7,7 @@ public class SubAdminDTO {
  private String mobileNumber;
  private String joineddate;
  private String name="";
+ private String role="subadmin";
  
  // Constructors, getters, and setters
 
@@ -21,6 +22,7 @@ public class SubAdminDTO {
      this.mobileNumber = mobileNumber;
      this.joineddate = joineddate;
      this.name = name;
+     this.role="subadmin";
     
  }
  
@@ -29,6 +31,7 @@ public class SubAdminDTO {
      this.mobileNumber = subAdmin.getMobileNumber();
      this.joineddate = subAdmin.getJoineddate();
      this.name = subAdmin.getName();
+     this.role="subadmin";
     
  }
 
@@ -65,6 +68,14 @@ public class SubAdminDTO {
  public void setName(String name) {
      this.name = name;
  }
+
+public String getRole() {
+	return role;
+}
+
+public void setRole(String role) {
+	this.role = role;
+}
 
   
  

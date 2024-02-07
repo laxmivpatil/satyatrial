@@ -138,8 +138,7 @@ public class SuggestionService {
 	public Optional<Suggestion> getSuggestionById(Long suggestionId) {
 		return suggestionRepository.findById(suggestionId);
 	}
-
-
+	
 	public List<Suggestion> getSuggestionsByUserId(Long userId) {
 		return suggestionRepository.findByUser_Id(userId);
 	}

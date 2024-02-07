@@ -144,6 +144,16 @@ public class AdminService {
         return  admin;
     }
     
+    public Optional<SubAdmin> getAdminByToken1(String token) {
+    	String mobileNo=jwtHelper.getUsernameFromToken(token);
+    	Optional<SubAdmin> subAdmin=subAdminRepository.findByMobileNumber(mobileNo);
+    	  
+     
+	//	 System.out.println("hi "+userName);
+		
+        return  subAdmin;
+    }
+    
     public Admin updateAdminProfile(Long adminId, AdminProfileRequest adminProfileRequest, MultipartFile profilePhoto,MultipartFile proof) throws IOException {
         // Retrieve the existing admin by adminId from the database
         Optional<Admin> adminOptional = adminRepository.findById(adminId);
@@ -152,10 +162,11 @@ public class AdminService {
             Admin admin = adminOptional.get();
 
             // Update admin profile details from adminProfileRequest
-             admin.setEmail(adminProfileRequest.getEmail());
+            
+            admin.setEmail(adminProfileRequest.getEmail());
             admin.setQualification(adminProfileRequest.getQualification());
             admin.setHomeAddress(adminProfileRequest.getHomeAddress());
-              admin.setOfficeAddress(adminProfileRequest.getOfficeAddress());
+            admin.setOfficeAddress(adminProfileRequest.getOfficeAddress());
             admin.setPincode(adminProfileRequest.getPincode());
             admin.setCity(adminProfileRequest.getCity());
             admin.setConstitution(adminProfileRequest.getConstitution());

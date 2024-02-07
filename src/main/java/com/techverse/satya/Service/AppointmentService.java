@@ -20,6 +20,7 @@ import com.techverse.satya.DTO.TimeSlotDetail;
 import com.techverse.satya.Model.Admin;
 import com.techverse.satya.Model.Appointment;
 import com.techverse.satya.Model.SmallerTimeSlot;
+import com.techverse.satya.Model.SubAdmin;
 import com.techverse.satya.Model.TimeSlot;
 import com.techverse.satya.Model.Users;
 import com.techverse.satya.Repository.AdminRepository;
@@ -361,8 +362,39 @@ public class AppointmentService {
             smallerTimeSlotRepository.save(smallerTimeSlot);
 
             // Send notification to the user about the cancellation
+            
             userNotificationService.sendDeleteAppointmentNotificationToUser(appointment, appointment.getUser());
+            
+          
 
+            return true;
+        }
+
+        return false; // Appointment not found
+    }
+    
+    public boolean deleteAppointmentbySubAdmin(Long appointmentId,SubAdmin subAdmin) {
+        Optional<Appointment> optionalAppointment = appointmentRepository.findById(appointmentId);
+
+        if (optionalAppointment.isPresent()) {
+            Appointment appointment = optionalAppointment.get();
+            appointment.setStatus("cancel");
+            appointmentRepository.save(appointment);
+
+            // Delete the appointment
+           
+            // Update the slotBook to false in SmallerTimeSlot entity
+            SmallerTimeSlot smallerTimeSlot = appointment.getSmallerTimeSlot();
+            smallerTimeSlot.setSlotBook(false);
+            smallerTimeSlot.setAppointment(null);
+            smallerTimeSlotRepository.save(smallerTimeSlot);
+
+            // Send notification to the user about the cancellation
+            
+             
+            	userNotificationService.sendDeleteAppointmentNotificationToUser(appointment, appointment.getUser());
+            	adminNotificationService.sendCancelAppointmentNotificationToAdminBySubAdmin(appointment,appointment.getUser(),subAdmin);
+             
             return true;
         }
 
@@ -455,6 +487,92 @@ public class AppointmentService {
         return false; // Appointment not found
     }
     // other methods...
+    
+    public boolean rescheduledAppointmentbySubAdmin(Long appointmentId,String newTime,SubAdmin subAdmin) {
+        Optional<Appointment> optionalAppointment = appointmentRepository.findById(appointmentId);
+        String oldTime="";
+        if (optionalAppointment.isPresent()) {
+        	 oldTime=optionalAppointment.get().getTime();
+        	 
+            Appointment appointment = optionalAppointment.get();
+            Optional<SmallerTimeSlot> smallerTime= smallerTimeSlotRepository.findByDateAndStartTimeAndAvailabilityAndAdminId(appointment.getDate(), newTime, appointment.getAppointmentType(), appointment.getAdmin().getId());
+             
+            
+            
+            if(smallerTime.isPresent())
+            	{
+            	 if(smallerTime.get().isSlotBook()) {
+            		 return false;
+            	 }
+            	 else {
+            		  SmallerTimeSlot smallerTimeSlot = appointment.getSmallerTimeSlot();
+                      smallerTimeSlot.setAppointment(null);
+                      smallerTimeSlot.setSlotBook(false);
+                      smallerTimeSlotRepository.save(smallerTimeSlot);
+                      
+            		 SmallerTimeSlot smallerTimeS=smallerTime.get();
+                 	smallerTimeS.setSlotBook(true);
+
+         	        // Set the appointment for the smaller time slot
+         	        smallerTimeS.setAppointment(appointment);
+         	        appointment.setTime(newTime);
+         	        // Save the updated smaller time slot (this cascades to appointment due to the relationship)
+         	        smallerTimeSlotRepository.save(smallerTimeS);
+            	 }
+            	
+    	        
+            	}
+            else {
+            	appointment.setTime(newTime);
+               SmallerTimeSlot smallerTimeSlot = appointment.getSmallerTimeSlot();
+                  smallerTimeSlot.setAppointment(null);
+                  smallerTimeSlot.setSlotBook(false);
+                  smallerTimeSlotRepository.save(smallerTimeSlot);
+            	 
+            	  TimeSlot timeSlot = new TimeSlot();
+      	        timeSlot.setDate(appointment.getDate());
+      	        timeSlot.setAvailability(appointment.getAppointmentType());
+      	        
+      	          
+      	        timeSlot.setAdmin(appointment.getAdmin());
+      	      SmallerTimeSlot smallerTimeSlot1 = new SmallerTimeSlot();
+      	    List<SmallerTimeSlot> smallerTimeSlots = new ArrayList<>();
+      	    LocalTime startTime = LocalTime.parse(newTime, DateTimeFormatter.ofPattern("hh:mma"));
+	          
+      	    LocalTime slotEndTime = startTime.plusMinutes(15);
+              smallerTimeSlot1.setStartTime(startTime.format(DateTimeFormatter.ofPattern("hh:mma")));
+              smallerTimeSlot1.setEndTime(slotEndTime.format(DateTimeFormatter.ofPattern("hh:mma")));
+              smallerTimeSlot1.setTimeSlot(timeSlot);
+              smallerTimeSlot1.setAdmin(appointment.getAdmin());
+              smallerTimeSlot1.setAppointment(appointment);
+              smallerTimeSlots.add(smallerTimeSlot1);
+              timeSlot.setSmallerTimeSlots(smallerTimeSlots);
+              List<TimeSlotDetail> timeSlotDetails=new ArrayList<>();
+              TimeSlotDetail t=new TimeSlotDetail(startTime.format(DateTimeFormatter.ofPattern("hh:mma")),slotEndTime.format(DateTimeFormatter.ofPattern("hh:mma")),appointment.getSmallerTimeSlot().getTimeSlot().getTimeSlotDetails().get(0).getAddress());
+              timeSlotDetails.add(t);
+                      
+  	    	timeSlot.setTimeSlotDetails(timeSlotDetails);
+  	        timeSlotRepository.save(timeSlot);
+  	      
+            }
+            
+            
+            appointmentRepository.save(appointment);
+
+            // Delete the appointment
+           
+            // Update the slotBook to false in SmallerTimeSlot entity
+           
+
+            // Send notification to the user about the cancellation
+            userNotificationService.sendRescheduleAppointmentNotificationToUser(appointment, appointment.getUser(),oldTime);
+        	adminNotificationService.sendRescheduleAppointmentNotificationToAdminBySubAdmin(appointment,appointment.getUser(),oldTime,subAdmin);
+            
+            return true;
+        }
+
+        return false; // Appointment not found
+    }
     
     public static String generateUniqueString() {
         SecureRandom secureRandom = new SecureRandom();
