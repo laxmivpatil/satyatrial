@@ -78,7 +78,7 @@ catch(Exception e){
         String notificationType = "appointment";
         Long entityId = appointment.getId();
 try {
-        AdminNotification adminNotification = new AdminNotification(message, notificationType, entityId,user.getProfilePphoto(),user.getAdmin(),appointment.getAppointmentType(),appointment.getStatus());
+        AdminNotification adminNotification = new AdminNotification(message, notificationType, entityId,user.getProfilePphoto(),user.getAdmin(),appointment.getAppointmentType(),"cancel");
         adminNotificationRepository.save(adminNotification);
         if(user.getAdmin().isNotificationEnabled()) {
             
@@ -142,7 +142,7 @@ catch(Exception e){
         String notificationType = "appointment";
         Long entityId = appointment.getId();
 try {
-        AdminNotification adminNotification = new  AdminNotification(message, notificationType, entityId,user.getProfilePphoto(),user.getAdmin(),appointment.getAppointmentType(),appointment.getStatus());
+        AdminNotification adminNotification = new  AdminNotification(message, notificationType, entityId,user.getProfilePphoto(),user.getAdmin(),appointment.getAppointmentType(),"cancel");
         adminNotificationRepository.save(adminNotification);
         if(user.getAdmin().isNotificationEnabled()) {
             
