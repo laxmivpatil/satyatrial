@@ -18,11 +18,13 @@ import org.springframework.stereotype.Service;
 import com.techverse.satya.DTO.AppointmentRequest;
 import com.techverse.satya.DTO.TimeSlotDetail;
 import com.techverse.satya.Model.Admin;
+import com.techverse.satya.Model.AdminNotification;
 import com.techverse.satya.Model.Appointment;
 import com.techverse.satya.Model.SmallerTimeSlot;
 import com.techverse.satya.Model.SubAdmin;
 import com.techverse.satya.Model.TimeSlot;
 import com.techverse.satya.Model.Users;
+import com.techverse.satya.Repository.AdminNotificationRepository;
 import com.techverse.satya.Repository.AdminRepository;
 import com.techverse.satya.Repository.AppointmentRepository;
 import com.techverse.satya.Repository.SmallerTimeSlotRepository;
@@ -45,6 +47,8 @@ public class AppointmentService {
 	UserNotificationService userNotificationService;
 	@Autowired
 	private TimeSlotRepository timeSlotRepository;
+	@Autowired
+	AdminNotificationRepository adminNotificationRepository;
    
     // other methods...
 
@@ -372,7 +376,37 @@ public class AppointmentService {
 
         return false; // Appointment not found
     }
-    
+    public boolean deleteAppointmentbyAdminByNotification(Long appointmentId,Long notificationId) {
+        Optional<Appointment> optionalAppointment = appointmentRepository.findById(appointmentId);
+
+        if (optionalAppointment.isPresent()) {
+            Appointment appointment = optionalAppointment.get();
+            appointment.setStatus("cancel");
+            appointmentRepository.save(appointment);
+
+            // Delete the appointment
+           
+            // Update the slotBook to false in SmallerTimeSlot entity
+            SmallerTimeSlot smallerTimeSlot = appointment.getSmallerTimeSlot();
+            smallerTimeSlot.setSlotBook(false);
+            smallerTimeSlot.setAppointment(null);
+            smallerTimeSlotRepository.save(smallerTimeSlot);
+
+            // Send notification to the user about the cancellation
+            
+            userNotificationService.sendDeleteAppointmentNotificationToUser(appointment, appointment.getUser());
+            Optional<AdminNotification> adminNotification=adminNotificationRepository.findById(notificationId);
+            if(adminNotification.isPresent()) {
+            	adminNotification.get().setAppointmentStatus("cancel");
+            	adminNotificationRepository.save(adminNotification.get());
+            }
+            
+
+            return true;
+        }
+
+        return false; // Appointment not found
+    }
     public boolean deleteAppointmentbySubAdmin(Long appointmentId,SubAdmin subAdmin) {
         Optional<Appointment> optionalAppointment = appointmentRepository.findById(appointmentId);
 

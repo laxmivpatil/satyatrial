@@ -742,6 +742,35 @@ public ResponseEntity<?> rescheduledAppointmentByAdmin(@RequestHeader("Authoriza
     	 
     }
 
+    
+    
+    @PatchMapping("/admin/appointments/deleteappointmentbynotification")
+    public ResponseEntity<?> deleteAppointmentByAdminInNotification(@RequestHeader("Authorization") String authorizationHeader,@RequestParam Long appointmentId,@RequestParam Long notificationId) {
+    	Optional<Admin> user = adminService.getAdminByToken(authorizationHeader.substring(7));
+    	 
+    	Map<String, Object> responseBody = new HashMap<>();
+    	 if(user.isPresent()) { 
+    	        
+    		 boolean isDeleted = appointmentService.deleteAppointmentbyAdminByNotification(appointmentId, notificationId);
+    		     
+
+    		    if (isDeleted) {
+    		        responseBody.put("status", true);
+    		        responseBody.put("message", "Appointment deleted successfully.");
+    		        return ResponseEntity.ok(responseBody);
+    		    } else {
+    		        responseBody.put("status", false);
+    		        responseBody.put("message", "Appointment not found");
+    		        return new ResponseEntity<>(responseBody, HttpStatus.OK);
+    		    }
+    	 }else {
+  	  		responseBody.put("status",false);
+	         responseBody.put("message","Unauthorized Access");
+	         return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.UNAUTHORIZED);
+	     }
+    	 
+    }
+
 /*******new***/
     @PatchMapping("/subadmin/appointments/reschedule")
     public ResponseEntity<?> rescheduledAppointmentBySubAdmin(@RequestHeader("Authorization") String authorizationHeader,@RequestParam Long appointmentId,@RequestParam String newTime) {
