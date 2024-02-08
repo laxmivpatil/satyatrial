@@ -101,7 +101,7 @@ private boolean isMorningSlot(String startTime) {
 private boolean isDaySlot(String startTime) {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("h:mma");
     LocalTime time = LocalTime.parse(startTime.toUpperCase(), formatter);
-    return time.isAfter(LocalTime.parse("12:00PM", formatter)) && time.isBefore(LocalTime.parse("6:00PM", formatter));
+    return time.isAfter(LocalTime.parse("11:59AM", formatter)) && time.isBefore(LocalTime.parse("6:00PM", formatter));
 }
 
 @GetMapping("/admin/timeslots/getavailability")
