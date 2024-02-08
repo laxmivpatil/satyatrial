@@ -23,6 +23,9 @@ public class SubAdminNotification {
     private boolean read=false; // Indicates whether the notification has been read or not
     private LocalDateTime createdAt;
     String profilePhoto;
+    private String appointmentType=""; // "appointment" or "suggestion"
+    private String appointmentStatus=""; // "appointment" or "suggestion"
+    
 
     // Constructors, getters, and setters
 
@@ -31,14 +34,44 @@ public class SubAdminNotification {
         this.read = false; // By default, the notification is unread when created
     }
 
-    public SubAdminNotification(String message, String notificationType, Long entityId,String profilePhoto,SubAdmin subAdmin) {
+    public SubAdminNotification(String message, String notificationType, Long entityId,String profilePhoto,SubAdmin subadmin,String appointmentType, String appointmentStatus) {
         this();
         this.message = message;
         this.notificationType = notificationType;
         this.entityId = entityId;
         this.profilePhoto=profilePhoto;
-        this.subAdmin=subAdmin;
+        this.subAdmin=subadmin;
+        this.appointmentType=appointmentType;
+        this.appointmentStatus=appointmentStatus;
+        
     }
+
+    public String getAppointmentType() {
+		return appointmentType;
+	}
+
+
+
+
+	public String getAppointmentStatus() {
+		return appointmentStatus;
+	}
+
+
+
+
+	public void setAppointmentStatus(String appointmentStatus) {
+		this.appointmentStatus = appointmentStatus;
+	}
+
+
+
+
+	public void setAppointmentType(String appointmentType) {
+		this.appointmentType = appointmentType;
+	}
+
+
 
 	public Long getId() {
 		return id;

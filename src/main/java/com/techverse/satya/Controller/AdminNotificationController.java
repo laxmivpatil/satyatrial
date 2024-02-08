@@ -124,7 +124,7 @@ public class AdminNotificationController {
         try {
             System.out.println("hi token");
             if (user.isPresent()) {
-
+            	 System.out.println("hi token"+user.get().getId());
                 List<AdminNotificationDTO> unreadNotifications = notificationService.getUnreadAdminNotificationDTOs(user.get().getId());
 
                 // Filter notifications for today, this week, and this month

@@ -3,8 +3,9 @@ package com.techverse.satya.DTO;
 import java.time.LocalDateTime;
 
 import com.techverse.satya.Model.AdminNotification;
+import com.techverse.satya.Model.SubAdminNotification;
 
-public class AdminNotificationDTO {
+public class SubAdminNotificationDTO {
     private Long id;
     private String message;
     private String notificationType;
@@ -12,7 +13,7 @@ public class AdminNotificationDTO {
     private boolean read;
     private LocalDateTime createdAt;
     private String profilePhoto;
-    private Long adminId;  // Id of the associated Admin
+    private Long subAdminId;  // Id of the associated Admin
     private String appointmentType="";
     
      private String appointmentStatus=""; // "appointment" or "suggestion"
@@ -21,12 +22,12 @@ public class AdminNotificationDTO {
 
     // Constructors, getters, and setters
 
-    public AdminNotificationDTO() {
+    public SubAdminNotificationDTO() {
         // Default constructor
     }
 
-    public AdminNotificationDTO(Long id, String message, String notificationType, Long entityId,
-                                boolean read, LocalDateTime createdAt, String profilePhoto, Long adminId,String appointmentType,String appointmentStatus) {
+    public SubAdminNotificationDTO(Long id, String message, String notificationType, Long entityId,
+                                boolean read, LocalDateTime createdAt, String profilePhoto, Long subAdminId,String appointmentType,String appointmentStatus) {
         this.id = id;
         this.message = message;
         this.notificationType = notificationType;
@@ -34,7 +35,7 @@ public class AdminNotificationDTO {
         this.read = read;
         this.createdAt = createdAt;
         this.profilePhoto = profilePhoto;
-        this.adminId = adminId;
+        this.subAdminId = subAdminId;
         this.appointmentType=appointmentType;
         this.appointmentStatus=appointmentStatus;
     }
@@ -44,7 +45,43 @@ public class AdminNotificationDTO {
     // Getters and setters
     // Omitted for brevity, but you need to include getters and setters for all fields
 
-    public String getAppointmentStatus() {
+    public Long getSubAdminId() {
+		return subAdminId;
+	}
+
+	public void setSubAdminId(Long subAdminId) {
+		this.subAdminId = subAdminId;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public void setNotificationType(String notificationType) {
+		this.notificationType = notificationType;
+	}
+
+	public void setEntityId(Long entityId) {
+		this.entityId = entityId;
+	}
+
+	public void setRead(boolean read) {
+		this.read = read;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public void setProfilePhoto(String profilePhoto) {
+		this.profilePhoto = profilePhoto;
+	}
+
+	public String getAppointmentStatus() {
 		return appointmentStatus;
 	}
 
@@ -80,9 +117,6 @@ public class AdminNotificationDTO {
         return profilePhoto;
     }
 
-    public Long getAdminId() {
-        return adminId;
-    }
     
     
 
@@ -95,8 +129,8 @@ public class AdminNotificationDTO {
 	}
 
 	// You can use a static method to convert an AdminNotification entity to DTO
-   /* public static AdminNotificationDTO fromEntity(AdminNotification adminNotification) {
-        return new AdminNotificationDTO(
+    public static SubAdminNotificationDTO fromEntity(SubAdminNotification adminNotification) {
+        return new SubAdminNotificationDTO(
                 adminNotification.getId(),
                 adminNotification.getMessage(),
                 adminNotification.getNotificationType(),
@@ -104,38 +138,12 @@ public class AdminNotificationDTO {
                 adminNotification.isRead(),
                 adminNotification.getCreatedAt(),
                 adminNotification.getProfilePhoto(),
-                adminNotification.getAdmin().getId(),
+                adminNotification.getSubAdmin().getId(),
                 adminNotification.getAppointmentType(),
                 adminNotification.getAppointmentStatus()
         );
     }
-    */
-    public static AdminNotificationDTO fromEntity(AdminNotification adminNotification) {
-    	String type="";
-    	String status="";
-    	if(adminNotification.getNotificationType().equals("suggestion")) {
-    		
-    		type="suggestion";
-    		status="suggestion";
-    	}
-    	else {
-    		type= adminNotification.getAppointment().getAppointmentType();
-            status=adminNotification.getAppointment().getStatus();
-    	}
-    	 
-        return new AdminNotificationDTO(
-                adminNotification.getId(),
-                adminNotification.getMessage(),
-                adminNotification.getNotificationType(),
-                adminNotification.getEntityId(),
-                adminNotification.isRead(),
-                adminNotification.getCreatedAt(),
-                adminNotification.getUser().getProfilePphoto(),
-                adminNotification.getAdmin().getId(),
-               type,
-                status
-        );
-    }
+    
     
     
 }

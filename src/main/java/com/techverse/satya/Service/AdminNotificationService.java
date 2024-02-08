@@ -40,7 +40,7 @@ public class AdminNotificationService {
         String notificationType = "appointment";
         Long entityId = appointment.getId();
 try {
-        AdminNotification adminNotification = new AdminNotification(message, notificationType, entityId,user.getProfilePphoto(),user.getAdmin(),appointment.getAppointmentType(),appointment.getStatus());
+        AdminNotification adminNotification = new AdminNotification(message, notificationType,user.getAdmin(),appointment,user);
         adminNotificationRepository.save(adminNotification);
         if(user.getAdmin().isNotificationEnabled()) {
         PushNotificationRequest p=new PushNotificationRequest(user.getAdmin().getDeviceToken(),"New Appointment",message);
@@ -57,8 +57,8 @@ try {
         String notificationType = "suggestion";
         Long entityId = suggestion.getId();
 try {
-        AdminNotification adminNotification = new AdminNotification(message, notificationType, entityId,user.getProfilePphoto(),user.getAdmin(),"suggestion","suggestion");
-        adminNotificationRepository.save(adminNotification);
+	 AdminNotification adminNotification = new AdminNotification(message, notificationType,user.getAdmin(),suggestion,user);
+       adminNotificationRepository.save(adminNotification);
         if(user.getAdmin().isNotificationEnabled()) {
         PushNotificationRequest p=new PushNotificationRequest(user.getAdmin().getDeviceToken(),"New Suggestion",message);
         pushNotificationService.sendPushNotificationToToken(p);
@@ -78,8 +78,8 @@ catch(Exception e){
         String notificationType = "appointment";
         Long entityId = appointment.getId();
 try {
-        AdminNotification adminNotification = new AdminNotification(message, notificationType, entityId,user.getProfilePphoto(),user.getAdmin(),appointment.getAppointmentType(),"cancel");
-        adminNotificationRepository.save(adminNotification);
+	 AdminNotification adminNotification = new AdminNotification(message, notificationType,user.getAdmin(),appointment,user);
+       adminNotificationRepository.save(adminNotification);
         if(user.getAdmin().isNotificationEnabled()) {
             
         PushNotificationRequest p=new PushNotificationRequest(user.getAdmin().getDeviceToken(),"Appointment Cancel",message);
@@ -99,8 +99,8 @@ catch(Exception e){
 	        String title="Appointment Rescheduled";
 	        String notificationType = "appointment";
 		  try {
-	        AdminNotification adminNotification = new AdminNotification(message, notificationType, entityId,user.getProfilePphoto(),user.getAdmin(),appointment.getAppointmentType(),appointment.getStatus());
-	        adminNotificationRepository.save(adminNotification);	  // Here you can add logic to send the notification to admin using email, SMS, etc.
+			  AdminNotification adminNotification = new AdminNotification(message, notificationType,user.getAdmin(),appointment,user);
+		        adminNotificationRepository.save(adminNotification);	  // Here you can add logic to send the notification to admin using email, SMS, etc.
 	        if(user.getAdmin().isNotificationEnabled()) {
 	            
 	        PushNotificationRequest p=new PushNotificationRequest(user.getAdmin().getDeviceToken(),"Appointment Rescheduled",message);
@@ -121,8 +121,8 @@ catch(Exception e){
 	        String title="Appointment Rescheduled";
 	        String notificationType = "appointment";
 		  try {
-	        AdminNotification adminNotification = new AdminNotification(message, notificationType, entityId,user.getProfilePphoto(),user.getAdmin(),appointment.getAppointmentType(),appointment.getStatus());
-	        adminNotificationRepository.save(adminNotification);	  // Here you can add logic to send the notification to admin using email, SMS, etc.
+			  AdminNotification adminNotification = new AdminNotification(message, notificationType,user.getAdmin(),appointment,user);
+		         adminNotificationRepository.save(adminNotification);	  // Here you can add logic to send the notification to admin using email, SMS, etc.
 	        if(user.getAdmin().isNotificationEnabled()) {
 	            
 	        PushNotificationRequest p=new PushNotificationRequest(user.getAdmin().getDeviceToken(),"Appointment Rescheduled",message);
@@ -142,8 +142,8 @@ catch(Exception e){
         String notificationType = "appointment";
         Long entityId = appointment.getId();
 try {
-        AdminNotification adminNotification = new  AdminNotification(message, notificationType, entityId,user.getProfilePphoto(),user.getAdmin(),appointment.getAppointmentType(),"cancel");
-        adminNotificationRepository.save(adminNotification);
+	 AdminNotification adminNotification = new AdminNotification(message, notificationType,user.getAdmin(),appointment,user);
+       adminNotificationRepository.save(adminNotification);
         if(user.getAdmin().isNotificationEnabled()) {
         PushNotificationRequest p=new PushNotificationRequest(user.getAdmin().getDeviceToken(),"Appointment Cancel",message);
         pushNotificationService.sendPushNotificationToToken(p);
@@ -167,8 +167,7 @@ catch(Exception e){
     }
 
     private AdminNotificationDTO convertToDTO(AdminNotification adminNotification) {
-    	System.out.println(adminNotification.getAppointmentStatus()+adminNotification.getAppointmentType());
-        return AdminNotificationDTO.fromEntity(adminNotification);
+    	         return AdminNotificationDTO.fromEntity(adminNotification);
          
 
      

@@ -395,12 +395,38 @@ public class AppointmentService {
             // Send notification to the user about the cancellation
             
             userNotificationService.sendDeleteAppointmentNotificationToUser(appointment, appointment.getUser());
-            Optional<AdminNotification> adminNotification=adminNotificationRepository.findById(notificationId);
+         /*   Optional<AdminNotification> adminNotification=adminNotificationRepository.findById(notificationId);
             if(adminNotification.isPresent()) {
             	adminNotification.get().setAppointmentStatus("cancel");
             	adminNotificationRepository.save(adminNotification.get());
             }
             
+*/
+            return true;
+        }
+
+        return false; // Appointment not found
+    }
+    public boolean deleteAppointmentbySubAdminByNotification(Long appointmentId,Long notificationId) {
+        Optional<Appointment> optionalAppointment = appointmentRepository.findById(appointmentId);
+
+        if (optionalAppointment.isPresent()) {
+            Appointment appointment = optionalAppointment.get();
+            appointment.setStatus("cancel");
+            appointmentRepository.save(appointment);
+
+            // Delete the appointment
+           
+            // Update the slotBook to false in SmallerTimeSlot entity
+            SmallerTimeSlot smallerTimeSlot = appointment.getSmallerTimeSlot();
+            smallerTimeSlot.setSlotBook(false);
+            smallerTimeSlot.setAppointment(null);
+            smallerTimeSlotRepository.save(smallerTimeSlot);
+
+            // Send notification to the user about the cancellation
+            
+            userNotificationService.sendDeleteAppointmentNotificationToUser(appointment, appointment.getUser());
+             
 
             return true;
         }

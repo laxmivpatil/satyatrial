@@ -18,16 +18,25 @@ public class AdminNotification {
 
     private String message;
     private String notificationType; // "appointment" or "suggestion"
-    private String appointmentType=""; // "appointment" or "suggestion"
-    private String appointmentStatus=""; // "appointment" or "suggestion"
-    
+     
     private Long entityId; // ID of the appointment or suggestion
     @Column(name = "is_read")  
     private boolean read=false; // Indicates whether the notification has been read or not
     private LocalDateTime createdAt;
-    String profilePhoto;
+    
+    @ManyToOne
+    @JoinColumn(name = "user_id") // Adjust the column name to match your schema
+    private Users user;
 
+    @ManyToOne
+    @JoinColumn(name = "appointment_id") // adjust the column name accordingly
+    private Appointment appointment;
     // Constructors, getters, and setters
+    
+    @ManyToOne
+    @JoinColumn(name = "suggestion_id") // adjust the column name accordingly
+    private Suggestion suggestion;
+    
 
     public AdminNotification() {
         this.createdAt = LocalDateTime.now();
@@ -37,33 +46,49 @@ public class AdminNotification {
     
     
 
-    public String getAppointmentType() {
-		return appointmentType;
+    public Suggestion getSuggestion() {
+		return suggestion;
 	}
 
 
 
 
-	public String getAppointmentStatus() {
-		return appointmentStatus;
+	public void setSuggestion(Suggestion suggestion) {
+		this.suggestion = suggestion;
 	}
 
 
 
 
-	public void setAppointmentStatus(String appointmentStatus) {
-		this.appointmentStatus = appointmentStatus;
+	public Appointment getAppointment() {
+		return appointment;
 	}
 
 
 
 
-	public void setAppointmentType(String appointmentType) {
-		this.appointmentType = appointmentType;
+	public void setAppointment(Appointment appointment) {
+		this.appointment = appointment;
 	}
 
 
 
+
+	public Users getUser() {
+		return user;
+	}
+
+
+
+
+	public void setUser(Users user) {
+		this.user = user;
+	}
+
+
+
+ 
+/*
 
 	public AdminNotification(String message, String notificationType, Long entityId,String profilePhoto,Admin admin,String appointmentType, String appointmentStatus) {
         this();
@@ -75,19 +100,40 @@ public class AdminNotification {
         this.appointmentType=appointmentType;
         this.appointmentStatus=appointmentStatus;
         
+    }*/
+	
+	public AdminNotification(String message, String notificationType,Admin admin,Appointment appointment,Users user) {
+        this();
+        this.message = message;
+        this.notificationType = notificationType;
+      
+        this.entityId=appointment.getId();
+         this.admin=admin;
+        this.user=user;
+        this.appointment=appointment;
+        this.suggestion=null;
+        
+        
+    }
+	public AdminNotification(String message, String notificationType,Admin admin,Suggestion suggestion,Users user) {
+        this();
+        this.message = message;
+        this.notificationType = notificationType;
+      
+        this.entityId=suggestion.getId();
+         this.admin=admin;
+        this.user=user;
+        this.appointment=null;
+        this.suggestion=suggestion;
+        
+        
     }
 
 	public Long getId() {
 		return id;
 	}
 
-	public String getProfilePhoto() {
-		return profilePhoto;
-	}
-
-	public void setProfilePhoto(String profilePhoto) {
-		this.profilePhoto = profilePhoto;
-	}
+ 
 
 	public void setId(Long id) {
 		this.id = id;
@@ -146,5 +192,6 @@ public class AdminNotification {
 		this.admin = admin;
 	}
 	 
+	
 	 
 }
