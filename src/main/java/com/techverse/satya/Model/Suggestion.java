@@ -1,5 +1,6 @@
 package com.techverse.satya.Model;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -42,12 +43,18 @@ public class Suggestion {
 		this.thumbnail = thumbnail;
 	}
 
-
+ 
 	@CreatedDate
     @Column(nullable = false, updatable = false)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dateTime;
-
+ 
+	/*@CreatedDate
+	@Column(nullable = false, updatable = false)
+	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "UTC")
+	private Instant dateTime;
+	
+	*/
 	public Long getId() {
 		return id;
 	}

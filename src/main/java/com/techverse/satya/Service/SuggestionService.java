@@ -50,8 +50,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -117,7 +119,12 @@ public class SuggestionService {
 			}
 
 			 suggestion.setUser(user.get());
-			suggestion.setDateTime(LocalDateTime.now());
+			   Instant instant = Instant.parse(Instant.now().toString());
+
+		        // Convert Instant to LocalDateTime in a specific time zone
+		        ZoneId zoneId = ZoneId.of("Asia/Kolkata"); // Choose the appropriate time zone
+		        LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, zoneId);
+			suggestion.setDateTime(localDateTime);
 			System.out.println(suggestion);
 			// Save the suggestion to the database
 			suggestionRepository.save(suggestion);
@@ -188,6 +195,8 @@ public class SuggestionService {
         dto.setComment(suggestion.getComment());
         dto.setPhoto(suggestion.getPhotoUrl());
         dto.setVideo(suggestion.getVideoUrl());
+     
+
         dto.setDateTime(suggestion.getDateTime());
         dto.setProfile(userRepository.findById(suggestion.getUser().getId()).get().getProfilePphoto());
         dto.setThumbnail(suggestion.getThumbnail());
