@@ -517,6 +517,7 @@ public class AppointmentService {
               smallerTimeSlot1.setStartTime(startTime.format(DateTimeFormatter.ofPattern("hh:mma")));
               smallerTimeSlot1.setEndTime(slotEndTime.format(DateTimeFormatter.ofPattern("hh:mma")));
               smallerTimeSlot1.setTimeSlot(timeSlot);
+              System.out.println("hi i am new");
               smallerTimeSlot1.setSlotBook(true);
               smallerTimeSlot1.setAdmin(appointment.getAdmin());
               smallerTimeSlot1.setAppointment(appointment);
