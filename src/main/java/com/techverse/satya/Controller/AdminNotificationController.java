@@ -225,7 +225,7 @@ public class AdminNotificationController {
              suggestionResponseDTO.setComment(suggestion.getComment());
              suggestionResponseDTO.setPhoto(suggestion.getPhotoUrl());
              suggestionResponseDTO.setVideo(suggestion.getVideoUrl());
-           //  suggestionResponseDTO.setDateTime(suggestion.getDateTime());
+            suggestionResponseDTO.setDateTime(suggestion.getDateTime());
              // You can set other fields like photo and video based on your logic
 
              responseBody.put("Suggestion", suggestionResponseDTO);
