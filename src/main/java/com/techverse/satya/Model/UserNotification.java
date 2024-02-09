@@ -5,7 +5,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Entity
 public class UserNotification {
@@ -77,7 +80,13 @@ public class UserNotification {
 		this.message = message;
 		this.appointmentId = appointmentId;
 		this.userId=userId;
-		  this.createdAt = LocalDateTime.now();
+		Instant instant = Instant.parse(Instant.now().toString());
+
+	     
+		 ZoneId zoneId = ZoneId.of("Asia/Kolkata"); // Choose the appropriate time zone
+	        LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, zoneId);
+     this.createdAt = localDateTime;
+		  
 		  this.title=title;
 		  this.profilePhoto=profile;
 	}

@@ -8,7 +8,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Entity
 public class AdminNotification {
@@ -39,7 +41,12 @@ public class AdminNotification {
     
 
     public AdminNotification() {
-        this.createdAt = LocalDateTime.now();
+    	 Instant instant = Instant.parse(Instant.now().toString());
+
+	        // Convert Instant to LocalDateTime in a specific time zone
+	        ZoneId zoneId = ZoneId.of("Asia/Kolkata"); // Choose the appropriate time zone
+	        LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, zoneId);
+        this.createdAt = localDateTime;
         this.read = false; // By default, the notification is unread when created
     }
     
@@ -57,7 +64,7 @@ public class AdminNotification {
 		this.suggestion = suggestion;
 	}
 
-
+//admin rescheduled appointment
 
 
 	public Appointment getAppointment() {
