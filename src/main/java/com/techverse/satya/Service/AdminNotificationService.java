@@ -43,7 +43,7 @@ try {
         AdminNotification adminNotification = new AdminNotification(message, notificationType,user.getAdmin(),appointment,user);
         adminNotificationRepository.save(adminNotification);
         if(user.getAdmin().isNotificationEnabled()) {
-        PushNotificationRequest p=new PushNotificationRequest(user.getAdmin().getDeviceToken(),"New Appointment",message);
+        PushNotificationRequest p=new PushNotificationRequest(user.getAdmin().getDeviceToken(),"New Appointment",message,"appointment");
         pushNotificationService.sendPushNotificationToToken(p);
         }
         
@@ -60,7 +60,7 @@ try {
 	 AdminNotification adminNotification = new AdminNotification(message, notificationType,user.getAdmin(),suggestion,user);
        adminNotificationRepository.save(adminNotification);
         if(user.getAdmin().isNotificationEnabled()) {
-        PushNotificationRequest p=new PushNotificationRequest(user.getAdmin().getDeviceToken(),"New Suggestion",message);
+        PushNotificationRequest p=new PushNotificationRequest(user.getAdmin().getDeviceToken(),"New Suggestion",message,"suggestion");
         pushNotificationService.sendPushNotificationToToken(p);
         }
         // Here you can add logic to send the notification to admin using email, SMS, etc.
@@ -82,7 +82,7 @@ try {
        adminNotificationRepository.save(adminNotification);
         if(user.getAdmin().isNotificationEnabled()) {
             
-        PushNotificationRequest p=new PushNotificationRequest(user.getAdmin().getDeviceToken(),"Appointment Cancel",message);
+        PushNotificationRequest p=new PushNotificationRequest(user.getAdmin().getDeviceToken(),"Appointment Cancel",message,"appointment");
         pushNotificationService.sendPushNotificationToToken(p);
         }
 }
@@ -103,7 +103,7 @@ catch(Exception e){
 		        adminNotificationRepository.save(adminNotification);	  // Here you can add logic to send the notification to admin using email, SMS, etc.
 	        if(user.getAdmin().isNotificationEnabled()) {
 	            
-	        PushNotificationRequest p=new PushNotificationRequest(user.getAdmin().getDeviceToken(),"Appointment Rescheduled",message);
+	        PushNotificationRequest p=new PushNotificationRequest(user.getAdmin().getDeviceToken(),"Appointment Rescheduled",message,"appointment");
 	        pushNotificationService.sendPushNotificationToToken(p);
 	        }
 		  }
@@ -125,7 +125,7 @@ catch(Exception e){
 		         adminNotificationRepository.save(adminNotification);	  // Here you can add logic to send the notification to admin using email, SMS, etc.
 	        if(user.getAdmin().isNotificationEnabled()) {
 	            
-	        PushNotificationRequest p=new PushNotificationRequest(user.getAdmin().getDeviceToken(),"Appointment Rescheduled",message);
+	        PushNotificationRequest p=new PushNotificationRequest(user.getAdmin().getDeviceToken(),"Appointment Rescheduled",message,"appointment");
 	        pushNotificationService.sendPushNotificationToToken(p);
 	        }
 		  }
@@ -145,7 +145,7 @@ try {
 	 AdminNotification adminNotification = new AdminNotification(message, notificationType,user.getAdmin(),appointment,user);
        adminNotificationRepository.save(adminNotification);
         if(user.getAdmin().isNotificationEnabled()) {
-        PushNotificationRequest p=new PushNotificationRequest(user.getAdmin().getDeviceToken(),"Appointment Cancel",message);
+        PushNotificationRequest p=new PushNotificationRequest(user.getAdmin().getDeviceToken(),"Appointment Cancel",message,"appointment");
         pushNotificationService.sendPushNotificationToToken(p);
         }
 }

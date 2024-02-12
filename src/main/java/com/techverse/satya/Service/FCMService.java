@@ -78,7 +78,7 @@ public class FCMService {
     private static final String FCM_API = "https://fcm.googleapis.com/fcm/send";
     private static final String SERVER_KEY = "AAAAekAU7bQ:APA91bFRV6cjIyxlNrZY8xn_PEG1lnSIfmBweeB8VuLbA59g62p3pPljbhV4ZgNM825BlfWZ2Q-Fj_ZJ2e2hFXInp8kRgUPeykvXgw-YpQBeDvP6TVOWK8dEpKU2cPEUzc_soxiYxBiJ"; // Replace with your server key
 
-    public ResponseEntity<String> sendPushNotification(String deviceToken, String title, String message) {
+    public ResponseEntity<String> sendPushNotification1(String deviceToken, String title, String message) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Authorization", "key=" + SERVER_KEY);
@@ -91,6 +91,24 @@ public class FCMService {
                 + "}"
                 + "}";
 
+        HttpEntity<String> request = new HttpEntity<>(payload, headers);
+
+        RestTemplate restTemplate = new RestTemplate();
+        return restTemplate.postForEntity(FCM_API, request, String.class);
+    }
+    public ResponseEntity<String> sendPushNotification(String deviceToken, String title, String message,String type) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "key=" + SERVER_KEY);
+
+        String payload = "{"
+                + "\"to\":\"" + deviceToken + "\","
+                + "\"notification\":{"
+                + "\"title\":\"" + title + "\","
+                + "\"body\":\"" + message + "\","
+                + "\"type\":\"" + type + "\""
+                + "}"
+                + "}";
         HttpEntity<String> request = new HttpEntity<>(payload, headers);
 
         RestTemplate restTemplate = new RestTemplate();

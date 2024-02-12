@@ -21,7 +21,7 @@ public class PushNotificationService {
     public void sendPushNotificationToToken(PushNotificationRequest request) {
         try {
           
-           fcmService.sendPushNotification(request.getToken(), request.getTitle(), request.getBody());
+           fcmService.sendPushNotification(request.getToken(), request.getTitle(), request.getBody(),request.getType());
         } catch (Exception e) {
             logger.error(e.getMessage());
         }

@@ -6,16 +6,24 @@ public class PushNotificationRequest {
     private String token;
     private String topic;
     
+    private String type;
     
-    
-  public PushNotificationRequest(String token , String title, String body) {
-	 
+ 
+  public PushNotificationRequest(String token , String title, String body,String type) {
+		 
 		this.title = title;
 		this.body = body;
 		this.token = token;
+		this.type=type;
 	}
+  
 
-
+public String getType() {
+	return type;
+}
+public void setType(String type) {
+	this.type = type;
+}
 public String getTopic() {
 		return topic;
 	}
