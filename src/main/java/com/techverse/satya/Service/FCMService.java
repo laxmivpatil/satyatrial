@@ -105,7 +105,9 @@ public class FCMService {
                 + "\"to\":\"" + deviceToken + "\","
                 + "\"notification\":{"
                 + "\"title\":\"" + title + "\","
-                + "\"body\":\"" + message + "\","
+                + "\"body\":\"" + message + "\""
+                + "},"
+                + "\"data\":{"
                 + "\"type\":\"" + type + "\""
                 + "}"
                 + "}";
