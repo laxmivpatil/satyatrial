@@ -216,13 +216,13 @@ else
 	}
 	
 	//final
-	@GetMapping("/user/checkuserbymobileno")
-	public ResponseEntity<?> checkUserByIdentifier(@RequestParam String mobileNo) {
-		String identifier=mobileNo;
+	@GetMapping("/user/checkuserbymobileoremail")
+	public ResponseEntity<?> checkUserByIdentifier(@RequestParam String mobileoremail) {
+		 
 	    ResponseDTO<Object> responseBody = new ResponseDTO<>();
 	    try {
-	        Optional<Admin> adminByPhone = adminService.getAdminBymobileNo(identifier);
-	        Optional<Admin> adminByEmail  = adminService.getAdminBymobileNo(identifier);
+	        Optional<Admin> adminByPhone = adminService.getAdminBymobileNo(mobileoremail);
+	        Optional<Admin> adminByEmail  = adminService.getAdminByEmail(mobileoremail);
 	        if (adminByPhone.isPresent() || adminByEmail.isPresent()) {
 	        	responseBody.setStatus(false);
                 responseBody.setMessage("User already registered as a Politician. Please login as a Politician");
@@ -231,12 +231,13 @@ else
                 return new ResponseEntity<>(responseBody, HttpStatus.OK);
 	             
 	        } else {
-	            Optional<Users> userByPhone = userService.findByPhoneNumber(identifier);
-	            Optional<Users> userByEmail = userService.findByEmail(identifier);
-
+	            Optional<Users> userByPhone = userService.findByPhoneNumber(mobileoremail);
+	            System.out.println(userByPhone.get());
+	            Optional<Users> userByEmail = userService.findByEmail(mobileoremail);
+	            System.out.println("hhjghjdgjdfgjfdgf");
 	            if (userByPhone.isPresent() || userByEmail.isPresent()) {
-	                Users user = userByPhone.orElse(userByEmail.get());
-
+	            	 Users user = userByPhone.orElseGet(() -> userByEmail.orElseThrow()); // Use orElseGet to handle the case where both are empty
+	                //Users user = userByPhone.get();
 	                UserDTO userDTO = new UserDTO(user);
 
 	                responseBody.setStatus(true);
@@ -254,6 +255,7 @@ else
 	            }
 	        }
 	    } catch (Exception e) {
+	     System.out.println("hi "+e);
 	        responseBody.setStatus(false);
 	        responseBody.setMessage("Failed to retrieve user." + e);
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
@@ -313,12 +315,12 @@ else
 			    }
 		}
  
-		@GetMapping("/admin/checkadminbymobileno")
-		public ResponseEntity<?> checkAdminByIdentifier(@RequestParam String identifier) {
+		@GetMapping("/admin/checkadminbymobileoremail")
+		public ResponseEntity<?> checkAdminByIdentifier(@RequestParam String mobileoremail) {
 		    ResponseDTO<AdminDTO> responseBody = new ResponseDTO<>();
 		    try {
 		        // First, check if the identifier is registered as a Citizen
-		        if (userService.findByPhoneNumber(identifier).isPresent() || userService.findByEmail(identifier).isPresent()) {
+		        if (userService.findByPhoneNumber(mobileoremail).isPresent() || userService.findByEmail(mobileoremail).isPresent()) {
 		        	  responseBody.setStatus(false);
 		                responseBody.setMessage("User already registered as a Citizen");
 		                responseBody.setRole("User");
@@ -327,10 +329,11 @@ else
 		        }
 
 		        // Then, check if the identifier is registered as an Admin/Politician
-		        Optional<Admin> adminByPhone = adminService.getAdminBymobileNo(identifier);
-		        Optional<Admin> adminByEmail  = adminService.getAdminBymobileNo(identifier);
+		        Optional<Admin> adminByPhone = adminService.getAdminBymobileNo(mobileoremail);
+		        Optional<Admin> adminByEmail  = adminService.getAdminByEmail(mobileoremail);
 		        if (adminByPhone.isPresent() || adminByEmail.isPresent()) {
-		        	  Admin admin  = adminByPhone.orElse(adminByEmail.get());
+		        	
+		         Admin admin  = adminByPhone.orElseGet(() -> adminByEmail.orElseThrow());
  		            AdminDTO adminDTO = new AdminDTO(admin);
 		            String verificationStatus = adminDTO.getVerification();
 		            switch (verificationStatus) {

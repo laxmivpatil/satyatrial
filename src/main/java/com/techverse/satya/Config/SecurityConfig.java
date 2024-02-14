@@ -59,7 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/updateverification").permitAll()   
             .antMatchers("/user/generateOtp").permitAll()   //done
             .antMatchers("/subadmin/generateOtp").permitAll()   //done
-             .antMatchers("/user/checkuserbymobileno").permitAll()		//done
+             .antMatchers("/user/checkuserbymobileoremail").permitAll()		//done
              .antMatchers("/user/firstlogin").permitAll()    
             .antMatchers("/user/login").permitAll() 
             .antMatchers("/user/logout").hasRole("USER")
@@ -70,7 +70,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/user/update").hasRole("USER")
             .antMatchers("/user/edit").hasRole("USER")
             .antMatchers("/user/getuser").hasRole("USER")
-            .antMatchers("/admin/checkadminbymobileno").permitAll()
+            .antMatchers("/admin/checkadminbymobileoremail").permitAll()
             .antMatchers("/admin/generateOtp").permitAll()   //done
             .antMatchers("/admin/firstlogin").permitAll() 
             .antMatchers("/admin/login").permitAll()     
@@ -133,7 +133,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login/generateOtp").permitAll() 
                 .antMatchers("/signup/generateOtp").permitAll() 
                 .antMatchers("/signup/**").permitAll()            
-                .antMatchers("/update").permitAll() 
+                .antMatchers("/update").permitAll()
                 .antMatchers("/send-whatsapp").permitAll()
                 .antMatchers("/send-update").permitAll()
                 .antMatchers("/notification/token").permitAll()
