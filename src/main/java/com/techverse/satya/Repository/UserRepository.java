@@ -8,4 +8,5 @@ import com.techverse.satya.Model.Users;
 
 public interface UserRepository extends JpaRepository<Users, Long> {
     Optional<Users> findByPhoneNumber(String phoneNumber);
+    Optional<Users> findByEmail(String email);
 }

@@ -12,7 +12,8 @@ import com.techverse.satya.Model.Admin;
 
 public interface AdminRepository extends JpaRepository<Admin, Long> {
     Optional<Admin> findByUsername(String username);
-    Optional<Admin> findByMobileNumber(String mobileNumber);
+    Optional<Admin> findByMobileNumber(String mobileNumber); 
+    Optional<Admin> findByEmail(String email);
     List<Admin> findByConstitution(String constitution);
     List<Admin> findByVerification(String verificationStatus);
     @Modifying

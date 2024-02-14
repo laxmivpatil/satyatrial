@@ -75,7 +75,9 @@ public class UserService {
 	public Optional<Users> findByPhoneNumber(String phoneNumber) {
 		return userRepository.findByPhoneNumber(phoneNumber);
 	}
-
+	public Optional<Users> findByEmail(String email) {
+		return userRepository.findByEmail(email);
+	}
 	
 	
 	public boolean editUser(EditUser editUser)

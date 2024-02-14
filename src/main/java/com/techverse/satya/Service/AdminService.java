@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.io.IOException;
 import java.io.InputStream;
@@ -125,6 +127,9 @@ public class AdminService {
     public Optional<Admin> getAdminBymobileNo(String mobileNo) {
         return adminRepository.findByMobileNumber(mobileNo);
     }
+    public Optional<Admin> getAdminByEmail(String email) {
+        return adminRepository.findByEmail(email);
+    }
     public Optional<Admin> getAdminByUsername(String username) {
         return adminRepository.findByUsername(username);
     }
@@ -243,7 +248,21 @@ public class AdminService {
     public List<Admin> getAdminsByConstitution(String constitution) {
         return adminRepository.findByConstitution(constitution);
     }
+    private boolean isPhoneNumber(String input) {
+        // Use a regular expression for phone number validation
+        String phoneRegex = "^[0-9]{10}$";
+        Pattern pattern = Pattern.compile(phoneRegex);
+        Matcher matcher = pattern.matcher(input);
+        return matcher.matches();
+    }
 
+    private boolean isEmail(String input) {
+        // Use a regular expression for email validation
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        Pattern pattern = Pattern.compile(emailRegex);
+        Matcher matcher = pattern.matcher(input);
+        return matcher.matches();
+    }
     // Other methods for managing admins...
 }
 

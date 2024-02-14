@@ -42,6 +42,7 @@ import com.techverse.satya.DTO.ApiResponse;
 import com.techverse.satya.DTO.EditUser;
 import com.techverse.satya.DTO.ResponseDTO;
 import com.techverse.satya.DTO.UserDTO;
+import com.techverse.satya.Model.Admin;
 import com.techverse.satya.Model.Users;
 import com.techverse.satya.Repository.UserRepository;
 import com.techverse.satya.Service.AdminService;
@@ -216,40 +217,49 @@ else
 	
 	//final
 	@GetMapping("/user/checkuserbymobileno")
-	public ResponseEntity<?> checkuserbymobileno(@RequestParam String mobileNo) {
-		  ResponseDTO<Object> responseBody = new ResponseDTO<>();
-		  try {  
-		  if(adminService.getAdminBymobileNo(mobileNo).isPresent())
-	    	{
-	    		return ResponseEntity.status(HttpStatus.OK)
-	            .body(new ApiResponse(false, "User Allready Registered as a Politician Please Login as a Politician"));
-	    	}
-	    
-		  else if(userService.findByPhoneNumber(mobileNo).isPresent()) {
-			Users user=  userService.findByPhoneNumber(mobileNo).get();
-			
-			  UserDTO userDTO = new UserDTO(user);
-			  
-	          responseBody.setStatus(true);
-	          responseBody.setMessage("User Allready Registered as a Citizen");
-	           responseBody.setData(userDTO);
-	          return new ResponseEntity<>(responseBody, HttpStatus.OK);	  
-		 
-	    		 
-		  }
-		  
-		  responseBody.setStatus(true);
-	        responseBody.setMessage( "User not Registered");
-	         
-	        return ResponseEntity.status(HttpStatus.OK).body(responseBody);
-		  
-	     
+	public ResponseEntity<?> checkUserByIdentifier(@RequestParam String mobileNo) {
+		String identifier=mobileNo;
+	    ResponseDTO<Object> responseBody = new ResponseDTO<>();
+	    try {
+	        Optional<Admin> adminByPhone = adminService.getAdminBymobileNo(identifier);
+	        Optional<Admin> adminByEmail  = adminService.getAdminBymobileNo(identifier);
+	        if (adminByPhone.isPresent() || adminByEmail.isPresent()) {
+	        	responseBody.setStatus(false);
+                responseBody.setMessage("User already registered as a Politician. Please login as a Politician");
+                responseBody.setRole("Admin");
+                
+                return new ResponseEntity<>(responseBody, HttpStatus.OK);
+	             
+	        } else {
+	            Optional<Users> userByPhone = userService.findByPhoneNumber(identifier);
+	            Optional<Users> userByEmail = userService.findByEmail(identifier);
+
+	            if (userByPhone.isPresent() || userByEmail.isPresent()) {
+	                Users user = userByPhone.orElse(userByEmail.get());
+
+	                UserDTO userDTO = new UserDTO(user);
+
+	                responseBody.setStatus(true);
+	                responseBody.setMessage("User already registered as a Citizen");
+	                responseBody.setRole("User");
+	                responseBody.setData(userDTO);
+
+	                return new ResponseEntity<>(responseBody, HttpStatus.OK);
+	            } else {
+	                responseBody.setStatus(true);
+	                responseBody.setMessage("User not registered");
+	                responseBody.setRole("");
+
+	                return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+	            }
+	        }
 	    } catch (Exception e) {
-	    	 responseBody.setStatus(false);
-		        responseBody.setMessage( "Failed to retrive user."+e);
-		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
-		}
+	        responseBody.setStatus(false);
+	        responseBody.setMessage("Failed to retrieve user." + e);
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
+	    }
 	}
+
 	//final
 		@GetMapping("/user/getuser")
 		public ResponseEntity<ResponseDTO<UserDTO>> getUserById(@RequestHeader("Authorization") String authorizationHeader) {
@@ -304,45 +314,55 @@ else
 		}
  
 		@GetMapping("/admin/checkadminbymobileno")
-		public ResponseEntity<?> checkadminbymobileno(@RequestParam String mobileNo) {
-			  ResponseDTO<AdminDTO> responseBody = new ResponseDTO<>();
-			  try {  
-				  if(userService.findByPhoneNumber(mobileNo).isPresent())
-		    	{
-		    		return ResponseEntity.status(HttpStatus.OK)
-		            .body(new ApiResponse(false, "User Allready Registered as a Citizen Please Login as a Citizen"));
-		    	}
-		    
-			  else if(adminService.getAdminBymobileNo(mobileNo).isPresent()) {
-				  AdminDTO adminDTO = new AdminDTO(adminService.getAdminBymobileNo(mobileNo).get());
-		         if(adminDTO.getVerification().equals("pending")) {
-				  responseBody.setStatus(false);
-		          responseBody.setMessage("Politician Allready Registered but verification pending, please wait for verification process");
-		           responseBody.setData(adminDTO);
-		          return new ResponseEntity<>(responseBody, HttpStatus.OK);	
-		          }
-		         else if(adminDTO.getVerification().equals("verified")) {
-					  responseBody.setStatus(true);
-			          responseBody.setMessage("Politician Allready Registered and verified successfully");
-			           responseBody.setData(adminDTO);
-			          return new ResponseEntity<>(responseBody, HttpStatus.OK);	
-			          }
-		         else {
-		        	 responseBody.setStatus(false);
-			          responseBody.setMessage("Politician Allready Registered but updation Pending");
-			           responseBody.setData(adminDTO);
-			          return new ResponseEntity<>(responseBody, HttpStatus.OK);	
-		         }
-		    		 
-			  }
-			  
-			  return ResponseEntity.status(HttpStatus.OK)
-					  .body(new ApiResponse(true, "Politician not Registered"));
-		     
+		public ResponseEntity<?> checkAdminByIdentifier(@RequestParam String identifier) {
+		    ResponseDTO<AdminDTO> responseBody = new ResponseDTO<>();
+		    try {
+		        // First, check if the identifier is registered as a Citizen
+		        if (userService.findByPhoneNumber(identifier).isPresent() || userService.findByEmail(identifier).isPresent()) {
+		        	  responseBody.setStatus(false);
+		                responseBody.setMessage("User already registered as a Citizen");
+		                responseBody.setRole("User");
+		                return new ResponseEntity<>(responseBody, HttpStatus.OK);
+		              
+		        }
+
+		        // Then, check if the identifier is registered as an Admin/Politician
+		        Optional<Admin> adminByPhone = adminService.getAdminBymobileNo(identifier);
+		        Optional<Admin> adminByEmail  = adminService.getAdminBymobileNo(identifier);
+		        if (adminByPhone.isPresent() || adminByEmail.isPresent()) {
+		        	  Admin admin  = adminByPhone.orElse(adminByEmail.get());
+ 		            AdminDTO adminDTO = new AdminDTO(admin);
+		            String verificationStatus = adminDTO.getVerification();
+		            switch (verificationStatus) {
+		                case "pending":
+		                    responseBody.setStatus(false);
+		                    responseBody.setRole("Admin");
+		                    responseBody.setMessage("Politician already registered but verification pending, please wait for verification process.");
+		                    break;
+		                case "verified":
+		                    responseBody.setStatus(true);
+		                    responseBody.setRole("Admin");
+		                    responseBody.setMessage("Politician already registered and verified successfully.");
+		                    break;
+		                default: // Assuming this is for "updation pending" or any other status
+		                    responseBody.setStatus(false);
+		                    responseBody.setRole("Admin");
+		                    responseBody.setMessage("Politician already registered but updation pending.");
+		                    break;
+		            }
+		            responseBody.setData(adminDTO);
+		            return new ResponseEntity<>(responseBody, HttpStatus.OK);
+		        }
+
+		        responseBody.setStatus(true);
+                responseBody.setRole("");
+                return new ResponseEntity<>(responseBody, HttpStatus.OK);
+
 		    } catch (Exception e) {
-		    	 responseBody.setStatus(false);
-			        responseBody.setMessage( "Failed to retrive user.");
-			        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
-			}
+		        responseBody.setStatus(false);
+		        responseBody.setMessage("Failed to retrieve user. " + e.getMessage());
+		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
+		    }
 		}
+
 }

@@ -4,6 +4,7 @@ public class ResponseDTO<T> {
     private boolean status;
     private String message;
     private String token="";
+    private String role="";
     private T data;
     
 
@@ -25,6 +26,15 @@ public class ResponseDTO<T> {
         this.message = message;
         this.data = data;
     }
+    
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
 
 	public boolean isStatus() {
 		return status;

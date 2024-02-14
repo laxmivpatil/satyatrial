@@ -49,7 +49,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         Optional<SubAdmin> subAdminOptional = subAdminRepository.findByMobileNumber(username);
         
         Optional<OtpEntity> otpEntityOptional = otpRepository.findByPhoneNumber(username);
- System.out.println("hsjhgjsdjgfsgdhdsgf");
+        System.out.println("call load by user name hsjhgjsdjgfsgdhdsgf");
         if (userOptional.isPresent()) {
             Users user = userOptional.get();
             return buildUserDetails(user.getPhoneNumber(), otpEntityOptional.get().getOtp(), "ROLE_USER");
