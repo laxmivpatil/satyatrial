@@ -23,4 +23,10 @@ public interface AdminRepository extends JpaRepository<Admin, Long> {
     
     @Query("SELECT DISTINCT a.constitution FROM Admin a WHERE a.constitution IS NOT NULL AND a.constitution <> ''")
     List<String> findAllConstitutions();
+    
+    
+    
+    @Query("SELECT a FROM Admin a WHERE a.mobileNumber = :value OR a.email = :value")
+    Optional<Admin> findByMobileNumberOrEmail(@Param("value") String mobileNumberOrEmail);
+
 }

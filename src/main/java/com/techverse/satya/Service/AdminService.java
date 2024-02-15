@@ -123,7 +123,9 @@ public class AdminService {
          admin.setJoineddate(formattedDate);
         return adminRepository.save(admin);
     }
-
+    public Optional<Admin> getAdminBymobileNoOrEmail(String mobileNoOrEmail) {
+        return adminRepository.findByMobileNumberOrEmail(mobileNoOrEmail);
+    }
     public Optional<Admin> getAdminBymobileNo(String mobileNo) {
         return adminRepository.findByMobileNumber(mobileNo);
     }

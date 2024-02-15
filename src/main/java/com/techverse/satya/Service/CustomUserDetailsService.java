@@ -44,8 +44,8 @@ public class CustomUserDetailsService implements UserDetailsService {
  
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<Users> userOptional = userRepository.findByPhoneNumber(username);
-        Optional<Admin> adminOptional = adminRepository.findByMobileNumber(username);
+        Optional<Users> userOptional = userRepository.findByPhoneNumberOrEmail(username);
+        Optional<Admin> adminOptional = adminRepository.findByMobileNumberOrEmail(username);
         Optional<SubAdmin> subAdminOptional = subAdminRepository.findByMobileNumber(username);
         
         Optional<OtpEntity> otpEntityOptional = otpRepository.findByPhoneNumber(username);

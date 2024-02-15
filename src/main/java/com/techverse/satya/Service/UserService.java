@@ -6,7 +6,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional; 
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -44,7 +46,14 @@ public class UserService {
        Users user = new Users();
       // admin.setUsername(username);
    //    admin.setPassword(passwordEncoder.encode(password));
-      user.setPhoneNumber(jwt.getMobileNo());
+       if(jwt.getMobileNo().matches("^\\d{10}$"))
+       {
+    	   user.setPhoneNumber(jwt.getMobileNo());
+       }
+       else {
+    	   user.setEmail(jwt.getMobileNo());
+       }
+      
        user.setOtp(passwordEncoder.encode(jwt.getOtp()));
           user.setName(jwt.getName());
        user.setGender(jwt.getGender());
@@ -56,6 +65,12 @@ public class UserService {
         user.setJoineddate(formattedDate);
        return userRepository.save(user);
    }
+	 
+	public Optional<Users> findByPhoneNumberOrEmail(String phoneNumberOrEmail) {
+    	 
+		
+        return userRepository.findByPhoneNumberOrEmail(phoneNumberOrEmail);
+    }
 	
 	/****get Username from token*/
 	 public Optional<Users> getUserByToken(String token) {

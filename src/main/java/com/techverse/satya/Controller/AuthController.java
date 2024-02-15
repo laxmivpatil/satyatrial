@@ -205,13 +205,13 @@ public class AuthController {
 	  ResponseDTO<Object> response = new ResponseDTO<>();
 	  
 	  try {
-    	if(adminService.getAdminBymobileNo(jwtRequest.getMobileNo()).isPresent())
+    	if(adminService.getAdminBymobileNoOrEmail(jwtRequest.getMobileNo()).isPresent())
     	{
     		return ResponseEntity.status(HttpStatus.OK)
             .body(new ApiResponse(false, "Please Login as a politician"));
     	}
     
-    	if(!userService.findByPhoneNumber(jwtRequest.getMobileNo()).isPresent()) {
+    	if(!userService.findByPhoneNumberOrEmail(jwtRequest.getMobileNo()).isPresent()) {
     		
     	 
     		Users user=userService.createUser(jwtRequest);
