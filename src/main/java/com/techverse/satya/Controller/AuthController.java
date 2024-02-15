@@ -211,19 +211,14 @@ public class AuthController {
             .body(new ApiResponse(false, "Please Login as a politician"));
     	}
     
-    	if(userService.findByPhoneNumber(jwtRequest.getMobileNo()).isPresent()) {
+    	if(!userService.findByPhoneNumber(jwtRequest.getMobileNo()).isPresent()) {
     		
-    		response.setStatus(true);
-            response.setMessage("User Allready Registerd Please login ");
-             
-            return new ResponseEntity<>(response, HttpStatus.OK);
-   
     	 
-    		
+    		Users user=userService.createUser(jwtRequest);
     		 
     	}
     	 
-    	Users user=userService.createUser(jwtRequest);
+    	   
     	
       	System.out.println("authuser"+jwtRequest.getMobileNo());
           Authentication authentication = authenticationManager.authenticate(
@@ -231,7 +226,7 @@ public class AuthController {
 
           UserDetails userDetails = (UserDetails) authentication.getPrincipal();
           String jwtToken = jwtHelper.generateToken(userDetails);
-           
+          Users user=userService.getUserByToken(jwtToken).get();
           UserDTO userDTO = new UserDTO(user);
           System.out.println(user.getAdmin());
           if(user.getAdmin()!=null)
@@ -254,6 +249,7 @@ public class AuthController {
                   .body(new ApiResponse(false, "An error occurred during authentication."+e));
       }
   }
+ 
  
   /***final******/
   @PostMapping("/admin/firstlogin")
