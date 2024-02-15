@@ -52,14 +52,14 @@ public class CustomUserDetailsService implements UserDetailsService {
         System.out.println("call load by user name hsjhgjsdjgfsgdhdsgf");
         if (userOptional.isPresent()) {
             Users user = userOptional.get();
-            return buildUserDetails(user.getPhoneNumber(), otpEntityOptional.get().getOtp(), "ROLE_USER");
+            return buildUserDetails(username, otpEntityOptional.get().getOtp(), "ROLE_USER");
         } else if (subAdminOptional.isPresent()) {
             SubAdmin subAdmin = subAdminOptional.get();
             return buildUserDetails(subAdmin.getMobileNumber(), otpEntityOptional.get().getOtp(), "ROLE_SUBADMIN");
         }
         else if (adminOptional.isPresent()) {
             Admin admin = adminOptional.get();
-            return buildUserDetails(admin.getMobileNumber(), otpEntityOptional.get().getOtp(), "ROLE_ADMIN");
+            return buildUserDetails(username, otpEntityOptional.get().getOtp(), "ROLE_ADMIN");
         }else {
             throw new UsernameNotFoundException("User not found with username: " + username);
         }
