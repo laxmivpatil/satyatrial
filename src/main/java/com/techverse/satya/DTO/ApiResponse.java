@@ -4,7 +4,12 @@ public class ApiResponse {
     private boolean status;
     private String message;
 
-    public ApiResponse(boolean success, String message) {
+    public ApiResponse() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public ApiResponse(boolean success, String message) {
         this.status = success;
         this.message = message;
     }

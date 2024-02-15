@@ -219,37 +219,27 @@ else
 	@GetMapping("/user/checkuserbymobileoremail")
 	public ResponseEntity<?> checkUserByIdentifier(@RequestParam String mobileoremail) {
 		 
-	    ResponseDTO<Object> responseBody = new ResponseDTO<>();
+	    ApiResponse responseBody = new ApiResponse();
 	    try {
 	        Optional<Admin> adminByPhone = adminService.getAdminBymobileNo(mobileoremail);
 	        Optional<Admin> adminByEmail  = adminService.getAdminByEmail(mobileoremail);
 	        if (adminByPhone.isPresent() || adminByEmail.isPresent()) {
 	        	responseBody.setStatus(false);
-                responseBody.setMessage("User already registered as a Politician. Please login as a Politician");
-                responseBody.setRole("Admin");
-                
-                return new ResponseEntity<>(responseBody, HttpStatus.OK);
+                responseBody.setMessage("User already registered as a Politician");
+                  return new ResponseEntity<>(responseBody, HttpStatus.OK);
 	             
 	        } else {
 	            Optional<Users> userByPhone = userService.findByPhoneNumber(mobileoremail);
-	            System.out.println(userByPhone.get());
 	            Optional<Users> userByEmail = userService.findByEmail(mobileoremail);
-	            System.out.println("hhjghjdgjdfgjfdgf");
 	            if (userByPhone.isPresent() || userByEmail.isPresent()) {
-	            	 Users user = userByPhone.orElseGet(() -> userByEmail.orElseThrow()); // Use orElseGet to handle the case where both are empty
-	                //Users user = userByPhone.get();
-	                UserDTO userDTO = new UserDTO(user);
-
-	                responseBody.setStatus(true);
+	                 responseBody.setStatus(false);
 	                responseBody.setMessage("User already registered as a Citizen");
-	                responseBody.setRole("User");
-	                responseBody.setData(userDTO);
+	                
 
 	                return new ResponseEntity<>(responseBody, HttpStatus.OK);
 	            } else {
 	                responseBody.setStatus(true);
 	                responseBody.setMessage("User not registered");
-	                responseBody.setRole("");
 
 	                return ResponseEntity.status(HttpStatus.OK).body(responseBody);
 	            }
@@ -317,14 +307,13 @@ else
  
 		@GetMapping("/admin/checkadminbymobileoremail")
 		public ResponseEntity<?> checkAdminByIdentifier(@RequestParam String mobileoremail) {
-		    ResponseDTO<AdminDTO> responseBody = new ResponseDTO<>();
-		    try {
+			  ApiResponse responseBody = new ApiResponse();
+			     try {
 		        // First, check if the identifier is registered as a Citizen
 		        if (userService.findByPhoneNumber(mobileoremail).isPresent() || userService.findByEmail(mobileoremail).isPresent()) {
 		        	  responseBody.setStatus(false);
 		                responseBody.setMessage("User already registered as a Citizen");
-		                responseBody.setRole("User");
-		                return new ResponseEntity<>(responseBody, HttpStatus.OK);
+		               return new ResponseEntity<>(responseBody, HttpStatus.OK);
 		              
 		        }
 
@@ -339,27 +328,24 @@ else
 		            switch (verificationStatus) {
 		                case "pending":
 		                    responseBody.setStatus(false);
-		                    responseBody.setRole("Admin");
-		                    responseBody.setMessage("Politician already registered but verification pending, please wait for verification process.");
+		                     responseBody.setMessage("Politician already registered but verification pending, please wait for verification process.");
 		                    break;
 		                case "verified":
-		                    responseBody.setStatus(true);
-		                    responseBody.setRole("Admin");
-		                    responseBody.setMessage("Politician already registered and verified successfully.");
+		                    responseBody.setStatus(false);
+		                     responseBody.setMessage("Politician already registered and verified successfully.");
 		                    break;
 		                default: // Assuming this is for "updation pending" or any other status
 		                    responseBody.setStatus(false);
-		                    responseBody.setRole("Admin");
-		                    responseBody.setMessage("Politician already registered but updation pending.");
+		                     responseBody.setMessage("Politician already registered but updation pending.");
 		                    break;
 		            }
-		            responseBody.setData(adminDTO);
+		             
 		            return new ResponseEntity<>(responseBody, HttpStatus.OK);
 		        }
-
+		        responseBody.setMessage("User not registered");
+		           
 		        responseBody.setStatus(true);
-                responseBody.setRole("");
-                return new ResponseEntity<>(responseBody, HttpStatus.OK);
+                 return new ResponseEntity<>(responseBody, HttpStatus.OK);
 
 		    } catch (Exception e) {
 		        responseBody.setStatus(false);
