@@ -74,10 +74,10 @@ public class UserService {
 	
 	/****get Username from token*/
 	 public Optional<Users> getUserByToken(String token) {
-	    	String mobileNo=jwtHelper.getUsernameFromToken(token);
+	    	String mobileNoOrEmail=jwtHelper.getUsernameFromToken(token);
 		//	 System.out.println("hi "+userName);
 			
-	        return userRepository.findByPhoneNumber(mobileNo);
+	        return userRepository.findByPhoneNumberOrEmail(mobileNoOrEmail);
 	    }
 
 	 public void deleteUserById(Long id) {
