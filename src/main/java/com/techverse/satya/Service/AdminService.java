@@ -109,7 +109,16 @@ public class AdminService {
          Admin admin = new Admin();
        // admin.setUsername(username);
     //    admin.setPassword(passwordEncoder.encode(password));
-         admin.setMobileNumber(jwt.getMobileNo());
+         if(jwt.getMobileNo().matches("^\\d{10}$"))
+         {
+        	 admin.setMobileNumber(jwt.getMobileNo());
+         }
+         else {
+      	  admin.setEmail(jwt.getMobileNo());
+         }
+         
+         
+        
         admin.setOtp(passwordEncoder.encode(jwt.getOtp()));
         admin.setProfession(jwt.getProfession());
         admin.setParty(jwt.getParty());
