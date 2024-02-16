@@ -152,7 +152,7 @@ public class AdminService {
     		 admin=Optional.of(subAdmin.get().getAdmin());
     	 }
     	 else {
-    		 admin=adminRepository.findByMobileNumber(mobileNo);
+    		 admin=adminRepository.findByMobileNumberOrEmail(mobileNo);
     	 }
    
 	//	 System.out.println("hi "+userName);

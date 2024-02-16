@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -64,7 +65,6 @@ public class SuggestionController {
 	   if (user.isPresent()) {
 	        
         try {
-     
             SuggestionDTO suggestionDTO = new SuggestionDTO();
             suggestionDTO.setAddress(address);
             suggestionDTO.setPurpose(purpose);
@@ -85,6 +85,52 @@ public class SuggestionController {
                 responseBody.put("message", "User Not Found");
                 return new ResponseEntity<>(responseBody, HttpStatus.NOT_FOUND);
             } 
+         
+        } catch (Exception e) {
+            responseBody.put("status", false);
+            responseBody.put("message", "Failed to update user information");
+            responseBody.put("error", e);
+            return new ResponseEntity<>(responseBody, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+	   }
+	   else {
+		   responseBody.put("status", false);
+           responseBody.put("message", "User not valid");
+           return new ResponseEntity<>(responseBody, HttpStatus.UNAUTHORIZED);	   
+           }
+    }
+    @PutMapping("/user/suggestions/edit")
+    public ResponseEntity<?> editSuggestion(
+    		@RequestHeader("Authorization") String authorizationHeader,
+    		 @RequestPart(name = "id", required = false) Long id,
+            @RequestPart(name = "photo", required = false) MultipartFile photo,
+            @RequestPart(name = "video", required = false) MultipartFile video,
+            @RequestPart(name = "address", required = false) String address,
+            @RequestPart(name = "purpose", required = false) String purpose,
+            @RequestPart(name = "comment", required = false) String comment
+            ) {
+    	SuggestionResponseDTO suggestionResponseDTO;
+   	 Optional<Users> user = userService.getUserByToken(authorizationHeader.substring(7));
+   	// System.out.println(user.get().getAdmin().getId());
+	   Map<String, Object> responseBody = new HashMap<>();
+	   if (user.isPresent()) {
+	        
+        try {
+        	  Optional<Suggestion> suggestion=suggestionService.getSuggestionById(id);
+        	   if(suggestion.isPresent()) {
+        		   suggestionResponseDTO=suggestionService.editSuggestion(suggestion.get(),photo,video,address,purpose,comment);
+        		   responseBody.put("status", true);
+                   responseBody.put("message", "Suggestion edit successfully");
+                   responseBody.put("Suggestion", suggestionResponseDTO);
+                   return new ResponseEntity<>(responseBody, HttpStatus.OK);
+        	   }
+        	   else {
+        		   responseBody.put("status", false);
+                   responseBody.put("message", "Suggestion not Found");
+                   return new ResponseEntity<>(responseBody, HttpStatus.OK);
+        	   }
+          
+            
          
         } catch (Exception e) {
             responseBody.put("status", false);

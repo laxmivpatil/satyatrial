@@ -48,7 +48,21 @@ public class Suggestion {
     @Column(nullable = false, updatable = false)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dateTime;
- 
+	@CreatedDate
+    @Column(nullable = false, updatable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime editTime;
+	
+	
+	
+	public LocalDateTime getEditTime() {
+		return editTime;
+	}
+
+	public void setEditTime(LocalDateTime editTime) {
+		this.editTime = editTime;
+	}
+
 	/*@CreatedDate
 	@Column(nullable = false, updatable = false)
 	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "UTC")

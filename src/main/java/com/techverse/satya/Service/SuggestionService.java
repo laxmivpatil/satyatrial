@@ -142,6 +142,64 @@ public class SuggestionService {
 		
 	}
 
+	
+	public SuggestionResponseDTO  editSuggestion(Suggestion suggestion,MultipartFile photoFile,MultipartFile videoFile,String address,String purpose,String comment) {
+		try {
+		// Retrieve user by userId from the database
+	  		 if(!address.isEmpty()) {
+	 			suggestion.setAddress( address );
+	 		 }
+	 		 if(!purpose.isEmpty()) {
+		 			suggestion.setPurpose(purpose);
+		 		 }
+	 		 if(!comment.isEmpty()) {
+		 			suggestion.setComment(comment);
+		 		 }
+			 			// Handle photo upload logic
+			 
+			if (photoFile != null && !photoFile.isEmpty()) {
+	 	//	String photoUrl= service.uploadSuggestionPhoto(photoFile, user.get().getId()+"");
+		 
+				String photoUrl= service.uploadFileOnAzure(photoFile );
+				suggestion.setPhotoUrl(photoUrl);
+			}
+
+			 // Handle video upload logic
+			 if (videoFile != null && !videoFile.isEmpty()) {
+				// Save videoFile to storage (local disk, AWS S3, etc.)
+				//String videoUrl=service.uploadSuggestionVideo(videoFile, user.get().getId()+"");
+				String videoUrl= service.uploadVideoToBlobStorage(videoFile);
+				
+			     //String thumbnailUrl = convert(videoUrl);
+		          
+			 	//suggestion.setThumbnail(thumbnailUrl);
+				suggestion.setVideoUrl(videoUrl);
+			}
+
+			    Instant instant = Instant.parse(Instant.now().toString());
+
+		        // Convert Instant to LocalDateTime in a specific time zone
+		        ZoneId zoneId = ZoneId.of("Asia/Kolkata"); // Choose the appropriate time zone
+		        LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, zoneId);
+			suggestion.setEditTime(localDateTime);
+			System.out.println(suggestion);
+			// Save the suggestion to the database
+			suggestionRepository.save(suggestion);
+		     adminNotificationService.sendSuggestionNotificationToAdmin(suggestion, suggestion.getUser());
+		       
+			return mapToDTO(suggestion);
+		 
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		
+	}
+	
+	
+	
 	public Optional<Suggestion> getSuggestionById(Long suggestionId) {
 		return suggestionRepository.findById(suggestionId);
 	}

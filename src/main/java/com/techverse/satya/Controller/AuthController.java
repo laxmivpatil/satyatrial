@@ -257,13 +257,13 @@ public class AuthController {
 	  ResponseDTO<Object> response = new ResponseDTO<>();
 	   
 	  try {
-    	if(userRepository.findByPhoneNumber(jwtRequest.getMobileNo()).isPresent())
+    	if(userService.findByPhoneNumberOrEmail(jwtRequest.getMobileNo()).isPresent())
     	{
     		return ResponseEntity.status(HttpStatus.OK)
             .body(new ApiResponse(false, "Please Login as a citizen"));
     	}
     
-    	if(!adminService.getAdminBymobileNo(jwtRequest.getMobileNo()).isPresent()) {
+    	if(!adminService.getAdminBymobileNoOrEmail(jwtRequest.getMobileNo()).isPresent()) {
     		Admin admin=adminService.createAdmin(jwtRequest);
     	}
     	
