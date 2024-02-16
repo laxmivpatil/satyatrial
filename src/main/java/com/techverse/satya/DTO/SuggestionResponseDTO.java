@@ -15,12 +15,18 @@ public class SuggestionResponseDTO {
 	    private String photo;
 	    private String video;
 	    private LocalDateTime dateTime;
-	    
+	    private LocalDateTime editTime;
 	    private String thumbnail="";
 	    
 	    
 	    
 	    
+		public LocalDateTime getEditTime() {
+			return editTime;
+		}
+		public void setEditTime(LocalDateTime editTime) {
+			this.editTime = editTime;
+		}
 		public String getThumbnail() {
 			return thumbnail;
 		}

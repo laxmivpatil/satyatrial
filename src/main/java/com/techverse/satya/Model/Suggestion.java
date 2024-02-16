@@ -48,8 +48,9 @@ public class Suggestion {
     @Column(nullable = false, updatable = false)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dateTime;
+	
 	@CreatedDate
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = true, updatable = false)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime editTime;
 	

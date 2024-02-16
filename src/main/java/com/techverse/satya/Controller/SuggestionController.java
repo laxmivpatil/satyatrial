@@ -102,12 +102,12 @@ public class SuggestionController {
     @PutMapping("/user/suggestions/edit")
     public ResponseEntity<?> editSuggestion(
     		@RequestHeader("Authorization") String authorizationHeader,
-    		 @RequestPart(name = "id", required = false) Long id,
-            @RequestPart(name = "photo", required = false) MultipartFile photo,
+    	  @RequestPart(name = "photo", required = false) MultipartFile photo,
             @RequestPart(name = "video", required = false) MultipartFile video,
-            @RequestPart(name = "address", required = false) String address,
-            @RequestPart(name = "purpose", required = false) String purpose,
-            @RequestPart(name = "comment", required = false) String comment
+       	 @RequestParam(name = "id", required = false) Long id,
+            @RequestParam(name = "address", required = false) String address,
+            @RequestParam(name = "purpose", required = false) String purpose,
+            @RequestParam(name = "comment", required = false) String comment
             ) {
     	SuggestionResponseDTO suggestionResponseDTO;
    	 Optional<Users> user = userService.getUserByToken(authorizationHeader.substring(7));

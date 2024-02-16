@@ -125,6 +125,7 @@ public class SuggestionService {
 		        ZoneId zoneId = ZoneId.of("Asia/Kolkata"); // Choose the appropriate time zone
 		        LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, zoneId);
 			suggestion.setDateTime(localDateTime);
+			suggestion.setEditTime(localDateTime);
 			System.out.println(suggestion);
 			// Save the suggestion to the database
 			suggestionRepository.save(suggestion);
@@ -256,6 +257,7 @@ public class SuggestionService {
      
 
         dto.setDateTime(suggestion.getDateTime());
+        dto.setEditTime(suggestion.getEditTime());
         dto.setProfile(userRepository.findById(suggestion.getUser().getId()).get().getProfilePphoto());
         dto.setThumbnail(suggestion.getThumbnail());
         dto.setId(suggestion.getId());
