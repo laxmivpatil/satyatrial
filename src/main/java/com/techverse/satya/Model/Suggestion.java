@@ -32,10 +32,20 @@ public class Suggestion {
     private String videoUrl;
     private String thumbnail="";
     
+    private String status="new";
     
     
     
-    public String getThumbnail() {
+    
+    public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getThumbnail() {
 		return thumbnail;
 	}
 

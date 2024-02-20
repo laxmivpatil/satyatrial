@@ -96,6 +96,7 @@ public class SuggestionService {
 			suggestion.setPurpose(suggestionDTO.getPurpose());
 			suggestion.setComment(suggestionDTO.getComment());
 			suggestion.setAdmin(user.get().getAdmin());
+			suggestion.setStatus("new");
 			// Handle photo upload logic
 			MultipartFile photoFile = suggestionDTO.getPhoto();
 			if (photoFile != null && !photoFile.isEmpty()) {
@@ -218,7 +219,9 @@ public class SuggestionService {
 
 	    if (existingSuggestion.isPresent()) {
 	        // Implement deletion logic if necessary
-	        suggestionRepository.deleteById(suggestionId);
+	    existingSuggestion.get().setStatus("delete"); 
+	    	suggestionRepository.save(existingSuggestion.get());
+	       
 	        return true; // Indicate that the suggestion was deleted
 	    } else {
 	        return false; // Indicate that the suggestion was not found
@@ -254,7 +257,7 @@ public class SuggestionService {
         dto.setComment(suggestion.getComment());
         dto.setPhoto(suggestion.getPhotoUrl());
         dto.setVideo(suggestion.getVideoUrl());
-     
+        dto.setStatus(suggestion.getStatus());
 
         dto.setDateTime(suggestion.getDateTime());
         dto.setEditTime(suggestion.getEditTime());

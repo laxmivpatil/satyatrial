@@ -146,6 +146,44 @@ public class SuggestionController {
            }
     }
 
+    @DeleteMapping("/user/suggestions/delete")
+    public ResponseEntity<?> deleteSuggestion(
+    		@RequestHeader("Authorization") String authorizationHeader,
+    		@RequestParam(name = "id", required = false) Long id
+            ) {
+    	SuggestionResponseDTO suggestionResponseDTO;
+   	 Optional<Users> user = userService.getUserByToken(authorizationHeader.substring(7));
+   	// System.out.println(user.get().getAdmin().getId());
+	   Map<String, Object> responseBody = new HashMap<>();
+	   if (user.isPresent()) {
+	        
+        try {
+         	   if(suggestionService.deleteSuggestion(id)) {
+         		   responseBody.put("status", true);
+                   responseBody.put("message", "Suggestion deleted successfully");
+                   return new ResponseEntity<>(responseBody, HttpStatus.OK);
+        	   }
+        	   else {
+        		   responseBody.put("status", false);
+                   responseBody.put("message", "Suggestion not Found");
+                   return new ResponseEntity<>(responseBody, HttpStatus.OK);
+        	   }
+          
+            
+         
+        } catch (Exception e) {
+            responseBody.put("status", false);
+            responseBody.put("message", "Failed to update user information");
+            responseBody.put("error", e);
+            return new ResponseEntity<>(responseBody, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+	   }
+	   else {
+		   responseBody.put("status", false);
+           responseBody.put("message", "User not valid");
+           return new ResponseEntity<>(responseBody, HttpStatus.UNAUTHORIZED);	   
+           }
+    }
 
     @GetMapping("/user/suggestions/all")
     public ResponseEntity<?> getSuggestionsByUser(	@RequestHeader("Authorization") String authorizationHeader) {
@@ -175,6 +213,7 @@ public class SuggestionController {
             suggestionResponseDTO.setComment(suggestion.getComment());
             suggestionResponseDTO.setPhoto(suggestion.getPhotoUrl());
             suggestionResponseDTO.setVideo(suggestion.getVideoUrl());
+            suggestionResponseDTO.setStatus(suggestion.getStatus());
             // You can set other fields like photo and video based on your logic
             suggestionResponseDTO.setDateTime(suggestion.getDateTime());
             suggestionResponseDTO.setProfile(userRepository.findById(user.get().getId()).get().getProfilePphoto());
@@ -222,6 +261,7 @@ public class SuggestionController {
             suggestionResponseDTO.setPhoto(suggestion.getPhotoUrl());
             suggestionResponseDTO.setVideo(suggestion.getVideoUrl());
             // You can set other fields like photo and video based on your logic
+            suggestionResponseDTO.setStatus(suggestion.getStatus());
             suggestionResponseDTO.setDateTime(suggestion.getDateTime());
             suggestionResponseDTO.setProfile(userRepository.findById(suggestion.getUser().getId()).get().getProfilePphoto());
             suggestionResponseDTO.setId(suggestion.getId());
@@ -257,6 +297,7 @@ public class SuggestionController {
             suggestionResponseDTO.setPhoto(suggestion.getPhotoUrl());
             suggestionResponseDTO.setVideo(suggestion.getVideoUrl());
             suggestionResponseDTO.setDateTime(suggestion.getDateTime());
+            suggestionResponseDTO.setStatus(suggestion.getStatus());
             // You can set other fields like photo and video based on your logic
             suggestionResponseDTO.setProfile(suggestion.getUser().getProfilePphoto());
             responseBody.put("suggestion", suggestionResponseDTO);
@@ -285,6 +326,7 @@ public class SuggestionController {
             Suggestion suggestion = optionalSuggestion.get();
             SuggestionResponseDTO suggestionResponseDTO = new SuggestionResponseDTO();
             suggestionResponseDTO.setId(suggestionId);
+            suggestionResponseDTO.setStatus(suggestion.getStatus());
             suggestionResponseDTO.setName(suggestion.getUser().getName());
             suggestionResponseDTO.setAddress(suggestion.getAddress());
             suggestionResponseDTO.setPurpose(suggestion.getPurpose());
@@ -309,21 +351,7 @@ public class SuggestionController {
            return new ResponseEntity<>(responseBody, HttpStatus.UNAUTHORIZED);	   }
 	 
     }
-    @DeleteMapping("/user/suggestions/delete")
-    public ResponseEntity<?> deleteSuggestion(@RequestParam Long suggestionId) {
-        Map<String, Object> responseBody = new HashMap<>();
-        boolean deleted = suggestionService.deleteSuggestion(suggestionId);
-
-        if (deleted) {
-            responseBody.put("status", true);
-            responseBody.put("message", "Suggestion deleted successfully");
-            return new ResponseEntity<>(responseBody, HttpStatus.OK);
-        } else {
-            responseBody.put("status", false);
-            responseBody.put("message", "Suggestion not found for the given ID");
-            return new ResponseEntity<>(responseBody, HttpStatus.NOT_FOUND);
-        }
-    }
+   
     
     @GetMapping("/admin/suggestions/today")
     public ResponseEntity<Map<String, Object>> getTodaySuggestionsByAdmin(

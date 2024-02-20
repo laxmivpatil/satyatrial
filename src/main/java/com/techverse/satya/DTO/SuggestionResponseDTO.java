@@ -17,10 +17,17 @@ public class SuggestionResponseDTO {
 	    private LocalDateTime dateTime;
 	    private LocalDateTime editTime;
 	    private String thumbnail="";
+	    private String status="";
 	    
 	    
 	    
 	    
+		public String getStatus() {
+			return status;
+		}
+		public void setStatus(String status) {
+			this.status = status;
+		}
 		public LocalDateTime getEditTime() {
 			return editTime;
 		}
