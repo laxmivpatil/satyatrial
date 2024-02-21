@@ -213,6 +213,10 @@ public class SuggestionService {
 	public List<Suggestion> getSuggestionsByAdminId(Long adminId) {
 		return suggestionRepository.findByAdmin_Id(adminId);
 	}
+	public List<Suggestion> getSuggestionsByAdminIdMonthYear(Long adminId,int month,int year) {
+		
+		return suggestionRepository.findByAdmin_Id(adminId);
+	}
 	public boolean deleteSuggestion(Long suggestionId) {
 	    // Check if suggestion exists
 	    Optional<Suggestion> existingSuggestion = suggestionRepository.findById(suggestionId);

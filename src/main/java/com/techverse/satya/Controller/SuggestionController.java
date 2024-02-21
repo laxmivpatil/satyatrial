@@ -1,10 +1,13 @@
 package com.techverse.satya.Controller;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -231,6 +234,67 @@ public class SuggestionController {
              }
     }
     
+    @GetMapping("/user/suggestions/bymonth")
+    public ResponseEntity<?> getSuggestionsByUserMonthYear(	@RequestHeader("Authorization") String authorizationHeader,
+    		@RequestParam int year,
+	         @RequestParam int month) {
+    	Optional<Users> user = userService.getUserByToken(authorizationHeader.substring(7));
+    	
+    	Map<String, Object> responseBody = new HashMap<>();
+    	 if (user.isPresent()) {
+ 	        
+    	      
+
+
+        List<SuggestionResponseDTO> suggestionResponseDTOs = new ArrayList<>();
+        List<Suggestion> suggestions = suggestionService.getSuggestionsByUserId(user.get().getId());
+        
+        List<Suggestion> filteredSuggestions = suggestions.stream()
+                .filter(suggestion -> {
+                    LocalDate localDate = LocalDate.parse(suggestion.getDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE));
+
+                    // Add condition for year and month
+                    boolean isMatchingDate = localDate.getYear() == year && localDate.getMonthValue() == month;
+
+                    // Add condition for adminId and status
+                     boolean isStatusMatch = suggestion.getStatus() == null || !suggestion.getStatus().equalsIgnoreCase("delete");
+
+                    return isMatchingDate  && isStatusMatch;
+                })
+                .collect(Collectors.toList());
+        if (filteredSuggestions.isEmpty()) {
+            responseBody.put("status", false);
+            responseBody.put("suggestions", filteredSuggestions);
+            return new ResponseEntity<>(responseBody, HttpStatus.OK);
+        }
+        
+        for (Suggestion suggestion : filteredSuggestions) {
+            SuggestionResponseDTO suggestionResponseDTO = new SuggestionResponseDTO();
+            suggestionResponseDTO.setName(suggestion.getUser().getName());
+            suggestionResponseDTO.setAddress(suggestion.getAddress());
+            suggestionResponseDTO.setPurpose(suggestion.getPurpose());
+            suggestionResponseDTO.setComment(suggestion.getComment());
+            suggestionResponseDTO.setPhoto(suggestion.getPhotoUrl());
+            suggestionResponseDTO.setVideo(suggestion.getVideoUrl());
+            suggestionResponseDTO.setStatus(suggestion.getStatus());
+            // You can set other fields like photo and video based on your logic
+            suggestionResponseDTO.setDateTime(suggestion.getDateTime());
+            suggestionResponseDTO.setProfile(userRepository.findById(user.get().getId()).get().getProfilePphoto());
+            suggestionResponseDTO.setId(suggestion.getId());
+            suggestionResponseDTOs.add(suggestionResponseDTO);
+        }
+        responseBody.put("status", true);
+        
+         responseBody.put("suggestions", suggestionResponseDTOs);
+        return new ResponseEntity<>(responseBody, HttpStatus.OK);
+    	 }
+    	 else {
+  		   responseBody.put("status", false);
+             responseBody.put("message", "User not valid");
+             return new ResponseEntity<>(responseBody, HttpStatus.UNAUTHORIZED);	   
+             }
+    }
+    
     
     @GetMapping("/admin/suggestions/all")
     public ResponseEntity<?> getSuggestionsByAdmin(	@RequestHeader("Authorization") String authorizationHeader) {
@@ -277,6 +341,89 @@ public class SuggestionController {
                return new ResponseEntity<>(responseBody, HttpStatus.UNAUTHORIZED);	 
                }
     	 
+    }
+    
+    @GetMapping("/admin/suggestions/bymonth")
+    public ResponseEntity<?> getSuggestionsByAdminIdMonthYear(	@RequestHeader("Authorization") String authorizationHeader,
+    		@RequestParam int year,
+	         @RequestParam int month) {
+    	Optional<Admin> admin= adminService.getAdminByToken(authorizationHeader.substring(7));
+    	 
+    	Map<String, Object> responseBody = new HashMap<>();
+       
+    	 if (admin.isPresent()) {
+  	        
+    	    	
+
+        List<SuggestionResponseDTO> suggestionResponseDTOs = new ArrayList<>();
+        List<Suggestion> suggestions = suggestionService.getSuggestionsByAdminId(admin.get().getId());
+        
+        List<Suggestion> filteredSuggestions = suggestions.stream()
+                .filter(suggestion -> {
+                    LocalDate localDate = LocalDate.parse(suggestion.getDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE));
+
+                    // Add condition for year and month
+                    boolean isMatchingDate = localDate.getYear() == year && localDate.getMonthValue() == month;
+
+                    // Add condition for adminId and status
+                     boolean isStatusMatch = suggestion.getStatus() == null || !suggestion.getStatus().equalsIgnoreCase("delete");
+
+                    return isMatchingDate  && isStatusMatch;
+                })
+                .collect(Collectors.toList());
+
+        // Convert filtered Suggestion entities to DTOs
+       
+        if (filteredSuggestions.isEmpty()) {
+            responseBody.put("status", false);
+            responseBody.put("suggestions", filteredSuggestions);
+            return new ResponseEntity<>(responseBody, HttpStatus.OK);
+        }
+        
+        for (Suggestion suggestion : filteredSuggestions) {
+            SuggestionResponseDTO suggestionResponseDTO = new SuggestionResponseDTO();
+            suggestionResponseDTO.setName(suggestion.getUser().getName());
+            suggestionResponseDTO.setAddress(suggestion.getAddress());
+            suggestionResponseDTO.setPurpose(suggestion.getPurpose());
+            suggestionResponseDTO.setComment(suggestion.getComment());
+            suggestionResponseDTO.setPhoto(suggestion.getPhotoUrl());
+            suggestionResponseDTO.setVideo(suggestion.getVideoUrl());
+            // You can set other fields like photo and video based on your logic
+            suggestionResponseDTO.setStatus(suggestion.getStatus());
+            suggestionResponseDTO.setDateTime(suggestion.getDateTime());
+            suggestionResponseDTO.setProfile(userRepository.findById(suggestion.getUser().getId()).get().getProfilePphoto());
+            suggestionResponseDTO.setId(suggestion.getId());
+            suggestionResponseDTOs.add(suggestionResponseDTO);
+        }
+        responseBody.put("status", true);
+         responseBody.put("suggestions", suggestionResponseDTOs);
+        return new ResponseEntity<>(responseBody, HttpStatus.OK);
+    	 }
+    	 else {
+    		   responseBody.put("status", false);
+               responseBody.put("message", "User not valid");
+               return new ResponseEntity<>(responseBody, HttpStatus.UNAUTHORIZED);	 
+               }
+    	 
+    }
+    
+    private SuggestionResponseDTO convertToDto(Suggestion suggestion) {
+        // Implement conversion logic here
+    	
+    	 SuggestionResponseDTO suggestionResponseDTO = new SuggestionResponseDTO();
+         suggestionResponseDTO.setName(suggestion.getUser().getName());
+         suggestionResponseDTO.setAddress(suggestion.getAddress());
+         suggestionResponseDTO.setPurpose(suggestion.getPurpose());
+         suggestionResponseDTO.setComment(suggestion.getComment());
+         suggestionResponseDTO.setPhoto(suggestion.getPhotoUrl());
+         suggestionResponseDTO.setVideo(suggestion.getVideoUrl());
+         // You can set other fields like photo and video based on your logic
+         suggestionResponseDTO.setStatus(suggestion.getStatus());
+         suggestionResponseDTO.setDateTime(suggestion.getDateTime());
+         suggestionResponseDTO.setProfile(userRepository.findById(suggestion.getUser().getId()).get().getProfilePphoto());
+         suggestionResponseDTO.setId(suggestion.getId());
+    	
+        return suggestionResponseDTO;
     }
     @GetMapping("/user/suggestions/bysuggestionid")
     public ResponseEntity<?> getSuggestionById(@RequestHeader("Authorization") String authorizationHeader,@RequestParam Long suggestionId) {
