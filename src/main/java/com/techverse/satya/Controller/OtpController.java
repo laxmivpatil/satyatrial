@@ -30,6 +30,7 @@ import com.techverse.satya.Model.Admin;
 import com.techverse.satya.Model.Users;
 import com.techverse.satya.Repository.UserRepository;
 import com.techverse.satya.Service.AdminService;
+import com.techverse.satya.Service.EmailService;
 import com.techverse.satya.Service.OtpService;
 import com.techverse.satya.Service.UserService;
 
@@ -56,6 +57,9 @@ public class OtpController {
     
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private EmailService emailService;
     @Autowired
     private AdminService adminService;
     
@@ -107,9 +111,9 @@ public class OtpController {
 
         try {
             if (mobileNo != null && !mobileNo.isEmpty()) {
-                
-                     String otp = otpService.generateOtp();
-                    if (otpService.sendOtp(mobileNo, otp)) {
+            	 String otp = otpService.generateOtp();
+            	if(mobileNo.matches("^\\d{10}$")) {
+            		if (otpService.sendOtp(mobileNo, otp)) {
                     	System.out.println("Otp is "+otp);
                         response.setStatus(true);
                         response.setMessage("OTP sent successfully."+otp);
@@ -120,11 +124,27 @@ public class OtpController {
                        
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
                     }
+            	}
+            	else {
+            		if (emailService.sendEmail(mobileNo, otp)) {
+                    	System.out.println("Otp is "+otp);
+                        response.setStatus(true);
+                        response.setMessage("OTP sent successfully."+otp);
+                        return ResponseEntity.ok(response);
+                    } else {
+                        response.setStatus(false);
+                        response.setMessage("Failed to send OTP.");
+                       
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+                    }
+            		
+            	}
+                    
                  
             } else {
                 response.setStatus(false);
                 
-                response.setMessage("Invalid Mobile No.");
+                response.setMessage("Invalid Mobile No. or Email");
                 return ResponseEntity.badRequest().body(response);
             }
         } catch (Exception e) {
@@ -143,9 +163,9 @@ public class OtpController {
 
         try {
             if (mobileNo != null && !mobileNo.isEmpty()) {
-                
-                     String otp = otpService.generateOtp();
-                    if (otpService.sendOtp(mobileNo, otp)) {
+            	 String otp = otpService.generateOtp();
+            	if(mobileNo.matches("^\\d{10}$")) {
+            		if (otpService.sendOtp(mobileNo, otp)) {
                     	System.out.println("Otp is "+otp);
                         response.setStatus(true);
                         response.setMessage("OTP sent successfully."+otp);
@@ -156,11 +176,27 @@ public class OtpController {
                        
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
                     }
+            	}
+            	else {
+            		if (emailService.sendEmail(mobileNo, otp)) {
+                    	System.out.println("Otp is "+otp);
+                        response.setStatus(true);
+                        response.setMessage("OTP sent successfully."+otp);
+                        return ResponseEntity.ok(response);
+                    } else {
+                        response.setStatus(false);
+                        response.setMessage("Failed to send OTP.");
+                       
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+                    }
+            		
+            	}
+                    
                  
             } else {
                 response.setStatus(false);
                 
-                response.setMessage("Invalid Mobile No.");
+                response.setMessage("Invalid Mobile No. or Email");
                 return ResponseEntity.badRequest().body(response);
             }
         } catch (Exception e) {

@@ -274,7 +274,8 @@ public class SuggestionController {
     	 else {
     		   responseBody.put("status", false);
                responseBody.put("message", "User not valid");
-               return new ResponseEntity<>(responseBody, HttpStatus.UNAUTHORIZED);	   }
+               return new ResponseEntity<>(responseBody, HttpStatus.UNAUTHORIZED);	 
+               }
     	 
     }
     @GetMapping("/user/suggestions/bysuggestionid")
