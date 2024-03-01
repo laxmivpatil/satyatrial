@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.poi.util.SystemOutLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,7 @@ import com.techverse.satya.DTO.SuggestionResponseDTO;
 import com.techverse.satya.Model.Admin;
 import com.techverse.satya.Model.Suggestion;
 import com.techverse.satya.Model.Users;
+import com.techverse.satya.Repository.SuggestionRepository;
 import com.techverse.satya.Repository.UserRepository;
 import com.techverse.satya.Service.AdminService;
 import com.techverse.satya.Service.SuggestionService;
@@ -43,6 +45,8 @@ public class SuggestionController {
 
     @Autowired
     private SuggestionService suggestionService;
+    @Autowired
+    private SuggestionRepository suggestionRepository;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -254,7 +258,12 @@ public class SuggestionController {
                     LocalDate localDate = LocalDate.parse(suggestion.getDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE));
 
                     // Add condition for year and month
-                    boolean isMatchingDate = localDate.getYear() == year && localDate.getMonthValue() == month;
+                    boolean isMatchingDate = localDate.getYear() == year && localDate.getMonthValue() == month ;
+                    if(suggestion.isEditable() && localDate.isBefore(LocalDate.now())){
+                    	System.out.println("change");
+                    	suggestion.setEditable(false);
+                    	suggestionRepository.save(suggestion);
+                    }
 
                     // Add condition for adminId and status
                      boolean isStatusMatch = suggestion.getStatus() == null || !suggestion.getStatus().equalsIgnoreCase("delete");
@@ -271,6 +280,7 @@ public class SuggestionController {
         for (Suggestion suggestion : filteredSuggestions) {
             SuggestionResponseDTO suggestionResponseDTO = new SuggestionResponseDTO();
             suggestionResponseDTO.setName(suggestion.getUser().getName());
+            suggestionResponseDTO.setEditable(suggestion.isEditable());
             suggestionResponseDTO.setAddress(suggestion.getAddress());
             suggestionResponseDTO.setPurpose(suggestion.getPurpose());
             suggestionResponseDTO.setComment(suggestion.getComment());
@@ -282,6 +292,7 @@ public class SuggestionController {
             suggestionResponseDTO.setProfile(userRepository.findById(user.get().getId()).get().getProfilePphoto());
             suggestionResponseDTO.setId(suggestion.getId());
             suggestionResponseDTOs.add(suggestionResponseDTO);
+            
         }
         responseBody.put("status", true);
         

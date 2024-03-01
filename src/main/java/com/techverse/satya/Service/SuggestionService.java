@@ -97,6 +97,7 @@ public class SuggestionService {
 			suggestion.setComment(suggestionDTO.getComment());
 			suggestion.setAdmin(user.get().getAdmin());
 			suggestion.setStatus("new");
+			suggestion.setEditable(true);
 			// Handle photo upload logic
 			MultipartFile photoFile = suggestionDTO.getPhoto();
 			if (photoFile != null && !photoFile.isEmpty()) {
@@ -130,8 +131,8 @@ public class SuggestionService {
 			System.out.println(suggestion);
 			// Save the suggestion to the database
 			suggestionRepository.save(suggestion);
-		     adminNotificationService.sendSuggestionNotificationToAdmin(suggestion, user.get());
-		       
+		    adminNotificationService.sendSuggestionNotificationToAdmin(suggestion, user.get());
+		    System.out.println(suggestion.isEditable());
 			return mapToDTO(suggestion);
 		}
 		return suggestionResponseDTO;
@@ -262,7 +263,7 @@ public class SuggestionService {
         dto.setPhoto(suggestion.getPhotoUrl());
         dto.setVideo(suggestion.getVideoUrl());
         dto.setStatus(suggestion.getStatus());
-
+        dto.setEditable(suggestion.isEditable());
         dto.setDateTime(suggestion.getDateTime());
         dto.setEditTime(suggestion.getEditTime());
         dto.setProfile(userRepository.findById(suggestion.getUser().getId()).get().getProfilePphoto());

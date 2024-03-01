@@ -34,10 +34,7 @@ public class ConstituencyController {
     public ResponseEntity<Map<String, Object>> getConstituenciesByDistrict(@RequestParam String districtName) {
         try {
             List<Constituency> constituencies = constituencyService.getConstituenciesByDistrictName(districtName);
-
-             
-
-                Map<String, Object> response = new HashMap<>();
+               Map<String, Object> response = new HashMap<>();
                 response.put("district", districtName);
                 response.put("constituency", constituencies);
 

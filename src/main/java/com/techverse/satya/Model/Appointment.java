@@ -16,6 +16,8 @@ public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    
     					
     private String appointmentType; // "online" or "personal"
     private String date;

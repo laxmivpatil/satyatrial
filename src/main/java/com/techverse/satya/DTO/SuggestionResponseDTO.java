@@ -18,10 +18,17 @@ public class SuggestionResponseDTO {
 	    private LocalDateTime editTime;
 	    private String thumbnail="";
 	    private String status="";
+	    private boolean editable;
 	    
 	    
 	    
-	    
+		 
+		public boolean isEditable() {
+			return editable;
+		}
+		public void setEditable(boolean editable) {
+			this.editable = editable;
+		}
 		public String getStatus() {
 			return status;
 		}

@@ -3,19 +3,16 @@ package com.techverse.satya.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-
+import org.springframework.stereotype.Service; 
 import com.techverse.satya.Controller.AppointmentController;
 import com.techverse.satya.Controller.SuggestionController;
 import com.techverse.satya.DTO.AdminNotificationDTO;
 import com.techverse.satya.Model.AdminNotification;
 import com.techverse.satya.Model.Appointment;
 import com.techverse.satya.Model.PushNotificationRequest;
-import com.techverse.satya.Model.SubAdmin;
-import com.techverse.satya.Model.SubAdminNotification;
+import com.techverse.satya.Model.SubAdmin; 
 import com.techverse.satya.Model.Suggestion;
 import com.techverse.satya.Model.UserNotification;
 import com.techverse.satya.Model.Users;

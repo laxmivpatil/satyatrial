@@ -34,10 +34,19 @@ public class Suggestion {
     
     private String status="new";
     
+    private boolean editable=true;
     
     
     
-    public String getStatus() {
+    public boolean isEditable() {
+		return editable;
+	}
+
+	public void setEditable(boolean editable) {
+		this.editable = editable;
+	}
+
+	public String getStatus() {
 		return status;
 	}
 
