@@ -5,7 +5,14 @@ public class ApiDataResponse<T> {
 	    private String message;
 	    private T data;
 
-	    public ApiDataResponse(boolean status, String message, T data) {
+	    
+	    
+	    public ApiDataResponse() {
+			super();
+			// TODO Auto-generated constructor stub
+		}
+
+		public ApiDataResponse(boolean status, String message, T data) {
 	        this.status = status;
 	        this.message = message;
 	        this.data = data;

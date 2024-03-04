@@ -38,6 +38,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.techverse.satya.DTO.AdminDTO;
+import com.techverse.satya.DTO.ApiDataResponse;
 import com.techverse.satya.DTO.ApiResponse;
 import com.techverse.satya.DTO.EditUser;
 import com.techverse.satya.DTO.ResponseDTO;
@@ -353,5 +354,41 @@ else
 		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
 		    }
 		}
+		
+		
+		@GetMapping("/user/currentMonthAppointmentCount")
+		public ResponseEntity<ApiDataResponse<Long>> getCountOfAppointmentsForUserInCurrentMonth(@RequestHeader("Authorization") String authorizationHeader) {
+		    Long count = 0L;
+		    Optional<Users> user = userService.getUserByToken(authorizationHeader.substring(7));
+		    ApiDataResponse<Long> responseBody = new ApiDataResponse<>();
+
+		    try {
+		        if (user.isPresent()) {
+		            count = userService.getCountOfAppointmentsForUserInCurrentMonth(user.get().getId());
+
+		            if (count == 0) {
+		                responseBody.setStatus(false);
+		                responseBody.setMessage("No appointments found for the current month.");
+		            }
+		            else {
+		                responseBody.setStatus(true);
+		                responseBody.setMessage("Successfully retrieved the count.");
+		            }
+		            responseBody.setData(count);
+		            return ResponseEntity.ok(responseBody);
+		        } else {
+		            responseBody.setStatus(false);
+		            responseBody.setMessage("User not found.");
+		            responseBody.setData(null); // Explicitly setting data to null
+		            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
+		        }
+		    } catch (Exception e) {
+		        responseBody.setStatus(false);
+		        responseBody.setMessage("Failed to retrieve data.");
+		        responseBody.setData(null); // Explicitly setting data to null
+		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
+		    }
+		}
+
 
 }

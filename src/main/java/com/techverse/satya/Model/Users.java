@@ -49,14 +49,25 @@ public class Users {
     
     private String role="";
 
-    
+    private int countpermonth=0;
 	 @Column(name = "notification_enabled")
 	 private boolean notificationEnabled=true;
     // getters and setters
 
+	 
+	 
+	 
      
        public String getJoineddate() {
 		return joineddate;
+	}
+
+	public int getCountpermonth() {
+		return countpermonth;
+	}
+
+	public void setCountpermonth(int countpermonth) {
+		this.countpermonth = countpermonth;
 	}
 
 	public boolean isNotificationEnabled() {

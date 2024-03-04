@@ -168,6 +168,17 @@ public class UserService {
 		}
 	}
 
+	
+	
+	 public long getCountOfAppointmentsForUserInCurrentMonth(Long userId) {
+	        // Get the current month and year
+	        LocalDate currentDate = LocalDate.now();
+	        int currentMonth = currentDate.getMonthValue();
+	        int currentYear = currentDate.getYear();
+
+	        // Call the repository method to get the count of appointments for the user in the current month
+	        return userRepository.countAppointmentsByMonthAndUser(userId, currentMonth, currentYear);
+	    }
 	/*private String uploadDir="F:\\MyProject\\SatyaApp\\Files\\";
 
     public String storeFile(MultipartFile file) {
