@@ -366,12 +366,12 @@ else
 		        if (user.isPresent()) {
 		            count = userService.getCountOfAppointmentsForUserInCurrentMonth(user.get().getId());
 
-		            if (count == 0) {
-		                responseBody.setStatus(false);
-		                responseBody.setMessage("No appointments found for the current month.");
+		            if (count == 5) {
+		                responseBody.setStatus(true);
+		                responseBody.setMessage("You allready exceeds limit  to create an  appointment");
 		            }
 		            else {
-		                responseBody.setStatus(true);
+		                responseBody.setStatus(false);
 		                responseBody.setMessage("Successfully retrieved the count.");
 		            }
 		            responseBody.setData(count);
