@@ -88,6 +88,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/subadmin/login").permitAll()
             .antMatchers("/subadmin/get").hasRole("SUBADMIN")
             .antMatchers("/user/suggestions/add").hasRole("USER")
+
+            .antMatchers("/user/suggestions/byfilter").hasRole("USER")
             .antMatchers("/user/suggestions/all").hasRole("USER")
             .antMatchers("/user/suggestions").hasRole("USER")
             .antMatchers("/user/suggestions/delete").hasRole("USER")

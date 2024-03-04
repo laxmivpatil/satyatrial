@@ -1,12 +1,15 @@
 package com.techverse.satya.Controller;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.apache.poi.util.SystemOutLogger;
@@ -305,7 +308,93 @@ public class SuggestionController {
              return new ResponseEntity<>(responseBody, HttpStatus.UNAUTHORIZED);	   
              }
     }
-    
+    @GetMapping("/user/suggestions/byfilter")
+    public ResponseEntity<?> getSuggestionsByUserMonthYear(
+            @RequestHeader("Authorization") String authorizationHeader,
+            @RequestParam(required = false) String filter) {
+
+        Optional<Users> user = userService.getUserByToken(authorizationHeader.substring(7));
+
+        Map<String, Object> responseBody = new HashMap<>();
+        if (!user.isPresent()) {
+            responseBody.put("status", false);
+            responseBody.put("message", "User not valid");
+            return new ResponseEntity<>(responseBody, HttpStatus.UNAUTHORIZED);
+        }
+
+        List<Suggestion> suggestions = suggestionService.getSuggestionsByUserId(user.get().getId());
+        LocalDate now = LocalDate.now();
+        LocalDate startOfWeek = now.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        LocalDate endOfWeek = now.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
+        LocalDate startOfLastWeek = startOfWeek.minusWeeks(1);
+        LocalDate endOfLastWeek = endOfWeek.minusWeeks(1);
+        LocalDate startOfThisMonth = now.with(TemporalAdjusters.firstDayOfMonth());
+        LocalDate endOfThisMonth = now.with(TemporalAdjusters.lastDayOfMonth());
+
+        Predicate<Suggestion> timeFilter;
+        switch (filter != null ? filter : "") {
+            case "allTime":
+                timeFilter = suggestion -> true;
+                break;
+            case "thisWeek":
+                timeFilter = suggestion -> {
+                    LocalDate date = LocalDate.parse(suggestion.getDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE));
+                    return !date.isBefore(startOfWeek) && !date.isAfter(endOfWeek);
+                };
+                break;
+            case "lastWeek":
+                timeFilter = suggestion -> {
+                    LocalDate date = LocalDate.parse(suggestion.getDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE));
+                    return !date.isBefore(startOfLastWeek) && !date.isAfter(endOfLastWeek);
+                };
+                break;
+            case "thisMonth":
+                timeFilter = suggestion -> {
+                    LocalDate date = LocalDate.parse(suggestion.getDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE));
+                    return !date.isBefore(startOfThisMonth) && !date.isAfter(endOfThisMonth);
+                };
+                break;
+            default: // Default to filtering by the specified month and year if no or unknown filter is provided.
+            	 timeFilter = suggestion -> true;
+                 break;
+        }
+
+        List<SuggestionResponseDTO> suggestionResponseDTOs = suggestions.stream()
+                .filter(timeFilter)
+                .filter(suggestion -> {
+                    if (suggestion.isEditable() && LocalDate.parse(suggestion.getDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE)).isBefore(LocalDate.now())) {
+                        suggestion.setEditable(false);
+                        suggestionRepository.save(suggestion);
+                    }
+                    return suggestion.getStatus() == null || !suggestion.getStatus().equalsIgnoreCase("delete");
+                })
+                .map(suggestion -> {
+                    SuggestionResponseDTO dto = new SuggestionResponseDTO();
+                    dto.setName(suggestion.getUser().getName());
+                    dto.setEditable(suggestion.isEditable());
+                    dto.setAddress(suggestion.getAddress());
+                    dto.setPurpose(suggestion.getPurpose());
+                    dto.setComment(suggestion.getComment());
+                    dto.setPhoto(suggestion.getPhotoUrl());
+                    dto.setVideo(suggestion.getVideoUrl());
+                    dto.setStatus(suggestion.getStatus());
+                    dto.setDateTime(suggestion.getDateTime());
+                    dto.setProfile(userRepository.findById(user.get().getId()).get().getProfilePphoto());
+                    dto.setId(suggestion.getId());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+
+        if (suggestionResponseDTOs.isEmpty()) {
+            responseBody.put("status", false);
+            responseBody.put("suggestions", "No suggestions found for the selected filter.");
+        } else {
+            responseBody.put("status", true);
+            responseBody.put("suggestions", suggestionResponseDTOs);
+        }
+        return new ResponseEntity<>(responseBody, HttpStatus.OK);
+    }
+
     
     @GetMapping("/admin/suggestions/all")
     public ResponseEntity<?> getSuggestionsByAdmin(	@RequestHeader("Authorization") String authorizationHeader) {
