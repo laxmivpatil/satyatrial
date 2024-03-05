@@ -93,6 +93,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/user/suggestions/all").hasRole("USER")
             .antMatchers("/user/suggestions").hasRole("USER")
             .antMatchers("/user/suggestions/delete").hasRole("USER")
+
+            .antMatchers("/admin/suggestions/byfilter").hasAnyRole("ADMIN","SUBADMIN")
             .antMatchers("/admin/suggestions/all").hasAnyRole("ADMIN","SUBADMIN")
             .antMatchers("/admin/suggestions/today").hasAnyRole("ADMIN","SUBADMIN")
             .antMatchers("/admin/suggestions/past").hasAnyRole("ADMIN","SUBADMIN")
