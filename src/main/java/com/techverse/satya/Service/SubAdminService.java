@@ -24,6 +24,8 @@ public class SubAdminService {
 	
 	@Autowired
 	OtpService otpService;
+	@Autowired
+	EmailService emailService;
 	
     @Autowired
     private JwtHelper jwtHelper;
@@ -35,6 +37,7 @@ public class SubAdminService {
                 .map(subAdmin -> new SubAdminDTO(
                         subAdmin.getId(),
                         subAdmin.getMobileNumber(),
+                        subAdmin.getEmail(),
                         subAdmin.getJoineddate(),
                         subAdmin.getName()                       
                 ))
@@ -45,9 +48,9 @@ public class SubAdminService {
 	/****get Username from token*/
 	 public Optional<SubAdmin> getSubAdminByToken(String token) {
 	    	String mobileNo=jwtHelper.getUsernameFromToken(token);
-		//	 System.out.println("hi "+userName);
+		 	 System.out.println("hi "+mobileNo);
 			
-	        return subAdminRepository.findByMobileNumber(mobileNo);
+	        return  subAdminRepository.findByMobileNumberOrEmail(mobileNo);
 	    }
 	
 	 public void deleteSubAdminById(Long subAdminId) {
@@ -55,12 +58,25 @@ public class SubAdminService {
 	    }
 	public  boolean  createSubAdmin(String mobileNo,Admin admin)
 	{
+		
 		boolean send=true;
-		//remove comment to send message
-		//send=otpService.sendmessagetosubadmin(mobileNo);
+		if(mobileNo.matches("^\\d{10}$")) {
+			send=otpService.sendmessagetosubadmin(mobileNo);
+		}
+		else {
+			 String playStoreUrl = "https://play.google.com/store/apps/details?id=com.techverse.satya";
+		      String messageBody = "Welcome Subadmin to satya app please click on "+playStoreUrl +" to login into satya application" ;
+
+			send=emailService.sendEmail(mobileNo, "SubAdmin Registration", messageBody);
+		}
 		if(send) {
 		 SubAdmin  subAdmin=new SubAdmin();
+		 if(mobileNo.matches("^\\d{10}$")) {
 		 subAdmin.setMobileNumber(mobileNo);
+		 }
+		 else {
+			 subAdmin.setEmail(mobileNo);
+		 }
 		 subAdmin.setAdmin(admin);
 		 subAdmin.setRole("ROLE_SUBADMIN");
 		 LocalDate currentDate = LocalDate.now();
@@ -78,6 +94,9 @@ public class SubAdminService {
 	
 	   public Optional<SubAdmin> getSubAdminBymobileNo(String mobileNo) {
 	        return subAdminRepository.findByMobileNumber(mobileNo);
+	    }
+	   public Optional<SubAdmin> getSubAdminBymobileNoOrEmail(String mobileNoOrEmail) {
+	        return subAdminRepository.findByMobileNumberOrEmail(mobileNoOrEmail);
 	    }
 	    
 }

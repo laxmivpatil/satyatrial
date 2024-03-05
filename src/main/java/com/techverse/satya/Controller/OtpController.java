@@ -69,35 +69,7 @@ public class OtpController {
      
     
     
-    @GetMapping("/generateOtp1")
-    public String sendSMS(@RequestParam("to") String to, @RequestParam("message") String message1) throws IOException {
-     
-    	 String apiKey = "0Gt2VnzXhK5DxkyZpJvYLfCRPibl63dUqoSAgOecNIHw9sauQWkzbYeg2rD8j1G6UoZxFhNJyK0mTt34";
-         String numbers = "7507568660";
-         String message = "Your OTP is: 5599";
-
-         HttpResponse<JsonNode> response = Unirest.get("https://www.fast2sms.com/dev/bulkV2")
-                 .queryString("authorization", apiKey)
-                 .queryString("route", "otp")
-                 .queryString("numbers", numbers)
-                 .queryString("message", message)
-                 .header("cache-control", "no-cache")
-                 .asJson();
-
-         int status = response.getStatus();
-         if (status == 200) {
-             System.out.println("OTP sent successfully!");
-             return message;
-         } else {
-             System.err.println("Failed to send OTP. Status code: " + status);
-             System.err.println("Response body: " + response.getBody());
-             return response.getBody().toString();
-         }
-    }
     
-     
- 
-
 
     
     /****final****/
@@ -217,23 +189,39 @@ public class OtpController {
         try {
             if (mobileNo != null && !mobileNo.isEmpty()) {
                 
-                     String otp = otpService.generateOtp();
-                    if (otpService.sendOtp(mobileNo, otp)) {
-                    	System.out.println("Otp is "+otp);
-                        response.setStatus(true);
-                        response.setMessage("OTP sent successfully."+otp);
-                        return ResponseEntity.ok(response);
-                    } else {
-                        response.setStatus(false);
-                        response.setMessage("Failed to send OTP.");
-                       
-                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-                    }
-                 
+            	 String otp = otpService.generateOtp();
+             	if(mobileNo.matches("^\\d{10}$")) {
+             		if (otpService.sendOtp(mobileNo, otp)) {
+                     	System.out.println("Otp is "+otp);
+                         response.setStatus(true);
+                         response.setMessage("OTP sent successfully."+otp);
+                         return ResponseEntity.ok(response);
+                     } else {
+                         response.setStatus(false);
+                         response.setMessage("Failed to send OTP.");
+                        
+                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+                     }
+             	}
+             	else {
+             		if (emailService.sendEmail(mobileNo, otp)) {
+                     	System.out.println("Otp is "+otp);
+                         response.setStatus(true);
+                         response.setMessage("OTP sent successfully."+otp);
+                         return ResponseEntity.ok(response);
+                     } else {
+                         response.setStatus(false);
+                         response.setMessage("Failed to send OTP.");
+                        
+                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+                     }
+             		
+             	}
+                     
             } else {
                 response.setStatus(false);
                 
-                response.setMessage("Invalid Mobile No.");
+                response.setMessage("Invalid Mobile No. or Email");
                 return ResponseEntity.badRequest().body(response);
             }
         } catch (Exception e) {

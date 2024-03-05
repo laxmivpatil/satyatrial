@@ -30,7 +30,7 @@ public class SubAdmin {
 
 	private String deviceToken="";
 	
-	
+    private String email="";
 	
 	
     @ManyToOne
@@ -41,6 +41,14 @@ public class SubAdmin {
     
     
     
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	public String getDeviceToken() {
 		return deviceToken;
 	}

@@ -55,9 +55,7 @@ public class SubAdminController {
     /****final***/
 	 @PostMapping("/login")
 	  public ResponseEntity<Object> authenticateUserlogin(@RequestBody JWTRequest jwtRequest) {
-	     
-		 
-		 try {
+	 	 try {
 	          Authentication authentication = authenticationManager.authenticate(
 	                  new UsernamePasswordAuthenticationToken(jwtRequest.getMobileNo(), jwtRequest.getOtp()));
 
@@ -86,7 +84,7 @@ public class SubAdminController {
 	    		        return ResponseEntity.ok(new ApiResponse(true, subAdmin.get().getMobileNumber()));
 	      } catch (BadCredentialsException e) {
 	          return ResponseEntity.status(HttpStatus.OK)
-	                  .body(new ApiResponse(false, "Invalid Mobile No  or Otp."));
+	                  .body(new ApiResponse(false, "Invalid Mobile No  or Email or Otp."));
 	      } catch (Exception e) {
 	          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 	                  .body(new ApiResponse(false, "An error occurred during authentication."));
@@ -97,12 +95,10 @@ public class SubAdminController {
 	 
 	 @GetMapping("/findbymobileno")
 	  public ResponseEntity<Object> findbymobileno(@RequestParam String mobileno) {
-	     
-		 
-		 try {
+	    	 try {
 	           
  
-	          Optional<SubAdmin> subAdmin = subAdminService.getSubAdminBymobileNo(mobileno);
+	          Optional<SubAdmin> subAdmin = subAdminService.getSubAdminBymobileNoOrEmail(mobileno);
 	          if(subAdmin.isPresent()) {
 	          return ResponseEntity.ok(new ApiDataResponse(true,"data available",new SubAdminDTO(subAdmin.get())));
 	          }

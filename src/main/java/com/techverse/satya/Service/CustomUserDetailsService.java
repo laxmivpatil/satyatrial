@@ -46,16 +46,17 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<Users> userOptional = userRepository.findByPhoneNumberOrEmail(username);
         Optional<Admin> adminOptional = adminRepository.findByMobileNumberOrEmail(username);
-        Optional<SubAdmin> subAdminOptional = subAdminRepository.findByMobileNumber(username);
+        Optional<SubAdmin> subAdminOptional = subAdminRepository.findByMobileNumberOrEmail(username);
         
         Optional<OtpEntity> otpEntityOptional = otpRepository.findByPhoneNumber(username);
-        System.out.println("call load by user name hsjhgjsdjgfsgdhdsgf");
+        System.out.println("call load by user name hsjhgjsdjgfsgdhdsgf"+ username);
         if (userOptional.isPresent()) {
             Users user = userOptional.get();
             return buildUserDetails(username, otpEntityOptional.get().getOtp(), "ROLE_USER");
         } else if (subAdminOptional.isPresent()) {
             SubAdmin subAdmin = subAdminOptional.get();
-            return buildUserDetails(subAdmin.getMobileNumber(), otpEntityOptional.get().getOtp(), "ROLE_SUBADMIN");
+            System.out.println("call sub admin");
+            return buildUserDetails(username, otpEntityOptional.get().getOtp(), "ROLE_SUBADMIN");
         }
         else if (adminOptional.isPresent()) {
             Admin admin = adminOptional.get();

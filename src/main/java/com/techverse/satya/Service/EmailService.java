@@ -58,8 +58,7 @@ public class EmailService {
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(senderEmail, senderPassword);
             }
-        });
-
+        }); 
         try {
             // Create a message
             Message message = new MimeMessage(session);
@@ -81,7 +80,7 @@ public class EmailService {
         }
     }
 	
-	public void sendEmail(String recipientEmail,String emailSubject, String emailBody)
+	public boolean sendEmail(String recipientEmail,String emailSubject, String emailBody)
 	{
 		Properties props = new Properties();
         props.put("mail.smtp.host", host);
@@ -109,9 +108,11 @@ public class EmailService {
             Transport.send(message);
 
             System.out.println("Email sent successfully.");
+            return true;
 
         } catch (MessagingException e) {
             System.out.println("Error sending email: " + e.getMessage());
+            return false;
         }
     }
 	 

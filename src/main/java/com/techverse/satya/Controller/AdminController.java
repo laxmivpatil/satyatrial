@@ -140,18 +140,18 @@ public class AdminController {
 		Optional<Admin> admin = adminService.getAdminByToken(authorizationHeader.substring(7));
 		if (admin.isPresent()) {
 			try {
-				if(userService.findByPhoneNumber(mobileNumber).isPresent()) {
+				if(userService.findByPhoneNumberOrEmail(mobileNumber).isPresent()) {
 					return ResponseEntity.status(HttpStatus.OK)
 							.body(new ApiResponse(false, "User Allready Present as citizen Not able to add"));
 
 				}
-				if(adminService.getAdminBymobileNo(mobileNumber).isPresent())
+				if(adminService.getAdminBymobileNoOrEmail(mobileNumber).isPresent())
 				{
 					return ResponseEntity.status(HttpStatus.OK)
 							.body(new ApiResponse(false, "User Allready Present as a politician Not able to add"));
 
 				}
-				if(subAdminService.getSubAdminBymobileNo(mobileNumber).isPresent()) {
+				if(subAdminService.getSubAdminBymobileNoOrEmail(mobileNumber).isPresent()) {
 					return ResponseEntity.status(HttpStatus.OK)
 							.body(new ApiResponse(false, "sub admin Allready Present Not able to add"));
 

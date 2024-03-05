@@ -116,11 +116,11 @@ public class OtpService {
     }     
     
     
-     public boolean sendmessagetosubadmin(String phoneNumber) {
-        LocalDateTime expiryTime = LocalDateTime.now().plusMinutes(5);
+     public boolean sendmessagetosubadmin(String phoneNumber) { 
         String url="localhost:8080/subadmin/login?"+phoneNumber;
-        String messageBody = "Welcome Subadmin to satya app please click on "+url +" to login " ;
-        Twilio.init(accountSid, authToken);
+         String playStoreUrl = "https://play.google.com/store/apps/details?id=com.techverse.satya";
+        String messageBody = "Welcome Subadmin to satya app please click on "+playStoreUrl +" to login into satya application" ;
+     /*   Twilio.init(accountSid, authToken);
        String  phoneNumber1 = "+91" + phoneNumber;
 
         try {
@@ -143,7 +143,8 @@ public class OtpService {
             // Handle exceptions (e.g., TwilioException)
             System.out.println("Error occurred while sending message " + e.getMessage());
             return false;
-        }
+        }*/
+        return true;
     } 
      public void sendWhatsAppMessage(String toPhoneNumber, String message) {
          Twilio.init(accountSid, authToken);

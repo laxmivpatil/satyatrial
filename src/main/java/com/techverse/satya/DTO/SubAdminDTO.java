@@ -7,6 +7,7 @@ public class SubAdminDTO {
  private String mobileNumber;
  private String joineddate;
  private String name="";
+ private String email="";
  private String role="subadmin";
  
  // Constructors, getters, and setters
@@ -16,12 +17,29 @@ public class SubAdminDTO {
 	 this.name="";
  }
 
- // Parameterized constructor
+ public String getEmail() {
+	return email;
+}
+
+public void setEmail(String email) {
+	this.email = email;
+}
+
+// Parameterized constructor
  public SubAdminDTO(Long id, String mobileNumber, String joineddate, String name) {
      this.id = id;
      this.mobileNumber = mobileNumber;
      this.joineddate = joineddate;
      this.name = name;
+     this.role="subadmin";
+    
+ }
+ public SubAdminDTO(Long id, String mobileNumber, String email, String joineddate, String name) {
+     this.id = id;
+     this.mobileNumber = mobileNumber;
+     this.joineddate = joineddate;
+     this.name = name;
+     this.email=email;
      this.role="subadmin";
     
  }
@@ -31,6 +49,7 @@ public class SubAdminDTO {
      this.mobileNumber = subAdmin.getMobileNumber();
      this.joineddate = subAdmin.getJoineddate();
      this.name = subAdmin.getName();
+     this.email=subAdmin.getEmail();
      this.role="subadmin";
     
  }
