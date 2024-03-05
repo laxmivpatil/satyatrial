@@ -60,7 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/user/getstatusvideo").permitAll()  
             .antMatchers("/pendingverification").permitAll()   
             .antMatchers("/updateverification").permitAll()   
-            .antMatchers("/user/generateOtp").permitAll()   //done
+            .antMatchers("/user/generateOtp").permitAll()  //done
             .antMatchers("/subadmin/generateOtp").permitAll()   //done
              .antMatchers("/user/checkuserbymobileoremail").permitAll()		//done
              .antMatchers("/user/firstlogin").permitAll()    

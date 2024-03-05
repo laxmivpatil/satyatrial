@@ -1,5 +1,6 @@
 package com.techverse.satya.Service;
 
+import java.time.LocalDateTime;
 import java.util.Properties;
 
 import java.util.Properties;
@@ -13,14 +14,23 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+ 
+import com.techverse.satya.Model.OtpEntity;
+import com.techverse.satya.Repository.OtpRepository;
+ 
 
 @Service
 public class EmailService {
 	
 	 
+	 @Autowired
+	    private OtpRepository otpRepository;
+	 @Autowired
+	    private PasswordEncoder passwordEncoder;
 	 private String senderEmail="laxmipatil070295@gmail.com";
 	
  
@@ -34,6 +44,9 @@ public class EmailService {
 	
 	public boolean sendEmail(String recipientEmail,String OTP)
 	{
+		 OtpEntity otpEntity = new OtpEntity(recipientEmail, passwordEncoder.encode(OTP), LocalDateTime.now().plusMinutes(5));
+         otpRepository.save(otpEntity);
+        
 		Properties props = new Properties();
         props.put("mail.smtp.host", host);
         props.put("mail.smtp.port", port);
