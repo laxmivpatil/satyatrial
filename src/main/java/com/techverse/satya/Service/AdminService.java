@@ -147,7 +147,7 @@ public class AdminService {
     public Optional<Admin> getAdminByToken(String token) {
     	Optional<Admin> admin;
     	String mobileNo=jwtHelper.getUsernameFromToken(token);
-    	 Optional<SubAdmin> subAdmin=subAdminRepository.findByMobileNumber(mobileNo);
+    	 Optional<SubAdmin> subAdmin=subAdminRepository.findByMobileNumberOrEmail(mobileNo);
     	 if(subAdmin.isPresent()) {
     		 admin=Optional.of(subAdmin.get().getAdmin());
     	 }
