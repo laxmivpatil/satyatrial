@@ -68,6 +68,25 @@ catch(Exception e){
 	  System.out.println("error to send push notification");
 }
     }
+    public void sendSuggestionEditNotificationToAdmin(Suggestion suggestion, Users user) {
+        String message = String.format("Hello "+user.getAdmin().getName()+ "Suggestion Edited by user %s.", user.getName());
+        String notificationType = "suggestion";
+        Long entityId = suggestion.getId();
+try {
+	 AdminNotification adminNotification = new AdminNotification(message, notificationType,user.getAdmin(),suggestion,user);
+       adminNotificationRepository.save(adminNotification);
+        if(user.getAdmin().isNotificationEnabled()) {
+        PushNotificationRequest p=new PushNotificationRequest(user.getAdmin().getDeviceToken(),"New Suggestion",message,"suggestion");
+        pushNotificationService.sendPushNotificationToToken(p);
+        }
+        // Here you can add logic to send the notification to admin using email, SMS, etc.
+        // For example, you can use the previously defined sendNotificationToAdmin method for this purpose.
+        // sendNotificationToAdmin(message);
+}
+catch(Exception e){
+	  System.out.println("error to send push notification");
+}
+    }
     
     public void sendCancelAppointmentNotificationToAdmin(Appointment appointment, Users user) {
         String message = String.format("Hello " +user.getAdmin().getName() +" Appointment Cancel by user %s", user.getName() + " Please check the app for more details.");

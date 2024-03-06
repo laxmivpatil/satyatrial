@@ -518,6 +518,7 @@ public class SuggestionController {
                     dto.setVideo(suggestion.getVideoUrl());
                     dto.setStatus(suggestion.getStatus());
                     dto.setDateTime(suggestion.getDateTime());
+                    dto.setEdit(suggestion.isEdit());
                     dto.setProfile(userRepository.findById(suggestion.getUser().getId()).get().getProfilePphoto());
                     dto.setId(suggestion.getId());
                     return dto;
@@ -615,6 +616,7 @@ public class SuggestionController {
          suggestionResponseDTO.setDateTime(suggestion.getDateTime());
          suggestionResponseDTO.setProfile(userRepository.findById(suggestion.getUser().getId()).get().getProfilePphoto());
          suggestionResponseDTO.setId(suggestion.getId());
+         suggestionResponseDTO.setEdit(suggestion.isEdit());
     	
         return suggestionResponseDTO;
     }
@@ -639,6 +641,7 @@ public class SuggestionController {
             suggestionResponseDTO.setVideo(suggestion.getVideoUrl());
             suggestionResponseDTO.setDateTime(suggestion.getDateTime());
             suggestionResponseDTO.setStatus(suggestion.getStatus());
+            suggestionResponseDTO.setEdit(suggestion.isEdit());
             // You can set other fields like photo and video based on your logic
             suggestionResponseDTO.setProfile(suggestion.getUser().getProfilePphoto());
             responseBody.put("suggestion", suggestionResponseDTO);
@@ -676,6 +679,7 @@ public class SuggestionController {
             suggestionResponseDTO.setVideo(suggestion.getVideoUrl());
             suggestionResponseDTO.setDateTime(suggestion.getDateTime());
             suggestionResponseDTO.setProfile(suggestion.getUser().getProfilePphoto());
+            suggestionResponseDTO.setEdit(suggestion.isEdit());
             // You can set other fields like photo and video based on your logic
 
             responseBody.put("suggestion", suggestionResponseDTO);
