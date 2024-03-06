@@ -19,10 +19,17 @@ public class SuggestionResponseDTO {
 	    private String thumbnail="";
 	    private String status="";
 	    private boolean editable;
+	    private boolean isEdit;
 	    
 	    
 	    
 		 
+		public boolean isEdit() {
+			return isEdit;
+		}
+		public void setEdit(boolean isEdit) {
+			this.isEdit = isEdit;
+		}
 		public boolean isEditable() {
 			return editable;
 		}

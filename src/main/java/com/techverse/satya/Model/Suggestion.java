@@ -36,9 +36,18 @@ public class Suggestion {
     
     private boolean editable=true;
     
+    private boolean isEdit=false;
     
     
-    public boolean isEditable() {
+    public boolean isEdit() {
+		return isEdit;
+	}
+
+	public void setEdit(boolean isEdit) {
+		this.isEdit = isEdit;
+	}
+
+	public boolean isEditable() {
 		return editable;
 	}
 

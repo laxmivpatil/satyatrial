@@ -98,6 +98,7 @@ public class SuggestionService {
 			suggestion.setAdmin(user.get().getAdmin());
 			suggestion.setStatus("new");
 			suggestion.setEditable(true);
+			suggestion.setEdit(false);
 			// Handle photo upload logic
 			MultipartFile photoFile = suggestionDTO.getPhoto();
 			if (photoFile != null && !photoFile.isEmpty()) {
@@ -185,6 +186,7 @@ public class SuggestionService {
 		        ZoneId zoneId = ZoneId.of("Asia/Kolkata"); // Choose the appropriate time zone
 		        LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, zoneId);
 			suggestion.setEditTime(localDateTime);
+			suggestion.setEdit(true);
 			System.out.println(suggestion);
 			// Save the suggestion to the database
 			suggestionRepository.save(suggestion);

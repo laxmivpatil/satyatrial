@@ -380,6 +380,7 @@ public class SuggestionController {
                     dto.setStatus(suggestion.getStatus());
                     dto.setDateTime(suggestion.getDateTime());
                     dto.setProfile(userRepository.findById(user.get().getId()).get().getProfilePphoto());
+                    dto.setEdit(suggestion.isEdit());
                     dto.setId(suggestion.getId());
                     return dto;
                 })
