@@ -55,6 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/constituencies").permitAll()  
             .antMatchers("/constituencies/district").permitAll()  
             .antMatchers("/admin/politicalParties").permitAll() 
+            .antMatchers("/admin/politicalPosts").permitAll() 
             .antMatchers("/user/setstatusvideo").permitAll()  
             .antMatchers("/user/setstatusvideo1").permitAll()  
             .antMatchers("/user/getstatusvideo").permitAll()  
