@@ -388,7 +388,7 @@ public class SuggestionController {
 
         if (suggestionResponseDTOs.isEmpty()) {
             responseBody.put("status", false);
-            responseBody.put("suggestions", "No suggestions found for the selected filter.");
+            responseBody.put("suggestions", suggestionResponseDTOs);
         } else {
             responseBody.put("status", true);
             responseBody.put("suggestions", suggestionResponseDTOs);
@@ -527,7 +527,7 @@ public class SuggestionController {
 
         if (suggestionResponseDTOs.isEmpty()) {
             responseBody.put("status", false);
-            responseBody.put("suggestions", "No suggestions found for the selected filter.");
+            responseBody.put("suggestions", suggestionResponseDTOs);
         } else {
             responseBody.put("status", true);
             responseBody.put("suggestions", suggestionResponseDTOs);

@@ -226,7 +226,7 @@ else
 	        Optional<Admin> adminByEmail  = adminService.getAdminByEmail(mobileoremail);
 	        if (adminByPhone.isPresent() || adminByEmail.isPresent()) {
 	        	responseBody.setStatus(false);
-                responseBody.setMessage("User already registered as a Politician");
+                responseBody.setMessage("You are already registered as a Politician");
                   return new ResponseEntity<>(responseBody, HttpStatus.OK);
 	             
 	        } else {
@@ -234,13 +234,13 @@ else
 	            Optional<Users> userByEmail = userService.findByEmail(mobileoremail);
 	            if (userByPhone.isPresent() || userByEmail.isPresent()) {
 	                 responseBody.setStatus(false);
-	                responseBody.setMessage("User already registered as a Citizen");
+	                responseBody.setMessage("You are already registered as a Citizen");
 	                
 
 	                return new ResponseEntity<>(responseBody, HttpStatus.OK);
 	            } else {
 	                responseBody.setStatus(true);
-	                responseBody.setMessage("User not registered");
+	                responseBody.setMessage("You are not registered Please Signup first");
 
 	                return ResponseEntity.status(HttpStatus.OK).body(responseBody);
 	            }
@@ -313,7 +313,7 @@ else
 		        // First, check if the identifier is registered as a Citizen
 		        if (userService.findByPhoneNumber(mobileoremail).isPresent() || userService.findByEmail(mobileoremail).isPresent()) {
 		        	  responseBody.setStatus(false);
-		                responseBody.setMessage("User already registered as a Citizen");
+		                responseBody.setMessage("you are already registered as a Citizen");
 		               return new ResponseEntity<>(responseBody, HttpStatus.OK);
 		              
 		        }
@@ -343,7 +343,7 @@ else
 		             
 		            return new ResponseEntity<>(responseBody, HttpStatus.OK);
 		        }
-		        responseBody.setMessage("User not registered");
+		        responseBody.setMessage("You are not registered Please Signup first");
 		           
 		        responseBody.setStatus(true);
                  return new ResponseEntity<>(responseBody, HttpStatus.OK);
