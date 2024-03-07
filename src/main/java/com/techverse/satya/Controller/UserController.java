@@ -159,11 +159,12 @@ public class UserController {
 		   ResponseDTO<Object> responseBody = new ResponseDTO<>();
 		   
 		   Optional<Users> user = userService.getUserByToken(authorizationHeader.substring(7));
-		   String userName=jwtHelper.getUsernameFromToken(authorizationHeader.substring(7));
+		   
 	     	
 	     	  if(user.isPresent()) {
 
 try {
+	String userName=jwtHelper.getUsernameFromToken(authorizationHeader.substring(7));
 	String str="";
 		if(!user.get().getEmail().equals(email) && email!=null) {
 			if(userService.findByEmail(email).isPresent()||adminService.getAdminByEmail(email).isPresent()||subAdminService.getSubAdminBymobileNoOrEmail(email).isPresent())

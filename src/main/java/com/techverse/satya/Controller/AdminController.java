@@ -30,7 +30,9 @@ import com.techverse.satya.DTO.ResponseDTO;
 import com.techverse.satya.Model.Admin; 
 import com.techverse.satya.Model.Users;
 import com.techverse.satya.Repository.AdminRepository;
+import com.techverse.satya.Security.JwtHelper;
 import com.techverse.satya.Service.AdminService;
+import com.techverse.satya.Service.OtpService;
 import com.techverse.satya.Service.SubAdminService;
 import com.techverse.satya.Service.UserService;
 @RestController
@@ -40,6 +42,14 @@ public class AdminController {
 
 	@Autowired
 	private AdminService adminService;
+	
+
+	@Autowired
+	JwtHelper jwtHelper;
+
+	
+	@Autowired
+	private OtpService otpService;
 	@Autowired
 	private UserService userService;
 
@@ -104,11 +114,11 @@ public class AdminController {
 
 	@PutMapping("/admin/edit")
 	public ResponseEntity<Object> editAdminProfile(@RequestHeader("Authorization") String authorizationHeader,
-			@RequestPart("email") String email,
-			@RequestPart("qualification") String qualification,
-			@RequestPart("name") String name,
-			@RequestPart("phoneNumber") String phoneNumber,
-			@RequestPart("profession") String profession,
+			@RequestPart(value="email",required = false) String email,
+			@RequestPart(value="qualification",required = false) String qualification,
+			@RequestPart(value = "name", required = false) String name,
+			@RequestPart(value="phoneNumber",required = false) String phoneNumber,
+			@RequestPart(value="profession",required = false) String profession,
 
 			@RequestPart(value = "profilePhoto", required = false) MultipartFile profilePhoto
 			){
@@ -116,13 +126,55 @@ public class AdminController {
 		Optional<Admin> admin = adminService.getAdminByToken(authorizationHeader.substring(7));
 		if (admin.isPresent()) {
 			try {
+				String userName=jwtHelper.getUsernameFromToken(authorizationHeader.substring(7));
+				
+				String str="";
+				String newToken="";
+				if(!admin.get().getEmail().equals(email) && email!=null) {
+					if(userService.findByEmail(email).isPresent()||adminService.getAdminByEmail(email).isPresent()||subAdminService.getSubAdminBymobileNoOrEmail(email).isPresent())
+					{
+						str="Email allready Registered  please enter another email";
+					}
+					
+				}
+				if(!admin.get().getMobileNumber().equals(phoneNumber) && phoneNumber!=null) {
+					if(userService.findByPhoneNumber(phoneNumber).isPresent()||adminService.getAdminBymobileNo(phoneNumber).isPresent()||subAdminService.getSubAdminBymobileNo(phoneNumber).isPresent()) {
+						if(str.isEmpty())
+							str="phone number allready registered please enter another no.";
+						else
+							str="Email and phone number allready registered ";
+					}
+					
+				}
+				if(!str.equals(null) && !str.isBlank())
+				{
+					
+					return ResponseEntity.ok()
+							.body(new ApiDataResponse(false, str, new String()));
+
+					 
+				}
+				
+				if(!userName.matches("^\\d{10}$")) {
+					newToken=jwtHelper.generateToken1(email);
+					otpService.updatePhoneNumber(admin.get().getEmail(), email);
+					
+				}
+				if(userName.matches("^\\d{10}$") ) {
+					newToken=jwtHelper.generateToken1(phoneNumber);
+					otpService.updatePhoneNumber(admin.get().getMobileNumber(), phoneNumber);
+				}
+			System.out.println("new Token=>"+newToken);
+				
+				
+				
 				EditAdmin adminProfileRequest = new EditAdmin( admin.get().getId(), name,phoneNumber,  email,
 						qualification, profession);
 
 				Admin updatedAdmin = adminService.editAdminProfile(admin.get().getId(), adminProfileRequest, profilePhoto);
 				adminProfileRequest.setProfilePhoto(updatedAdmin.getProfilePhoto());
 				return ResponseEntity.ok()
-						.body(new ApiDataResponse(true, "Admin profile updated successfully.", adminProfileRequest));
+						.body(new ApiDataResponse(true, newToken, adminProfileRequest));
 			} catch (Exception e) {
 				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 						.body(new ApiDataResponse(false, "Failed to update admin profile. Please try again later.", ""));

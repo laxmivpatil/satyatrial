@@ -114,7 +114,7 @@ public class Users {
 		this.occupation = occupation;
 	}
 
-	String email;
+	String email="";
       String qualification;
      String occupation;
     

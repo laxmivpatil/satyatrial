@@ -23,6 +23,7 @@ import javax.annotation.PostConstruct;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -112,9 +113,11 @@ public class AdminService {
          if(jwt.getMobileNo().matches("^\\d{10}$"))
          {
         	 admin.setMobileNumber(jwt.getMobileNo());
+        	 admin.setEmail("");
          }
          else {
       	  admin.setEmail(jwt.getMobileNo());
+      	admin.setMobileNumber("");
          }
          
          
@@ -226,14 +229,29 @@ public class AdminService {
             Admin admin = adminOptional.get();
 
             // Update admin profile details from adminProfileRequest
+            
+            if(!ObjectUtils.isEmpty(adminProfileRequest.getEmail()))
+   		 {
              admin.setEmail(adminProfileRequest.getEmail());
-            admin.setQualification(adminProfileRequest.getQualification());
-          admin.setMobileNumber(adminProfileRequest.getPhoneNumber());
-          admin.setProfession(adminProfileRequest.getOccupation());
-          admin.setName(adminProfileRequest.getName());
-          
-              
-
+   		 }
+            
+            if(!ObjectUtils.isEmpty(adminProfileRequest.getQualification()))
+      		 {
+            	admin.setQualification(adminProfileRequest.getQualification());
+      		 }
+            if(!ObjectUtils.isEmpty(adminProfileRequest.getPhoneNumber()))
+     		 {
+            	 admin.setMobileNumber(adminProfileRequest.getPhoneNumber());
+     		 }
+            if(!ObjectUtils.isEmpty(adminProfileRequest.getOccupation()))
+     		 {
+            	admin.setProfession(adminProfileRequest.getOccupation());
+     		 }
+            if(!ObjectUtils.isEmpty(adminProfileRequest.getName()))
+     		 {
+            	 admin.setName(adminProfileRequest.getName());
+     		 }
+             
             // Handle profile photo update if provided
             if (profilePhoto != null && !profilePhoto.isEmpty()) {
                 // Implement logic to handle profile photo upload, save to storage, etc.

@@ -50,7 +50,7 @@ public class PincodeController {
         	
         	 response.put("city/district", "");
 	            response.put("state", "");
-	            response.put("message", "city/district not found");
+	            response.put("message", "Please enter valid pincode");
 	            return ResponseEntity.status(HttpStatus.OK).body(response);
         } else {
             return ResponseEntity.ok(response);

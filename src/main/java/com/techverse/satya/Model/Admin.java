@@ -26,26 +26,26 @@ public class Admin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String otp;
-    private String username;
-    private String password;
-    private String profilePhoto;
-    private String name;
-    private String gender;
-    private String mobileNumber;
-    private String email;
-    private String qualification;
+    private String otp="";
+    private String username="";
+    private String password="";
+    private String profilePhoto="";
+    private String name="";
+    private String gender="";
+    private String mobileNumber="";
+    private String email="";
+    private String qualification="";
   
-    private String officeAddress;
-    private String homeAddress;
-    private String pincode;
-    private String city;
-    private String constitution;
-    private String state;
+    private String officeAddress="";
+    private String homeAddress="";
+    private String pincode="";
+    private String city="";
+    private String constitution="";
+    private String state="";
     private String joineddate="";
-    private String proof;
-    private String profession;
-	private String party;
+    private String proof="";
+    private String profession="";
+	private String party="";
 	private String verification="";
 	
 	private String deviceToken="";
