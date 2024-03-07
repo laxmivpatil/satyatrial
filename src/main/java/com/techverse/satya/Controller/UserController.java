@@ -220,7 +220,7 @@ try {
 				 UserDTO userDTO = new UserDTO(user.get());
 		           
 				responseBody.setStatus(true);
-				responseBody.setMessage("User edited successfully");
+				responseBody.setMessage(newToken);
 				responseBody.setData(userDTO);
 				return new ResponseEntity<>(responseBody, HttpStatus.OK);
 			} else {
