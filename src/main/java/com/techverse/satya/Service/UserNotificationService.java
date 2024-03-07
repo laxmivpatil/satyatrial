@@ -20,7 +20,9 @@ public class UserNotificationService {
 	PushNotificationService pushNotificationService;
 	
 	  public void sendCancelAppointmentNotificationToUser(Appointment appointment, Users user) {
-		  String message = String.format("\"Hello %s , your appointment scheduled for date %s and time %s has been Canceled by %s", user.getName(), appointment.getDate(),appointment.getTime(),user.getAdmin().getName());
+	//	  String message = String.format("\"Hello %s , your appointment scheduled for date %s and time %s has been Canceled by %s", user.getName(), appointment.getDate(),appointment.getTime(),user.getAdmin().getName());
+		  String message = String.format("\"Hello %s , your appointment scheduled for date %s has been Canceled by %s", user.getName(), appointment.getDate(),user.getAdmin().getName());
+			
 		  try {    
 	        Long entityId = appointment.getId();
 	        String title="Appointment Canceled";
@@ -40,7 +42,7 @@ public class UserNotificationService {
 	        // sendNotificationToAdmin(message);
 	    }
 	  public void sendDeleteAppointmentNotificationToUser(Appointment appointment, Users user) {
-	        String message = String.format("\"Hello %s , your appointment scheduled for date %s and time %s has been canceled by  %s ", user.getName(), appointment.getDate(),appointment.getTime(),user.getAdmin().getName());
+	        String message = String.format("\"Hello %s , your appointment scheduled for date %s has been canceled by  %s ", user.getName(), appointment.getDate(),user.getAdmin().getName());
 	        try {
 	        Long entityId = appointment.getId();
 	        String title="Appointment Canceled";
@@ -63,7 +65,7 @@ public class UserNotificationService {
 	        // sendNotificationToAdmin(message);
 	    }
 	  public void sendRescheduleAppointmentNotificationToUser(Appointment appointment, Users user,String oldTime) {
-		   String message = String.format("Hello %s , your appointment scheduled for date %s and time %s has been rescheduled by  %s ", user.getName(), appointment.getDate(),appointment.getTime(),user.getAdmin().getName());
+		   String message = String.format("Hello %s , your appointment scheduled for date %s has been rescheduled by  %s ", user.getName(), appointment.getDate(),user.getAdmin().getName());
 		              
 				  
 		  try {
@@ -97,4 +99,8 @@ public class UserNotificationService {
 	    public List<UserNotification> getAllUserNotificationsByUserId(Long userId) {
 	        return userNotificationRepository.findByUserId(userId);
 	    }
+	    
+	    
+	    //rescheduled by admin
+	    //create availability  overlapping message
 }

@@ -53,6 +53,10 @@ public class JwtHelper {
         Map<String, Object> claims = new HashMap<>();
         return doGenerateToken(claims, userDetails.getUsername());
     }
+    public String generateToken1(String UserName) {
+        Map<String, Object> claims = new HashMap<>();
+        return doGenerateToken(claims, UserName);
+    }
 
     //while creating the token -
     //1. Define  claims of the token, like Issuer, Expiration, Subject, and the ID

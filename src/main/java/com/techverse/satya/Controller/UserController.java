@@ -46,9 +46,11 @@ import com.techverse.satya.DTO.UserDTO;
 import com.techverse.satya.Model.Admin;
 import com.techverse.satya.Model.Users;
 import com.techverse.satya.Repository.UserRepository;
+import com.techverse.satya.Security.JwtHelper;
 import com.techverse.satya.Service.AdminService;
 import com.techverse.satya.Service.OtpService;
 import com.techverse.satya.Service.StorageService;
+import com.techverse.satya.Service.SubAdminService;
 import com.techverse.satya.Service.UserService;
 
 import org.slf4j.LoggerFactory;
@@ -67,13 +69,20 @@ public class UserController {
     );
 	
 	@Autowired
+	private OtpService otpService;
+	
+	@Autowired
 	private StorageService service;
+	
+	@Autowired
+	JwtHelper jwtHelper;
+	
 	   @Autowired
 	    private AdminService adminService;
 	    
-
-	@Autowired
-	private OtpService otpService;
+	   @Autowired
+	    private SubAdminService subAdminService;
+	 
 
 	@Autowired
 	private UserService userService;
@@ -91,7 +100,8 @@ public class UserController {
 	        @RequestPart("state") String state  , @RequestPart("adminId") String adminId ,@RequestPart(value="profilePhoto", required = false) MultipartFile file) {
 	     ResponseDTO<Object> response = new ResponseDTO<>();
 	     Optional<Users> user = userService.getUserByToken(authorizationHeader.substring(7));
-     	  if(user.isPresent()) {
+	     
+	      if(user.isPresent()) {
 
 	     
 	     
@@ -145,12 +155,50 @@ public class UserController {
 			@RequestPart(value = "qualification", required = false) String qualification,
 			@RequestPart(value = "occupation", required = false) String occupation,
 	@RequestPart(value = "address", required = false) String address){
+		String newToken="";
 		   ResponseDTO<Object> responseBody = new ResponseDTO<>();
 		   
 		   Optional<Users> user = userService.getUserByToken(authorizationHeader.substring(7));
+		   String userName=jwtHelper.getUsernameFromToken(authorizationHeader.substring(7));
+	     	
 	     	  if(user.isPresent()) {
 
 try {
+	String str="";
+		if(!user.get().getEmail().equals(email) && email!=null) {
+			if(userService.findByEmail(email).isPresent()||adminService.getAdminByEmail(email).isPresent()||subAdminService.getSubAdminBymobileNoOrEmail(email).isPresent())
+			{
+				str="Email allready Registered  please enter another email";
+			}
+			
+		}
+		if(!user.get().getPhoneNumber().equals(phoneNumber) && phoneNumber!=null) {
+			if(userService.findByPhoneNumber(phoneNumber).isPresent()||adminService.getAdminBymobileNo(phoneNumber).isPresent()||subAdminService.getSubAdminBymobileNo(phoneNumber).isPresent()) {
+				if(str.isEmpty())
+					str="phone number allready registered please enter another no";
+				else
+					str="Email and phone number allready registered ";
+			}
+			
+		}
+		if(!str.equals(null) && !str.isBlank())
+		{
+			responseBody.setStatus(false);
+			responseBody.setMessage(str);
+			responseBody.setData(new String());
+			return new ResponseEntity<>(responseBody, HttpStatus.OK);
+		}
+		
+		if(!userName.matches("^\\d{10}$")) {
+			newToken=jwtHelper.generateToken1(email);
+			otpService.updatePhoneNumber(user.get().getEmail(), email);
+			
+		}
+		if(userName.matches("^\\d{10}$")) {
+			newToken=jwtHelper.generateToken1(phoneNumber);
+			otpService.updatePhoneNumber(user.get().getPhoneNumber(), phoneNumber);
+		}
+	System.out.println("new Token=>"+newToken);
 			EditUser editUser = new EditUser();
 			editUser.setUserId(user.get().getId());
 			editUser.setName(name);
@@ -368,7 +416,7 @@ else
 
 		            if (count == 5) {
 		                responseBody.setStatus(true);
-		                responseBody.setMessage("You allready exceeds limit  to create an  appointment");
+		                responseBody.setMessage("You allready exceeds limit  to create an  appointment for this month");
 		            }
 		            else {
 		                responseBody.setStatus(false);

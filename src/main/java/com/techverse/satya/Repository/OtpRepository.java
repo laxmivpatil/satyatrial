@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.techverse.satya.Model.OtpEntity;
 
-public interface OtpRepository extends JpaRepository<OtpEntity, String> {
+public interface OtpRepository extends JpaRepository<OtpEntity, Long> {
 
     Optional<OtpEntity> findByPhoneNumberAndOtpAndExpiryTimeAfter(String phoneNumber, String otp, LocalDateTime expiryTime);
 

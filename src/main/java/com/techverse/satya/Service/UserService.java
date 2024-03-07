@@ -106,6 +106,11 @@ public class UserService {
 		 {
 			 user.setEmail(editUser.getEmail());
 		 }
+		 // Update the user information
+		 if(!StringUtils.isEmpty(editUser.getPhoneNumber()))
+		 {
+			 user.setPhoneNumber(editUser.getPhoneNumber());	
+		 }
 		 if(!StringUtils.isEmpty(editUser.getName()))
 		 {
 			 user.setName(editUser.getName());

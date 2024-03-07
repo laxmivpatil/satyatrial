@@ -43,6 +43,23 @@ public class OtpService {
 
     @Value("${twilio.phone-number}")
     private String twilioWhatsappNumber;
+    
+ 
+
+    public boolean updatePhoneNumber(String oldPhoneNumber, String newPhoneNumber) {
+        Optional<OtpEntity> otpEntityOptional = otpRepository.findByPhoneNumber(oldPhoneNumber);
+
+        if (otpEntityOptional.isPresent()) {
+            OtpEntity otpEntity = otpEntityOptional.get();
+            otpEntity.updatePhoneNumber(newPhoneNumber);
+            otpRepository.save(otpEntity);
+            return true;
+        } else {
+            return false; // Handle the case where the old phone number does not exist
+        }
+    }
+    
+    
    
     public String generateOtp() {
         // Generate a 6-digit random OTP
