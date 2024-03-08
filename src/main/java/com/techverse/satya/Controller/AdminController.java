@@ -165,9 +165,6 @@ public class AdminController {
 					otpService.updatePhoneNumber(admin.get().getMobileNumber(), phoneNumber);
 				}
 			System.out.println("new Token=>"+newToken);
-				
-				
-				
 				EditAdmin adminProfileRequest = new EditAdmin( admin.get().getId(), name,phoneNumber,  email,
 						qualification, profession);
 

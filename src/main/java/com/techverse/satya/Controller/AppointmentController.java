@@ -615,7 +615,7 @@ public class AppointmentController {
 
         if (isCanceled) {
         	  responseBody.put("status", true);
-              responseBody.put("message", "Appointment status updated to 'Deleted'.");
+              responseBody.put("message", "Appointment Deleted Successfully");
               return ResponseEntity.ok(responseBody);
    } else {
 	   responseBody.put("status", false);
@@ -645,7 +645,7 @@ public class AppointmentController {
               return ResponseEntity.ok(responseBody);
    } else {
 	   responseBody.put("status", false);
-       responseBody.put("message", "Time Slot not available  " + newTime+" please select another timeslot");
+       responseBody.put("message",  newTime +" this time Slot not available please select another timeslot");
        return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.OK);
              }
         

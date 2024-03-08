@@ -64,9 +64,9 @@ public class TimeSlotController {
                         admin.get());
 
                 if ("Successfully created".equals(createdTimeSlot)) {
-                    return ResponseEntity.ok(new ResponseDTO<>(true, "Thank you for Submitting Time availability", timeSlotRequest));
+                    return ResponseEntity.ok(new ResponseDTO<>(true, "Thank you for Submitting availability", timeSlotRequest));
                 } else {
-                    return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO<>(false, "Failed to create TimeSlot due to Overlapping Slots", createdTimeSlot));
+                    return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO<>(false, "Failed to create availabilty due to Overlapping Slots found", createdTimeSlot));
                 }
             } catch (RuntimeException e) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO<>(false, "Failed to create TimeSlot", e));
@@ -85,7 +85,7 @@ public class TimeSlotController {
             	
             	// Validate time slot details
                 if (!isValidTimeSlotDetails(timeSlotRequest.getTimeSlotDetails())) {
-                	    return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO<>(false, "Invalid Availability details. Minimum 15 minutes difference required or availabilty timeslots must be different", ""));
+                	    return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO<>(false, "Invalid Availability time details. Minimum 15 minutes difference required or availabilty timeslots must be different", ""));
                 }
                 
                String createdTimeSlot = timeSlotService.createTimeSlot(
@@ -97,10 +97,10 @@ public class TimeSlotController {
                 if ("Successfully created".equals(createdTimeSlot)) {
                     return ResponseEntity.ok(new ResponseDTO<>(true, "Thank you for Submitting Time availability", timeSlotRequest));
                 } else {
-                    return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO<>(false, "Failed to create TimeSlot due to Overlapping Slots", createdTimeSlot));
+                    return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO<>(false, "Failed to create availabilty due to Overlapping Slots found", createdTimeSlot));
                 } 
             } catch ( Exception e) {
-                return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO<>(false, "Failed to create TimeSlot", ""));
+                return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO<>(false, "Failed to create availability", ""));
             }
         } else {
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO<>(false, "Unauthorized Access",""));
@@ -217,7 +217,7 @@ System.out.println(address+" hfjgjdfhghdfh");
 					  }
 					  else if(op.startsWith("Overlapping slots====>")){
 						  responseBody.put("status", true);
-				     		responseBody.put("message", " overlapping slots");
+				     		responseBody.put("message", "Failed to rescheduled availabilty due to Overlapping Slots found");
 				     		responseBody.put("data", op);
 				     		return new ResponseEntity<Map<String, Object>>(responseBody, HttpStatus.CONFLICT);
 						  
