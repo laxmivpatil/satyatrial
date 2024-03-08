@@ -101,6 +101,4 @@ public class UserNotificationService {
 	    }
 	    
 	    
-	    //rescheduled by admin
-	    //create availability  overlapping message
 }

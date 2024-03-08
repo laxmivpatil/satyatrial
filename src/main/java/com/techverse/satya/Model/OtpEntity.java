@@ -72,7 +72,9 @@ public class OtpEntity {
         this.phoneNumber = newPhoneNumber;
     }
     
-    
+	public void updateOtp(String otp) {
+        this.otp=otp;
+    }
     
     // Constructors, getters, and setters
 }

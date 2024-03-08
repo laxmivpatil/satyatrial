@@ -59,7 +59,20 @@ public class OtpService {
         }
     }
     
-    
+    public boolean updateOtp(String oldPhoneNumber, String otp) {
+        Optional<OtpEntity> otpEntityOptional = otpRepository.findByPhoneNumber(oldPhoneNumber);
+
+        if (otpEntityOptional.isPresent()) {
+            OtpEntity otpEntity = otpEntityOptional.get();
+            otpEntity.updateOtp(passwordEncoder.encode(otp));
+            otpEntity.setExpiryTime(LocalDateTime.now().plusMinutes(25));
+            otpRepository.save(otpEntity);
+            return true;
+        } else {
+        	
+            return false; // Handle the case where the old phone number does not exist
+        }
+    }
    
     public String generateOtp() {
         // Generate a 6-digit random OTP
@@ -69,13 +82,15 @@ public class OtpService {
     }
  //    please remove this comment to send sms on mobile and comment above simple sendotp method
     public boolean sendOtp(String phoneNumber, String otp) {
-        LocalDateTime expiryTime = LocalDateTime.now().plusMinutes(5);
+        LocalDateTime expiryTime = LocalDateTime.now().plusMinutes(25);
         String messageBody = "Your OTP is: " + otp;
         String  phoneNumber1 = "+91" + phoneNumber;
 
              System.out.println("OTP sent successfully! SID: " +otp);
-                OtpEntity otpEntity = new OtpEntity(phoneNumber, passwordEncoder.encode(otp), expiryTime);
-                otpRepository.save(otpEntity);
+             if(!updateOtp(phoneNumber,otp)) {
+             OtpEntity otpEntity = new OtpEntity(phoneNumber, passwordEncoder.encode(otp), expiryTime);
+             otpRepository.save(otpEntity);
+             }
                 return true;
            
          

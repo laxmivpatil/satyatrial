@@ -1,6 +1,7 @@
 package com.techverse.satya.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.Properties;
 
 import java.util.Properties;
@@ -41,11 +42,29 @@ public class EmailService {
 	
 	 
      int port=587;
+     
+     
+     public boolean updateOtp(String oldPhoneNumber, String otp) {
+         Optional<OtpEntity> otpEntityOptional = otpRepository.findByPhoneNumber(oldPhoneNumber);
+
+         if (otpEntityOptional.isPresent()) {
+             OtpEntity otpEntity = otpEntityOptional.get();
+             otpEntity.updateOtp(otp);
+             otpRepository.save(otpEntity);
+             return true;
+         } else {
+         	
+             return false; // Handle the case where the old phone number does not exist
+         }
+     }
 	
 	public boolean sendEmail(String recipientEmail,String OTP)
 	{
+		
+		if(!updateOtp(recipientEmail,OTP)) {
 		 OtpEntity otpEntity = new OtpEntity(recipientEmail, passwordEncoder.encode(OTP), LocalDateTime.now().plusMinutes(5));
          otpRepository.save(otpEntity);
+		}
         
 		Properties props = new Properties();
         props.put("mail.smtp.host", host);
