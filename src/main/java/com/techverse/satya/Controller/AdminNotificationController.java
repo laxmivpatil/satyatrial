@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +35,7 @@ import com.techverse.satya.Model.Admin;
 import com.techverse.satya.Model.AdminNotification;
 import com.techverse.satya.Model.Appointment;
 import com.techverse.satya.Model.Suggestion;
+import com.techverse.satya.Model.UserNotification;
 import com.techverse.satya.Repository.AdminNotificationRepository;
 import com.techverse.satya.Repository.AdminRepository;
 import com.techverse.satya.Repository.AppointmentRepository;
@@ -126,8 +128,7 @@ public class AdminNotificationController {
             if (user.isPresent()) {
             	 System.out.println("hi token"+user.get().getId());
                 List<AdminNotificationDTO> unreadNotifications = notificationService.getUnreadAdminNotificationDTOs(user.get().getId());
-
-                // Filter notifications for today, this week, and this month
+                 // Filter notifications for today, this week, and this month
                 LocalDate today = LocalDate.now();
                 LocalDateTime startOfWeek = LocalDateTime.now().with(DayOfWeek.MONDAY).truncatedTo(ChronoUnit.DAYS);
                 LocalDateTime startOfMonth = LocalDateTime.now().withDayOfMonth(1).truncatedTo(ChronoUnit.DAYS);
@@ -150,14 +151,20 @@ public class AdminNotificationController {
                 List<Map<String, Object>> notifications = new ArrayList<>();
 
                 if (!todayNotifications.isEmpty()) {
+                	todayNotifications.sort(Comparator.comparing(AdminNotificationDTO::getCreatedAt).reversed());
+ 		           
                     notifications.add(buildNotificationMap("Today", todayNotifications));
                 }
 
                 if (!thisWeekNotifications.isEmpty()) {
+                	thisWeekNotifications.sort(Comparator.comparing(AdminNotificationDTO::getCreatedAt).reversed());
+   		          
                     notifications.add(buildNotificationMap("This Week", thisWeekNotifications));
                 }
 
                 if (!thisMonthNotifications.isEmpty()) {
+                	thisMonthNotifications.sort(Comparator.comparing(AdminNotificationDTO::getCreatedAt).reversed());
+   		          
                     notifications.add(buildNotificationMap("This Month", thisMonthNotifications));
                 }
                 responseBody.put("status", true);

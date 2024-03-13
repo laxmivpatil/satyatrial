@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -157,16 +158,21 @@ public class UserNotificationController {
 	                        .collect(Collectors.toList());
 
 	                List<Map<String, Object>> notifications = new ArrayList<>();
-
+	               // unreadNotifications.sort(Comparator.comparing(UserNotification::getCreatedAt).reversed());
 	                if (!todayNotifications.isEmpty()) {
+	                	todayNotifications.sort(Comparator.comparing(UserNotification::getCreatedAt).reversed());
 	                    notifications.add(buildNotificationMap("Today", todayNotifications));
 	                }
 
 	                if (!thisWeekNotifications.isEmpty()) {
+	                	thisWeekNotifications.sort(Comparator.comparing(UserNotification::getCreatedAt).reversed());
+		                   
 	                    notifications.add(buildNotificationMap("This Week", thisWeekNotifications));
 	                }
 
 	                if (!thisMonthNotifications.isEmpty()) {
+	                	thisMonthNotifications.sort(Comparator.comparing(UserNotification::getCreatedAt).reversed());
+	 		           
 	                    notifications.add(buildNotificationMap("This Month", thisMonthNotifications));
 	                }
 	                responseBody.put("status", true);
