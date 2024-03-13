@@ -98,6 +98,8 @@ public class OtpController {
                     }
             	}
             	else {
+            		
+            		
             		if (emailService.sendEmail(mobileNo, otp)) {
                     	System.out.println("Otp is "+otp);
                         response.setStatus(true);

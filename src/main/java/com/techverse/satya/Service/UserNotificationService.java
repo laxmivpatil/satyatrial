@@ -21,7 +21,7 @@ public class UserNotificationService {
 	
 	  public void sendCancelAppointmentNotificationToUser(Appointment appointment, Users user) {
 	//	  String message = String.format("\"Hello %s , your appointment scheduled for date %s and time %s has been Canceled by %s", user.getName(), appointment.getDate(),appointment.getTime(),user.getAdmin().getName());
-		  String message = String.format("\"Hello %s , your appointment scheduled for date %s has been Canceled by %s", user.getName(), appointment.getDate(),user.getAdmin().getName());
+		  String message = String.format("Hello %s , your appointment scheduled for date %s has been Canceled by %s", user.getName(), appointment.getDate(),user.getAdmin().getName());
 			
 		  try {    
 	        Long entityId = appointment.getId();
@@ -42,7 +42,8 @@ public class UserNotificationService {
 	        // sendNotificationToAdmin(message);
 	    }
 	  public void sendDeleteAppointmentNotificationToUser(Appointment appointment, Users user) {
-	        String message = String.format("\"Hello %s , your appointment scheduled for date %s has been canceled by  %s ", user.getName(), appointment.getDate(),user.getAdmin().getName());
+	        String message = String.format("Hello %s , your appointment scheduled for date %s has been canceled by  %s ", user.getName(), appointment.getDate(),user.getAdmin().getName());
+	       
 	        try {
 	        Long entityId = appointment.getId();
 	        String title="Appointment Canceled";
@@ -51,7 +52,8 @@ public class UserNotificationService {
 	        userNotificationRepository.save(userNotification);
 	       
 	        if(user.isNotificationEnabled()) {
-	 	       
+
+		 	       System.out.println("hi notification called");
 	        PushNotificationRequest p=new PushNotificationRequest(user.getDeviceToken(),"Appointment Canceled",message,"appointment");
 	        pushNotificationService.sendPushNotificationToToken(p);
 	        }
@@ -76,7 +78,7 @@ public class UserNotificationService {
 	        userNotificationRepository.save(userNotification);
 	        
 	        if(user.isNotificationEnabled()) {
-	 	       
+	 	       System.out.println("hi notification called");
 	        PushNotificationRequest p=new PushNotificationRequest(user.getDeviceToken(),"Appointment Rescheduled" ,message,"appointment");
 	        pushNotificationService.sendPushNotificationToToken(p);
 	        }
