@@ -166,14 +166,14 @@ public class UserController {
 try {
 	String userName=jwtHelper.getUsernameFromToken(authorizationHeader.substring(7));
 	String str="";
-		if(!user.get().getEmail().equals(email) && email!=null) {
+		if( user.get().getEmail() != null && !user.get().getEmail().equals(email) && email!=null) {
 			if(userService.findByEmail(email).isPresent()||adminService.getAdminByEmail(email).isPresent()||subAdminService.getSubAdminBymobileNoOrEmail(email).isPresent())
 			{
 				str="Email allready Registered  please enter another email";
 			}
 			
 		}
-		if(!user.get().getPhoneNumber().equals(phoneNumber) && phoneNumber!=null) {
+		if( user.get().getPhoneNumber() != null && !user.get().getPhoneNumber().equals(phoneNumber) && phoneNumber!=null) {
 			if(userService.findByPhoneNumber(phoneNumber).isPresent()||adminService.getAdminBymobileNo(phoneNumber).isPresent()||subAdminService.getSubAdminBymobileNo(phoneNumber).isPresent()) {
 				if(str.isEmpty())
 					str="phone number allready registered please enter another no";
@@ -191,15 +191,18 @@ try {
 		}
 		
 		if(!userName.matches("^\\d{10}$")) {
-			newToken=jwtHelper.generateToken1(email);
-			otpService.updatePhoneNumber(user.get().getEmail(), email);
+			 	otpService.updatePhoneNumber(user.get().getEmail(), email);
+				newToken=jwtHelper.generateToken1(email);
+			 
 			
 		}
-		if(userName.matches("^\\d{10}$")) {
-			newToken=jwtHelper.generateToken1(phoneNumber);
-			otpService.updatePhoneNumber(user.get().getPhoneNumber(), phoneNumber);
+		if(userName.matches("^\\d{10}$") ) {
+			 
+				otpService.updatePhoneNumber(user.get().getPhoneNumber(), phoneNumber);
+				newToken=jwtHelper.generateToken1(user.get().getPhoneNumber());
+			 
 		}
-	System.out.println("new Token=>"+newToken);
+			System.out.println("new Token=>"+newToken);
 			EditUser editUser = new EditUser();
 			editUser.setUserId(user.get().getId());
 			editUser.setName(name);

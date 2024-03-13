@@ -49,7 +49,7 @@ public class EmailService {
 
          if (otpEntityOptional.isPresent()) {
              OtpEntity otpEntity = otpEntityOptional.get();
-             otpEntity.updateOtp(otp);
+             otpEntity.updateOtp(passwordEncoder.encode(otp));
              otpRepository.save(otpEntity);
              return true;
          } else {

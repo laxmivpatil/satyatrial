@@ -130,14 +130,14 @@ public class AdminController {
 				
 				String str="";
 				String newToken="";
-				if(!admin.get().getEmail().equals(email) && email!=null) {
+				if(admin.get().getEmail()!=null && !admin.get().getEmail().equals(email) && email!=null) {
 					if(userService.findByEmail(email).isPresent()||adminService.getAdminByEmail(email).isPresent()||subAdminService.getSubAdminBymobileNoOrEmail(email).isPresent())
 					{
 						str="Email allready Registered  please enter another email";
 					}
 					
 				}
-				if(!admin.get().getMobileNumber().equals(phoneNumber) && phoneNumber!=null) {
+				if(admin.get().getMobileNumber()!=null && !admin.get().getMobileNumber().equals(phoneNumber) && phoneNumber!=null) {
 					if(userService.findByPhoneNumber(phoneNumber).isPresent()||adminService.getAdminBymobileNo(phoneNumber).isPresent()||subAdminService.getSubAdminBymobileNo(phoneNumber).isPresent()) {
 						if(str.isEmpty())
 							str="phone number allready registered please enter another no.";
