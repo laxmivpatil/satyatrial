@@ -87,7 +87,7 @@ public class EmailService {
             message.setText("Your OTP for satya application is ."+OTP);
 
             // Send the message
-            //Transport.send(message);
+ 
 
             System.out.println("Email sent successfully.");
             return true;
@@ -124,8 +124,7 @@ public class EmailService {
             // message.setContent();
 
             // Send the message
-          //  Transport.send(message);
-
+  
             System.out.println("Email sent successfully.");
             return true;
 
