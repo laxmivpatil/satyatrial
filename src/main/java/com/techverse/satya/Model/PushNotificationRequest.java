@@ -10,7 +10,6 @@ public class PushNotificationRequest {
     
  
   public PushNotificationRequest(String token , String title, String body,String type) {
-		 
 		this.title = title;
 		this.body = body;
 		this.token = token;

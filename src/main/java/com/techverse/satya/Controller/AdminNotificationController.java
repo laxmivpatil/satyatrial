@@ -224,8 +224,7 @@ public class AdminNotificationController {
         else if(notificationOptional.get().getNotificationType().equals("suggestion"))
         {
         	Suggestion suggestion =suggestionService.getSuggestionById(notificationOptional.get().getEntityId()).get();
-        	 
-        	  SuggestionResponseDTO suggestionResponseDTO = new SuggestionResponseDTO();
+        	SuggestionResponseDTO suggestionResponseDTO = new SuggestionResponseDTO();
              suggestionResponseDTO.setName(suggestion.getUser().getName());
              suggestionResponseDTO.setAddress(suggestion.getAddress());
              suggestionResponseDTO.setPurpose(suggestion.getPurpose());

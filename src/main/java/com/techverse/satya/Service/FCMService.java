@@ -6,7 +6,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.io.FileInputStream;
 import java.time.Duration;
+import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -14,7 +17,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
- 
+
+import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.messaging.AndroidConfig;
 import com.google.firebase.messaging.AndroidNotification;
 import com.google.firebase.messaging.ApnsConfig;
@@ -75,9 +79,11 @@ public class FCMService {
 @Service
 public class FCMService {
 
-    private static final String FCM_API = "https://fcm.googleapis.com/fcm/send";
+	private static final String PROJECT_ID="satya-3dc00";
+  //  private static final String FCM_API = "https://fcm.googleapis.com/fcm/send";
+	private static final String FCM_API="https://fcm.googleapis.com/v1/projects/" + PROJECT_ID + "/messages:send";
     private static final String SERVER_KEY = "AAAAekAU7bQ:APA91bFRV6cjIyxlNrZY8xn_PEG1lnSIfmBweeB8VuLbA59g62p3pPljbhV4ZgNM825BlfWZ2Q-Fj_ZJ2e2hFXInp8kRgUPeykvXgw-YpQBeDvP6TVOWK8dEpKU2cPEUzc_soxiYxBiJ"; // Replace with your server key
-
+/*
     public ResponseEntity<String> sendPushNotification1(String deviceToken, String title, String message) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -96,6 +102,8 @@ public class FCMService {
         RestTemplate restTemplate = new RestTemplate();
         return restTemplate.postForEntity(FCM_API, request, String.class);
     }
+    
+    */
     public ResponseEntity<String> sendPushNotification(String deviceToken, String title, String message,String type) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -115,5 +123,41 @@ public class FCMService {
 
         RestTemplate restTemplate = new RestTemplate();
         return restTemplate.postForEntity(FCM_API, request, String.class);
+    }
+    
+    
+    public ResponseEntity<String> sendPushNotificationV1(String deviceToken, String title, String body, String type) throws Exception {
+ 
+        // ✅ Get OAuth2 access token using service account
+        GoogleCredentials googleCredentials = GoogleCredentials
+                .fromStream(new FileInputStream("service-account.json"))
+                .createScoped(Collections.singletonList("https://www.googleapis.com/auth/firebase.messaging"));
+        
+        googleCredentials.refreshIfExpired();
+        String accessToken = googleCredentials.getAccessToken().getTokenValue();
+
+        // ✅ Create request payload
+        String payload = "{"
+                + "\"message\": {"
+                + "\"token\": \"" + deviceToken + "\","
+                + "\"notification\": {"
+                + "\"title\": \"" + title + "\","
+                + "\"body\": \"" + body + "\""
+                + "},"
+                + "\"data\": {"
+                + "\"type\": \"" + type + "\""
+                + "}"
+                + "}"
+                + "}";
+
+        // ✅ Set headers
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(accessToken);
+
+        HttpEntity<String> entity = new HttpEntity<>(payload, headers);
+        RestTemplate restTemplate = new RestTemplate();
+
+        return restTemplate.postForEntity(FCM_API, entity, String.class);
     }
 }

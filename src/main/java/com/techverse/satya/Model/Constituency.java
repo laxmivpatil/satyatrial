@@ -12,8 +12,20 @@ public class Constituency {
     private Long id;
     private String districtName;
     private String constituencyName;
+    private String state="";
+    
+    
+    
 
-    // Constructors, Getters, and Setters
+    public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	// Constructors, Getters, and Setters
     public Constituency() {}
 
     public Constituency(String districtName, String constituencyName) {
