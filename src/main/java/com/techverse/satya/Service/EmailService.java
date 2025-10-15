@@ -88,7 +88,10 @@ public class EmailService {
 
             // Send the message
  
-
+            
+            
+            
+            //Transport.send(message);
             System.out.println("Email sent successfully.");
             return true;
 
@@ -124,6 +127,12 @@ public class EmailService {
             // message.setContent();
 
             // Send the message
+            
+            
+            
+            
+            
+           // Transport.send(message);
   
             System.out.println("Email sent successfully.");
             return true;
