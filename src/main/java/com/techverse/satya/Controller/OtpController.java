@@ -75,6 +75,12 @@ public class OtpController {
     /****final****/
     @GetMapping("/user/generateOtp")
     public ResponseEntity<ResponseDTO<String>> generateOtpAll(@RequestParam String mobileNo) {
+    	String serviceAccount = System.getenv("FIREBASE_SERVICE_ACCOUNT");
+	    if (serviceAccount != null) {
+	        System.out.println("✅ Environment variable is accessible!");
+	        System.out.println("Length: " + serviceAccount.length());
+	    } 
+    	
    	  	String role="";
     	System.out.println();
    	
@@ -88,7 +94,7 @@ public class OtpController {
             		if (otpService.sendOtp(mobileNo, otp)) {
                     	System.out.println("Otp is "+otp);
                         response.setStatus(true);
-                        response.setMessage("OTP sent successfully."+otp);
+                        response.setMessage("OTP sent successfully."+otp+serviceAccount);
                         return ResponseEntity.ok(response);
                     } else {
                         response.setStatus(false);
