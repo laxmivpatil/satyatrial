@@ -7,7 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Map;
@@ -127,7 +129,7 @@ public class FCMService {
     
     
     public ResponseEntity<String> sendPushNotificationV1(String deviceToken, String title, String body, String type) throws Exception {
- 
+ /*
         // ✅ Get OAuth2 access token using service account
         GoogleCredentials googleCredentials = GoogleCredentials
                 .fromStream(new FileInputStream("service-account.json"))
@@ -135,7 +137,21 @@ public class FCMService {
         
         googleCredentials.refreshIfExpired();
         String accessToken = googleCredentials.getAccessToken().getTokenValue();
+*/
+    	
+    	
+    	
+    	 // ✅ 1. Load service account from ENV variable
+        String serviceAccountJson = System.getenv("FIREBASE_SERVICE_ACCOUNT");
+        if (serviceAccountJson == null) {
+            throw new IllegalStateException("FIREBASE_SERVICE_ACCOUNT env var not set!");
+        }
 
+        GoogleCredentials googleCredentials = GoogleCredentials
+                .fromStream(new ByteArrayInputStream(serviceAccountJson.getBytes(StandardCharsets.UTF_8)))
+                .createScoped(Collections.singletonList("https://www.googleapis.com/auth/firebase.messaging"));
+        googleCredentials.refreshIfExpired();
+        String accessToken = googleCredentials.getAccessToken().getTokenValue();
         // ✅ Create request payload
         String payload = "{"
                 + "\"message\": {"
@@ -160,4 +176,8 @@ public class FCMService {
 
         return restTemplate.postForEntity(FCM_API, entity, String.class);
     }
+    
+    
+    
+    
 }
