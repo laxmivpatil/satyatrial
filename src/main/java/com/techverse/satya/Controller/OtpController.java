@@ -83,27 +83,6 @@ public class OtpController {
           response.setData("");
     	
     	
-    	try {
-    	String serviceAccount = System.getenv("FIREBASE_SERVICE_ACCOUNT");
-	    if (serviceAccount != null) {
-	        System.out.println("✅ Environment variable is accessible!");
-	        System.out.println("Length: " + serviceAccount.length());
-	    } 
-	    GoogleCredentials googleCredentials = GoogleCredentials
-                .fromStream(new ByteArrayInputStream(serviceAccount.getBytes(StandardCharsets.UTF_8)))
-                .createScoped(Collections.singletonList("https://www.googleapis.com/auth/firebase.messaging"));
-        googleCredentials.refreshIfExpired();
-        String accessToken = googleCredentials.getAccessToken().getTokenValue();
-    	}
-    	
-    	 catch (Exception e) {
-             response.setStatus(false);
-             response.setMessage(e.toString());
-             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-         }
-    	
-    	
-    	
     	
     	
    	  	String role="";
