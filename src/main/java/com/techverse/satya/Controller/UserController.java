@@ -418,7 +418,7 @@ else
 		        if (user.isPresent()) {
 		            count = userService.getCountOfAppointmentsForUserInCurrentMonth(user.get().getId());
 
-		            if (count == 5) {
+		            if (count == 50) {
 		                responseBody.setStatus(true);
 		                responseBody.setMessage("You allready exceeds limit  to create an  appointment for this month");
 		            }
