@@ -1,12 +1,15 @@
 package com.techverse.satya.Controller;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -23,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
+import com.google.auth.oauth2.GoogleCredentials;
 import com.techverse.satya.DTO.OtpVerificationResult;
 import com.techverse.satya.DTO.ResponseDTO;
 import com.techverse.satya.Model.Admin;
@@ -75,17 +78,38 @@ public class OtpController {
     /****final****/
     @GetMapping("/user/generateOtp")
     public ResponseEntity<ResponseDTO<String>> generateOtpAll(@RequestParam String mobileNo) {
+    	
+    	  ResponseDTO<String> response = new ResponseDTO<>();
+          response.setData("");
+    	
+    	
+    	try {
     	String serviceAccount = System.getenv("FIREBASE_SERVICE_ACCOUNT");
 	    if (serviceAccount != null) {
 	        System.out.println("✅ Environment variable is accessible!");
 	        System.out.println("Length: " + serviceAccount.length());
 	    } 
+	    GoogleCredentials googleCredentials = GoogleCredentials
+                .fromStream(new ByteArrayInputStream(serviceAccount.getBytes(StandardCharsets.UTF_8)))
+                .createScoped(Collections.singletonList("https://www.googleapis.com/auth/firebase.messaging"));
+        googleCredentials.refreshIfExpired();
+        String accessToken = googleCredentials.getAccessToken().getTokenValue();
+    	}
+    	
+    	 catch (Exception e) {
+             response.setStatus(false);
+             response.setMessage(e.toString());
+             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+         }
+    	
+    	
+    	
+    	
     	
    	  	String role="";
     	System.out.println();
    	
-        ResponseDTO<String> response = new ResponseDTO<>();
-        response.setData("");
+      
 
         try {
             if (mobileNo != null && !mobileNo.isEmpty()) {
@@ -94,7 +118,7 @@ public class OtpController {
             		if (otpService.sendOtp(mobileNo, otp)) {
                     	System.out.println("Otp is "+otp);
                         response.setStatus(true);
-                        response.setMessage("OTP sent successfully."+otp+serviceAccount);
+                        response.setMessage("OTP sent successfully."+otp);
                         return ResponseEntity.ok(response);
                     } else {
                         response.setStatus(false);
